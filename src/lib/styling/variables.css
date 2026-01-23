@@ -1,0 +1,37 @@
+/* npm run updateStylingVariables to update */
+
+:root {
+
+  --fontFamily: 'Times New Roman', Times, serif;
+  --headerText: 3rem;
+  --largeText: 2rem;
+  --mediumText: 1.375rem;
+  --standardText: 1rem;
+
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --red: #C93521;
+    --yellow: #C9B320;
+    --blue: #34314A;
+    --green: #314A3E;
+    --white: #F7F1E0;
+    --cream: #EAD79D;
+    --black: #000000;
+
+  }
+}
+  
+@media (prefers-color-scheme: dark) {
+  :root {
+    --red: #C93521;
+    --yellow: #C9B320;
+    --blue: #34314A;
+    --green: #314A3E;
+    --white: #1A1A1A;
+    --cream: #EAD79D;
+    --black: #FAFAFA;
+
+  }
+}
