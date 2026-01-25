@@ -3,6 +3,7 @@ import path from "path";
 
 const themePath = path.resolve("./src/lib/styling/theme.json");
 const theme = JSON.parse(fs.readFileSync(themePath, "utf-8"));
+const isNumber = /^-?\d*\.?\d+(?:[a-z%]+)?$/i;
 
 let themeColors = {
   "light": "",
@@ -30,7 +31,11 @@ for (const [sectionKey, section] of Object.entries(theme)) {
   css += "\n";
   for (const [key, value] of Object.entries(section)) {
     css += `  --${key}: ${value};\n`;
-    ts += `  ${key}: ${/^-?\d*\.?\d+[a-z%]+$/i.test(value) ? value.replace(/(-?\d*\.?\d+)([a-z%]+)/i, '$1') : `"${value}"`},\n`;
+    ts += `  ${key}: ${
+      isNumber.test(value)
+        ? value.replace(/(-?\d*\.?\d+)[a-z%]+/i, '$1')
+        : `"${value}"`
+    },\n`;
   }
 }
 

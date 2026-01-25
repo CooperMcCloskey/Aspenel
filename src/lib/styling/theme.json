@@ -1,31 +1,36 @@
 {
   "colors": {
     "light": {      
-      "red": "#C93521",
-      "yellow": "#C9B320",
-      "blue": "#34314A",
-      "green": "#314A3E",
+      "red": "#c85040",
+      "yellow": "#c8b63f",
+      "blue": "#504d61",
+      "green": "#4d6158",
 
-      "white": "#F7F1E0",
-      "cream": "#EAD79D",
+      "background": "#F7F1E0",
+      "white": "#f4f4f4",
       "black": "#000000"
     },
     "dark": {
-      "red": "#C93521",
-      "yellow": "#C9B320",
-      "blue": "#34314A",
-      "green": "#314A3E",
+      "red": "#c85040",
+      "yellow": "#c8b63f",
+      "blue": "#504d61",
+      "green": "#4d6158",
 
-      "white": "#1A1A1A",
-      "cream": "#EAD79D",
+      "background": "#1E1E1E",
+      "white": "#EAD79D",
       "black": "#FAFAFA"
     }
   },
   "font": {
-    "fontFamily": "'Times New Roman', Times, serif",
+    "fontFamily": "'Nimbus Sans'",
     "headerText": "3rem",
     "largeText": "2rem",
     "mediumText": "1.375rem",
     "standardText": "1rem"
-  }  
+  },
+  "layout": {
+    "gridGapSize": "16px",
+    "gridRows": "8",
+    "gridColumns": "6"
+  }
 }
