@@ -1,23 +1,26 @@
 <script>
   export let color;
   export let name;
+
 </script>
 
-<div id="container">
+<button id="container" onclick={()=>{}}>
   <header style="background: {color}">
     <h2>{name}</h2>
   </header>
-</div>
+</button>
 
 <style>
   #container{
     height: 100%;
+    position: relative;
     grid-column: span 1;
     grid-row: span 1;
     background: var(--white);
   }
   header{
-    position: relative;
+    position: absolute;
+    top: 0;
     width: 100%;
     height: var(--gridUnitHeight);
   }

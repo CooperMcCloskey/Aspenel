@@ -1,7 +1,10 @@
 <script lang="ts">
   import FileList from "$lib/components/UI/FileList/FileList.svelte";
+    import { invoke } from "@tauri-apps/api/core";
+    import { onMount } from "svelte";
 
   const date = new Date().toLocaleDateString('en-US', {month: 'long', day: '2-digit', year: 'numeric'});
+  
 </script>
 
 <header>

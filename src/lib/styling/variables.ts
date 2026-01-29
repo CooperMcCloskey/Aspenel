@@ -7,7 +7,8 @@ export const stylingVars = {
     blue: "#504d61",
     green: "#4d6158",
     background: "#F7F1E0",
-    white: "#f4f4f4",
+    white: "#e8dfcd",
+    gray: "#c5c5c5",
     black: "#000000",
   },
   dark: {
@@ -16,8 +17,9 @@ export const stylingVars = {
     blue: "#504d61",
     green: "#4d6158",
     background: "#1E1E1E",
-    white: "#EAD79D",
-    black: "#FAFAFA",
+    white: "#292936",
+    gray: "#292936",
+    black: "#c5c5c5",
   },
 
   fontFamily: "'Nimbus Sans'",

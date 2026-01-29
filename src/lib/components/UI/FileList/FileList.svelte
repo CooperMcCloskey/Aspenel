@@ -1,5 +1,9 @@
 <script lang="ts">
+  import IconBase from "$lib/components/icons/IconBase.svelte";
   import MoreHorizontalIcon from "$lib/components/icons/MoreHorizontalIcon.svelte";
+    import NewCategoryIcon from "$lib/components/icons/NewCategoryIcon.svelte";
+    import NewProjectIcon from "$lib/components/icons/NewProjectIcon.svelte";
+    import NewTaskIcon from "$lib/components/icons/NewTaskIcon.svelte";
   import FileIcon from "./FileViews/IconView/FileIcon.svelte";
   import IconView from "./FileViews/IconView/IconView.svelte";
 
@@ -10,15 +14,18 @@
 <div id="container">
   <header>
     <p id="path">{dir}</p>
-    <div id="editIcon"><MoreHorizontalIcon size=24/></div>
+    <div id="buttons">
+      <button id="newTaskButton" title="Create new task"><IconBase><NewTaskIcon/></IconBase></button>
+      <button id="newProjectButton" title="Create new project"><IconBase><NewProjectIcon/></IconBase></button>
+      <button id="newCategoryButton" title="Create new category"><IconBase><NewCategoryIcon/></IconBase></button>
+      <button id="moreButton" title="More"><IconBase><MoreHorizontalIcon/></IconBase></button>
+    </div>
   </header>
   <div id="fileViews">
     {#if viewType == "icon"}
       <IconView rows=1 columns=4>
-        <FileIcon color="var(--red)" name="School"></FileIcon>
-        <FileIcon color="var(--yellow)" name="Life"></FileIcon>
-        <FileIcon color="var(--blue)" name="Work"></FileIcon>
-        <FileIcon color="var(--green)" name="Chores"></FileIcon>
+        <FileIcon name="School" color="var(--red)"/>
+        <FileIcon name="Work" color="var(--blue)"/>
       </IconView>
     {/if}
   </div>
@@ -45,7 +52,7 @@
     font-size: 16px;
     margin: 0;
   }
-  #editIcon{
+  #buttons{
     position: relative;
     top: -2px;
   }
