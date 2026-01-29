@@ -1,24 +1,30 @@
 <script lang="ts">
   import IconBase from "$lib/components/icons/IconBase.svelte";
   import MoreHorizontalIcon from "$lib/components/icons/MoreHorizontalIcon.svelte";
-    import NewCategoryIcon from "$lib/components/icons/NewCategoryIcon.svelte";
-    import NewProjectIcon from "$lib/components/icons/NewProjectIcon.svelte";
-    import NewTaskIcon from "$lib/components/icons/NewTaskIcon.svelte";
+  import NewProjectIcon from "$lib/components/icons/NewProjectIcon.svelte";
+  import NewTaskIcon from "$lib/components/icons/NewTaskIcon.svelte";
+  import NewCategoryIcon from "$lib/components/icons/NewCategoryIcon.svelte";
   import FileIcon from "./FileViews/IconView/FileIcon.svelte";
   import IconView from "./FileViews/IconView/IconView.svelte";
+  import { goto } from "$app/navigation";
 
   export let dir: string = "home/";
   export let viewType: string;
+
+  function newFile(){
+    goto('category/a');
+  }
+
 </script>
 
 <div id="container">
   <header>
     <p id="path">{dir}</p>
     <div id="buttons">
-      <button id="newTaskButton" title="Create new task"><IconBase><NewTaskIcon/></IconBase></button>
-      <button id="newProjectButton" title="Create new project"><IconBase><NewProjectIcon/></IconBase></button>
-      <button id="newCategoryButton" title="Create new category"><IconBase><NewCategoryIcon/></IconBase></button>
-      <button id="moreButton" title="More"><IconBase><MoreHorizontalIcon/></IconBase></button>
+      <button class="iconButton" id="newTaskButton" title="Create new task" onclick={newFile}><IconBase hasHoverEffect={true}><NewTaskIcon/></IconBase></button>
+      <button class="iconButton" id="newProjectButton" title="Create new project"><IconBase hasHoverEffect={true}><NewProjectIcon/></IconBase></button>
+      <button class="iconButton" id="newCategoryButton" title="Create new category"><IconBase hasHoverEffect={true}><NewCategoryIcon/></IconBase></button>
+      <button class="iconButton" id="moreButton" title="More"><IconBase hasHoverEffect={true}><MoreHorizontalIcon/></IconBase></button>
     </div>
   </header>
   <div id="fileViews">

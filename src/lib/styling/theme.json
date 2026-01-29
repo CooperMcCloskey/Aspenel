@@ -24,7 +24,7 @@
     }
   },
   "font": {
-    "fontFamily": "'Nimbus Sans'",
+    "fontFamily": "'Times New Roman', Times, serif",
     "headerText": "3rem",
     "largeText": "2rem",
     "mediumText": "1.375rem",
@@ -34,5 +34,8 @@
     "gridGapSize": "16px",
     "gridRows": "8",
     "gridColumns": "6"
+  },
+  "transitions":{
+    "fastTransition": "0.3s"
   }
 }

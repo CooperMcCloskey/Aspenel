@@ -1,14 +1,15 @@
-<script>
-  export let color;
-  export let name;
+<script lang="ts">
+  export let color: string;
+  export let name: string;
+  export let path: string;
 
 </script>
 
-<button id="container" onclick={()=>{}}>
+<div id="container">
   <header style="background: {color}">
-    <h2>{name}</h2>
+    <a href={path}>{name}</a>
   </header>
-</button>
+</div>
 
 <style>
   #container{
@@ -24,12 +25,15 @@
     width: 100%;
     height: var(--gridUnitHeight);
   }
-  h2{
+  a{
+    font-size: 1.5em;
     margin: 0;
     position: absolute;
     bottom: 0;
     left: 4px;
-    bottom: -4px;
     color: var(--white);
+  }
+  a:hover, a:focus-visible{
+    text-decoration: underline solid var(--white) 5px;
   }
 </style>

@@ -18,6 +18,9 @@ button{
   all: unset;
   cursor: pointer;
 }
+input{
+  all: unset;
+}
 body{
   background-color: var(--background);
   color: var(--black);
@@ -31,10 +34,11 @@ body{
   font-style: normal;
   font-weight: 400;
 }
-@font-face{
-  font-family: 'Nimbus Sans';
-  src: url('/fonts/NimbusSanL-Reg.otf');
-  font-style: normal;
-  font-weight: 400;
+
+.iconButton{
+  color: var(--gray);
+}
+.iconButton:focus-visible{
+  color: var(--black)
 }
 
