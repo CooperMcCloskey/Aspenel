@@ -18,7 +18,7 @@ export const stylingVars = {
     green: "#4d6158",
     background: "#1E1E1E",
     white: "#292936",
-    gray: "#292936",
+    gray: "#4F4F69",
     black: "#c5c5c5",
   },
 

@@ -16,6 +16,6 @@
   }
   .hover:hover{
     /* Hover color should be passed as a style prop */
-    color: var(--hoverColor)
+    color: var(--hoverColor, var(--black))
   }
 </style>

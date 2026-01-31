@@ -6,13 +6,22 @@
   import NewCategoryIcon from "$lib/components/icons/NewCategoryIcon.svelte";
   import FileIcon from "./FileViews/IconView/FileIcon.svelte";
   import IconView from "./FileViews/IconView/IconView.svelte";
-  import { goto } from "$app/navigation";
+
+  import { ulid } from 'ulid'
+  import { invoke } from "@tauri-apps/api/core";
+  import type { File } from "$lib/types/rustTypes";
 
   export let dir: string = "home/";
   export let viewType: string;
 
-  function newFile(){
-    goto('category/a');
+  function newFile(type: "Task" | "Project" | "Category"){
+    const defaultFile: File = {
+      id: ulid(),
+      name: `New ${type}`,
+      color: "var(--red)"
+    }
+    invoke('create_file', {relativePath: "aaa.txt", content: defaultFile});
+    invoke('read_file', {relativePath: "aaa.txt"});
   }
 
 </script>
