@@ -2,8 +2,6 @@
   export let color: string= "var(--black)";
   export let hasHoverEffect: boolean= false
   export let size: string = "24px";
-
-  console.log(hasHoverEffect)
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class:hover={hasHoverEffect} height={size} width={size} fill={hasHoverEffect ? "currentColor" : color}>

@@ -1,13 +1,14 @@
 <script lang="ts">
-  export let color: string;
-  export let name: string;
+  import type { FileData } from "$lib/types/rustTypes";
+
+  export let dir: FileData;
   export let path: string;
 
 </script>
 
 <div id="container">
-  <header style="background: {color}">
-    <a href={path}>{name}</a>
+  <header style="background: {dir.color}">
+    <a href={path}>{dir.name}</a>
   </header>
 </div>
 

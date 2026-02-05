@@ -8,7 +8,8 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             filesystem::commands::create_file,
-            filesystem::commands::read_file
+            filesystem::commands::read_file,
+            filesystem::commands::read_dir
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
