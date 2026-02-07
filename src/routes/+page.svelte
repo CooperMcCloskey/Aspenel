@@ -10,7 +10,7 @@
 </header>
 
 <div id="fileList">
-  <FileList/>
+  <FileList path=""/>
 </div>
 <style>
   #fileList{

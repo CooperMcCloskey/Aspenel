@@ -1,14 +1,14 @@
 <script lang="ts">
-  import type { FileData } from "$lib/types/rustTypes";
+  import type { CategoryData } from "$lib/types/rustTypes/CategoryData";
+  import type { FileData } from "$lib/types/rustTypes/FileData";
 
-  export let dir: FileData;
-  export let path: string;
+  export let dir: CategoryData;
 
 </script>
 
 <div id="container">
   <header style="background: {dir.color}">
-    <a href={path}>{dir.name}</a>
+    <a href={`/file/category/${dir.file.path}`}>{dir.file.name}</a>
   </header>
 </div>
 
@@ -35,6 +35,6 @@
     color: var(--white);
   }
   a:hover, a:focus-visible{
-    text-decoration: underline solid var(--white) 5px;
+    text-decoration: underline solid var(--white) 2px;
   }
 </style>

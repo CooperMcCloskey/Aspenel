@@ -11,7 +11,9 @@
 <FileHeader fileType="Category"/>
 
 <div id="fileList">
-  <FileList path={path}/>
+  {#if path !== undefined}
+    <FileList path={path}/>
+  {/if}
 </div>
 
 <style>

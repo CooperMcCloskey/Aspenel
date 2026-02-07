@@ -1,7 +1,7 @@
 export const ssr = false;
-import type { FileData } from "$lib/types/rustTypes";
 import { invoke } from "@tauri-apps/api/core";
 import type { LayoutLoad } from "../$types";
+import type { FileData } from "$lib/types/rustTypes/FileData";
 
 export const load: LayoutLoad = async ({params}) => {
   if(params.path == undefined) throw "File path unset"

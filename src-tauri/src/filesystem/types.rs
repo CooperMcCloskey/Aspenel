@@ -1,41 +1,62 @@
-use std::{path::PathBuf};
+use std::path::PathBuf;
 
-use ulid::Ulid;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use ts_rs::TS;
+use ulid::Ulid;
 
 #[derive(Debug, Serialize, Deserialize, TS, Clone)]
-#[ts(export, export_to = "../src/lib/types/rustTypes.ts")]
-pub struct FileData{
+#[ts(export, export_to = "../src/lib/types/rustTypes/")]
+#[serde(tag = "type")]
+pub enum FileData {
+  Category(CategoryData),
+  Project(ProjectData),
+}
+
+#[derive(Debug, Serialize, Deserialize, TS, Clone)]
+#[ts(export, export_to = "../src/lib/types/rustTypes/")]
+pub struct FileBase {
   #[ts(type = "string")]
   id: Ulid,
   name: String,
   path: PathBuf,
 }
 
-impl FileData{
-  pub fn new(file_type: &str, path: &PathBuf) -> FileData{
-    let name = format!("New {}", file_type);
-    FileData {
+impl FileBase {
+  pub fn new(name: &str, path: PathBuf) -> FileBase {
+    FileBase {
       id: Ulid::new(),
-      path: path.join(&name),
-      name: name
+      path: path,
+      name: name.to_string(),
     }
   }
 }
 
 #[derive(Debug, Serialize, Deserialize, TS, Clone)]
-#[ts(export, export_to = "../src/lib/types/rustTypes.ts")]
-pub struct CategoryData{
-  base: FileData,
-  color: String,
+#[ts(export, export_to = "../src/lib/types/rustTypes/")]
+pub struct CategoryData {
+  file: FileBase,
+  color: String
 }
 
-impl CategoryData{
-  pub fn new(file_type: &str, path: &PathBuf) -> CategoryData{
+impl CategoryData {
+  pub fn new(name: &str, path: PathBuf) -> CategoryData {
     CategoryData {
-      base: FileData::new(&file_type, &path),
-      color: "var(--Red)".to_string()
+      file: FileBase::new(name, path),
+      color: "var(--red)".to_string()
+    }
+  }
+}
+
+#[derive(Debug, Serialize, Deserialize, TS, Clone)]
+#[ts(export, export_to = "../src/lib/types/rustTypes/")]
+pub struct ProjectData {
+  file: FileBase,
+}
+
+impl ProjectData {
+  pub fn new(name: &str, path: PathBuf) -> ProjectData {
+    ProjectData {
+      file: FileBase::new(name, path),
     }
   }
 }

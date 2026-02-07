@@ -6,18 +6,26 @@
   import IconView from "./IconView.svelte";
 
   import { invoke } from "@tauri-apps/api/core";
-  import { goto } from "$app/navigation";
-  import type { FileData } from "$lib/types/rustTypes";
-  import FileIcon from "./FileIcon.svelte";
-    import { onMount } from "svelte";
-
-  export let path: string = "home";
-  let subDirs: FileData[];
+  import { goto } from "$app/navigation"; 
+  import { onMount } from "svelte";
+  import Category from "./Category.svelte";
+  import Project from "./Project.svelte";
+  import type { CategoryData } from "$lib/types/rustTypes/CategoryData";
+  import type { ProjectData } from "$lib/types/rustTypes/ProjectData";
+  import type { FileData } from "$lib/types/rustTypes/FileData";
+  import { isCategory, isProject } from "$lib/types/rustTypes/typeGuards";
   
-  async function newFile(type: "project" | "category"){
-    console.log(`going to: file/${type}/${path}/New ${type}`)
-    await invoke('create_file', {path: `${path}/New ${type}/meta.json`, fileType: type});
-    goto(`/file/${type}/${path}/New ${type}`);
+  export let path: string;
+
+  let subDirs: FileData[];
+
+  async function newCategory(){
+    let categoryData: CategoryData = await invoke('create_category', {path})
+    goto(`/file/category/${categoryData.file.path}`);
+  }
+  async function newProject(){
+    let projectData: ProjectData = await invoke('create_project', {path})
+    goto(`/file/project/${projectData.file.path}`);
   }
 
   onMount(async ()=>{
@@ -30,8 +38,8 @@
     <p id="path">{path}</p>
 
     <div id="buttons">
-      <button class="iconButton" id="newProjectButton" title="Create new project" onclick={()=>{newFile("project")}}><IconBase hasHoverEffect={true}><NewProjectIcon/></IconBase></button>
-      <button class="iconButton" id="newCategoryButton" title="Create new category" onclick={()=>{newFile("category")}}><IconBase hasHoverEffect={true}><NewCategoryIcon/></IconBase></button>
+      <button class="iconButton" id="newProjectButton" title="Create new project" onclick={()=>{newProject()}}><IconBase hasHoverEffect={true}><NewProjectIcon/></IconBase></button>
+      <button class="iconButton" id="newCategoryButton" title="Create new category" onclick={()=>{newCategory()}}><IconBase hasHoverEffect={true}><NewCategoryIcon/></IconBase></button>
       <button class="iconButton" id="moreButton" title="More"><IconBase hasHoverEffect={true}><MoreHorizontalIcon/></IconBase></button>
     </div>
 
@@ -39,7 +47,11 @@
   <div id="fileViews">
     <IconView rows=1 columns=4>
       {#each subDirs as subDir}
-        <FileIcon dir={subDir} path={path}/>
+        {#if isCategory(subDir)}
+          <Category dir={subDir}/>
+        {:else if isProject(subDir)}
+          <Project dir={subDir}/>
+        {/if}
       {/each}
     </IconView>
   </div>
