@@ -1,14 +1,14 @@
-<script>
+<script lang="ts">
   import { page } from "$app/state";
-  import FileList from "$lib/components/UI/FileList/FileList.svelte";
+  import FileList from "../../_components/FileList/FileList.svelte";
   import FileHeader from "../../_components/FileHeader.svelte";
 
+  const {data} = $props();
+  const filedata = $derived(data.filedata);
   const path = $derived(page.params.path);
-  let {data} = $props();
 </script>
 
-
-<FileHeader fileType="Category"/>
+<FileHeader name={filedata.file.name} path={path ?? ""} fileType={"Category"}/>
 
 <div id="fileList">
   {#if path !== undefined}

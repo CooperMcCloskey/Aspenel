@@ -1,14 +1,25 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
+    import { invoke } from "@tauri-apps/api/core";
   import { onMount } from "svelte";
-
-  export let fileType;
+  
+  let {name, path, fileType}: {name: string, path: string, fileType: string} = $props()
 
   let input: HTMLInputElement;
+  
+  $effect(()=>{
+    input.value = name
+  })
 
-  function onNameUpdated(name: string) {
-    console.log(name);
+  async function onNameUpdated(name: string) {
+    const newPath = await invoke("rename_file", {oldPath: path, newName: input.value});
+    console.log(`/file/${fileType.toLowerCase()}/${newPath}`);
+    goto(`/file/${fileType.toLowerCase()}/${newPath}`);
   }
+
   onMount(() => {
+    input.focus();
+    
     input.addEventListener("keydown", (e) => {
       if (e.key == "Enter") input.blur();
     });
@@ -16,8 +27,6 @@
       onNameUpdated(input.value);
     });
   });
-
-  export function loadHeader() {}
 </script>
 
 <header>

@@ -2,4 +2,4 @@
 import type { CategoryData } from "./CategoryData";
 import type { ProjectData } from "./ProjectData";
 
-export type FileData = { "type": "Category" } & CategoryData | { "type": "Project" } & ProjectData;
+export type Filedata = { "type": "Category" } & CategoryData | { "type": "Project" } & ProjectData;

@@ -5,9 +5,13 @@ use tauri::{AppHandle, Manager};
 
 use crate::{error_handling::command_errors::Error};
 
-pub fn create_dir(app: AppHandle, path: &PathBuf, name: &str) -> Result<(String, PathBuf), Error>{
+pub fn get_sys_path(app: AppHandle, path: &PathBuf) -> Result<PathBuf, Error>{
   let app_data_path = app.path().app_data_dir()?;
-  let sys_path = app_data_path.join(&path);
+  Ok(app_data_path.join(&path))
+}
+
+pub fn create_dir(app: AppHandle, path: &PathBuf, name: &str) -> Result<(String, PathBuf), Error>{
+  let sys_path = get_sys_path(app, path)?;
 
   let unique_name = unique_path_name(&sys_path, name);
   let path = path.join(&unique_name);
@@ -17,8 +21,7 @@ pub fn create_dir(app: AppHandle, path: &PathBuf, name: &str) -> Result<(String,
   Ok((unique_name, path))
 }
 pub fn create_file(app: AppHandle, path: &PathBuf, name: &str) -> Result<(File, String), Error> {
-  let app_data_path = app.path().app_data_dir()?;
-  let sys_path = app_data_path.join(&path);
+  let sys_path = get_sys_path(app, path)?;
   let unique_name = unique_path_name(&sys_path, name);
 
   let file = fs::File::create(sys_path.join(&unique_name))?;
@@ -30,8 +33,8 @@ pub fn write_file<T: Serialize>(mut file: File, data: &T) -> Result<(), Error>{
   Ok(())
 }
 
-fn unique_path_name(base_path: &PathBuf, name: &str) -> String {
-  let path = base_path.join(name);
+fn unique_path_name(parent_path: &PathBuf, name: &str) -> String {
+  let path = parent_path.join(name);
   if !path.exists() {
     return name.to_string();
   }
@@ -47,7 +50,7 @@ fn unique_path_name(base_path: &PathBuf, name: &str) -> String {
       None => format!("{stem} ({counter})"),
     };
 
-    let test_path = base_path.join(&test_name);
+    let test_path = parent_path.join(&test_name);
 
     if !test_path.exists() {
       return test_name;

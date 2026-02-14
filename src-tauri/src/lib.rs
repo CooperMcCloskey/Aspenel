@@ -10,7 +10,8 @@ pub fn run() {
       filesystem::commands::create_category,
       filesystem::commands::create_project,
       filesystem::commands::read_file,
-      filesystem::commands::read_dir
+      filesystem::commands::read_dir,
+      filesystem::commands::rename_file,
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");

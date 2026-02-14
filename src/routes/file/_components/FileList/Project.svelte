@@ -2,12 +2,14 @@
   import type { ProjectData } from "$lib/types/rustTypes/ProjectData";
 
   export let dir: ProjectData;
+  export let parentPath: string;
+  let path: string = parentPath + dir.file.name;
 
 </script>
 
 <div id="container">
   <header>
-    <a href={`/file/project/${dir.file.path}`}>{dir.file.name}</a>
+    <a href={`/file/project/${path}`}>{dir.file.name}</a>
   </header>
 </div>
 

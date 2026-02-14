@@ -1,14 +1,15 @@
 <script lang="ts">
+  import { joinPath } from "$lib/filesystem/utils";
   import type { CategoryData } from "$lib/types/rustTypes/CategoryData";
-  import type { FileData } from "$lib/types/rustTypes/FileData";
 
-  export let dir: CategoryData;
+  let {dir, parentPath}: {dir: CategoryData, parentPath: string} = $props();
+  let path: string = $derived(joinPath(parentPath, dir.file.name));
 
 </script>
 
 <div id="container">
   <header style="background: {dir.color}">
-    <a href={`/file/category/${dir.file.path}`}>{dir.file.name}</a>
+    <a href={`/file/category/${path}`}>{dir.file.name}</a>
   </header>
 </div>
 

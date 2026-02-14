@@ -8,29 +8,24 @@
   import { invoke } from "@tauri-apps/api/core";
   import { goto } from "$app/navigation"; 
   import { onMount } from "svelte";
-  import Category from "./Category.svelte";
-  import Project from "./Project.svelte";
   import type { CategoryData } from "$lib/types/rustTypes/CategoryData";
   import type { ProjectData } from "$lib/types/rustTypes/ProjectData";
-  import type { FileData } from "$lib/types/rustTypes/FileData";
   import { isCategory, isProject } from "$lib/types/rustTypes/typeGuards";
+  import Category from "./Category.svelte";
+  import Project from "./Project.svelte";
+  import type { Filedata } from "$lib/types/rustTypes/Filedata";
   
-  export let path: string;
-
-  let subDirs: FileData[];
+  const {path}: {path: string} = $props();
+  let subdirs: Filedata[] = $derived(await invoke('read_dir', {path})); //experimental feature
 
   async function newCategory(){
     let categoryData: CategoryData = await invoke('create_category', {path})
-    goto(`/file/category/${categoryData.file.path}`);
+    goto(`/file/category/${path + "/" + categoryData.file.name}`);
   }
   async function newProject(){
     let projectData: ProjectData = await invoke('create_project', {path})
-    goto(`/file/project/${projectData.file.path}`);
+    goto(`/file/project/${path + "/" + projectData.file.name}`);
   }
-
-  onMount(async ()=>{
-    subDirs = await invoke('read_dir', {path});
-  })
 </script>
 
 <div id="container">
@@ -46,11 +41,11 @@
   </header>
   <div id="fileViews">
     <IconView rows=1 columns=4>
-      {#each subDirs as subDir}
+      {#each subdirs as subDir}
         {#if isCategory(subDir)}
-          <Category dir={subDir}/>
+          <Category parentPath={path} dir={subDir}/>
         {:else if isProject(subDir)}
-          <Project dir={subDir}/>
+          <Project parentPath={path} dir={subDir}/>
         {/if}
       {/each}
     </IconView>

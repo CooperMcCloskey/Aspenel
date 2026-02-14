@@ -1,5 +1,5 @@
 <script lang="ts">
-  import FileList from "$lib/components/UI/FileList/FileList.svelte";
+  import FileList from "./file/_components/FileList/FileList.svelte";
 
   const date = new Date().toLocaleDateString('en-US', {month: 'long', day: '2-digit', year: 'numeric'});
   
