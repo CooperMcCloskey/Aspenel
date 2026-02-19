@@ -8,6 +8,9 @@ pub enum Error {
 
   #[error(transparent)]
   SerdeJson(#[from] serde_json::Error),
+  
+  #[error("{0}")]
+  Message(String),
 }
 
 impl serde::Serialize for Error {
@@ -18,4 +21,10 @@ impl serde::Serialize for Error {
     eprintln!("\x1b[31mERROR: {}\x1b[m", self);
     serializer.serialize_str(self.to_string().as_ref())
   }
+}
+
+impl From<&str> for Error {
+    fn from(value: &str) -> Self {
+        Error::Message(value.to_string())
+    }
 }

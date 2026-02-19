@@ -6,8 +6,9 @@
   import { goto } from '$app/navigation';
 
   let { children } = $props();
-  
+
   function backArrow(){
+    //TODO: Make this work
     goto("/")
   }
 </script>

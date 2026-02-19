@@ -3,18 +3,16 @@
     import { invoke } from "@tauri-apps/api/core";
   import { onMount } from "svelte";
   
-  let {name, path, fileType}: {name: string, path: string, fileType: string} = $props()
+  let {name: filename, path, fileType}: {name: string, path: string, fileType: "Branch" | "Leaf"} = $props()
 
   let input: HTMLInputElement;
-  
   $effect(()=>{
-    input.value = name
+    input.value = filename
   })
 
   async function onNameUpdated(name: string) {
-    const newPath = await invoke("rename_file", {oldPath: path, newName: input.value});
-    console.log(`/file/${fileType.toLowerCase()}/${newPath}`);
-    goto(`/file/${fileType.toLowerCase()}/${newPath}`);
+    const newPath = await invoke<string>("rename_file", {oldPath: path, newName: input.value});
+    goto(`/document/${newPath}`);
   }
 
   onMount(() => {

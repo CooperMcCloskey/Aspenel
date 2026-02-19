@@ -1,10 +1,9 @@
 <script lang="ts">
-  export let rows: string;
-  export let columns: string;
+  const {children, rows, columns} = $props();
 </script>
 
 <div id="container" style={`--rows: ${rows}; --columns: ${columns}`}>
-  <slot></slot>
+  {@render children()}
 </div>
 
 

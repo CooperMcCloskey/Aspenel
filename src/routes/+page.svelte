@@ -1,5 +1,5 @@
 <script lang="ts">
-  import FileList from "./file/_components/FileList/FileList.svelte";
+  import DocumentList from "./document/_components/DocumentList/DocumentList.svelte";
 
   const date = new Date().toLocaleDateString('en-US', {month: 'long', day: '2-digit', year: 'numeric'});
   
@@ -10,7 +10,7 @@
 </header>
 
 <div id="fileList">
-  <FileList path=""/>
+  <DocumentList path="Home"/>
 </div>
 <style>
   #fileList{
