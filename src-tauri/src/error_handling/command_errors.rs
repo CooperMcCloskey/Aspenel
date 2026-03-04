@@ -8,7 +8,7 @@ pub enum Error {
 
   #[error(transparent)]
   SerdeJson(#[from] serde_json::Error),
-  
+
   #[error("{0}")]
   Message(String),
 }
@@ -24,7 +24,7 @@ impl serde::Serialize for Error {
 }
 
 impl From<&str> for Error {
-    fn from(value: &str) -> Self {
-        Error::Message(value.to_string())
-    }
+  fn from(value: &str) -> Self {
+    Error::Message(value.to_string())
+  }
 }

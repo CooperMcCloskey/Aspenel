@@ -2,7 +2,7 @@
   import DocumentList from "./document/_components/DocumentList/DocumentList.svelte";
 
   const date = new Date().toLocaleDateString('en-US', {month: 'long', day: '2-digit', year: 'numeric'});
-  
+
 </script>
 
 <header>

@@ -1,10 +1,10 @@
 use std::fs::{self};
-use std::path::{PathBuf};
+use std::path::PathBuf;
 use tauri::{AppHandle, Manager};
 
 use crate::data_handling::types::{Document, FsDocument};
 use crate::error_handling::command_errors::Error;
-use crate::filesystem::utils::{write_document, get_sys_path};
+use crate::filesystem::utils::{get_sys_path, write_document};
 
 #[tauri::command]
 pub fn create_home_branch(app: AppHandle) -> Result<FsDocument, Error> {
@@ -36,7 +36,10 @@ pub fn read_document(app: AppHandle, path: PathBuf) -> Result<FsDocument, Error>
   println!("{:?}", metadata_sys_path);
   let json = fs::read_to_string(&metadata_sys_path)?;
   let document: Document = serde_json::from_str(&json)?;
-  let filename: std::ffi::OsString = path.file_name().ok_or(Error::from("Reading illegal file"))?.to_os_string();
+  let filename: std::ffi::OsString = path
+    .file_name()
+    .ok_or(Error::from("Reading illegal file"))?
+    .to_os_string();
   Ok(FsDocument::new(document, filename))
 }
 
@@ -61,7 +64,7 @@ pub fn read_dir(app: AppHandle, path: PathBuf) -> Result<Vec<FsDocument>, Error>
 }
 
 #[tauri::command]
-pub fn rename_file(app: AppHandle, old_path: PathBuf, new_name: &str) -> Result<PathBuf, Error>{
+pub fn rename_file(app: AppHandle, old_path: PathBuf, new_name: &str) -> Result<PathBuf, Error> {
   let parent_path = old_path.parent().unwrap();
   let new_path = parent_path.join(new_name);
 
@@ -69,13 +72,15 @@ pub fn rename_file(app: AppHandle, old_path: PathBuf, new_name: &str) -> Result<
   let new_sys_path = get_sys_path(app.clone(), &new_path)?;
 
   fs::rename(&old_sys_path, &new_sys_path)?;
-    
+
   Ok(new_path)
 }
 
 #[tauri::command]
-pub fn delete_file(app: AppHandle, path: PathBuf) -> Result<(), Error>{
+pub fn delete_file(app: AppHandle, path: PathBuf) -> Result<(), Error> {
   let sys_path = get_sys_path(app, &path)?;
-  fs::remove_file(sys_path)?;
+  println!("${sys_path:?}");
+  //TODO: Move to trash instead of full delete
+  fs::remove_dir_all(sys_path)?;
   Ok(())
 }

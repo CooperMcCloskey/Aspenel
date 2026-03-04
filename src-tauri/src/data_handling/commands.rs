@@ -1,4 +1,3 @@
-
 use std::path::PathBuf;
 
 use tauri::AppHandle;
@@ -16,6 +15,9 @@ pub fn get_color(app: AppHandle, mut path: PathBuf) -> Result<String, Error> {
     if let Some(color) = test_document.get_color() {
       return Ok(color);
     }
-    path = path.parent().ok_or(Error::from("Couldn't find color"))?.to_path_buf();
+    path = path
+      .parent()
+      .ok_or(Error::from("Couldn't find color"))?
+      .to_path_buf();
   }
 }

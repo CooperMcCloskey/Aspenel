@@ -12,12 +12,24 @@
   import NewBranchIcon from "$lib/components/icons/NewBranchIcon.svelte";
   
   const {path}: {path: string} = $props();
-  let children: FsDocument[] = $derived(await invoke<FsDocument[]>('read_dir', {path})); //experimental feature
+
+  let children: FsDocument[] = $state([]);
+  let loadingChildren: boolean = $state(true);
+  
+  async function readDir(){
+    loadingChildren = true;
+    children = await invoke<FsDocument[]>('read_dir', {path});
+    loadingChildren = false;
+  }
+
+  $effect(()=>{
+    path; // adds path as a dependency
+    readDir()
+  })
 
   async function newDocument(type: "leaf" | "branch"){
     const newFsDocument = await invoke<FsDocument>(`create_${type}`, {path})
     
-    console.log(newFsDocument)
     goto(`/document/${joinPath(path, newFsDocument.filename)}`);
   }
 </script>
@@ -37,7 +49,12 @@
     <!-- TODO: Make rows and columns adjustable -->
     <IconView rows=1 columns=4>
       {#each children as fsNode}
-        <DocumentIcon filename={fsNode.filename} path={joinPath(path, fsNode.filename)} color={await invoke('get_color', {path: joinPath(path, fsNode.filename)})} />
+        <DocumentIcon 
+          filename={fsNode.filename} 
+          path={joinPath(path, fsNode.filename)} 
+          color={await /*EXPERIMENTAL ASYNC*/  invoke('get_color', {path: joinPath(path, fsNode.filename)})}
+          viewUpdateCallback={readDir}
+        />
       {/each}
     </IconView>
   </div>
