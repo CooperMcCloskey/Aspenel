@@ -4,8 +4,12 @@ import { invoke } from "@tauri-apps/api/core";
 import { ask } from "@tauri-apps/plugin-dialog";
 
 
-export function joinPath(base: string, part: string): string {
-  return `${base}/${part}`.replace(/\/+/g, '/').replace(/^\/|\/$/g, '');
+export function joinPath(base: string, part: string): Promise<string> {
+  return invoke<string>("join_path", {base, part});
+}
+
+export function getDocumentHref(path: string){
+  return path == "" ? "/document/Home" : `/document/${path}`;
 }
 
 export async function loadDocument(path: string | undefined): Promise<DocumentLoad>{
@@ -24,7 +28,7 @@ export async function deleteDocument(filename: string, path: string, viewUpdateC
     kind: "warning"
   })
   if(deleteConfirmed) {
-    await invoke('delete_file', {path})
+    await invoke('delete_file', {path});
     viewUpdateCallback();
   }
 }

@@ -1,5 +1,5 @@
 use std::fs::{self};
-use std::path::PathBuf;
+use std::path::{MAIN_SEPARATOR, PathBuf};
 use tauri::{AppHandle, Manager};
 
 use crate::data_handling::types::{Document, FsDocument};
@@ -79,8 +79,24 @@ pub fn rename_file(app: AppHandle, old_path: PathBuf, new_name: &str) -> Result<
 #[tauri::command]
 pub fn delete_file(app: AppHandle, path: PathBuf) -> Result<(), Error> {
   let sys_path = get_sys_path(app, &path)?;
-  println!("${sys_path:?}");
   //TODO: Move to trash instead of full delete
   fs::remove_dir_all(sys_path)?;
   Ok(())
+}
+
+#[tauri::command]
+pub fn join_path(base: PathBuf, part: PathBuf) -> PathBuf{
+  base.join(part)
+}
+
+#[tauri::command]
+pub fn get_path_components(path: PathBuf) -> Vec<String>{
+  path.components()
+    .map(|c| c.as_os_str().to_string_lossy().into_owned())
+    .collect()
+}
+
+#[tauri::command]
+pub fn get_path_separator() -> char{
+  return MAIN_SEPARATOR
 }

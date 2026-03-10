@@ -16,6 +16,10 @@ pub fn run() {
       filesystem::commands::read_dir,
       filesystem::commands::rename_file,
       filesystem::commands::delete_file,
+      filesystem::commands::join_path,
+      filesystem::commands::get_path_components,
+      filesystem::commands::get_path_separator,
+
       data_handling::commands::get_color,
     ])
     .run(tauri::generate_context!())

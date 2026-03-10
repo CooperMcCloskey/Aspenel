@@ -5,38 +5,45 @@
 
   import { invoke } from "@tauri-apps/api/core";
   import { goto } from "$app/navigation"; 
-  import { joinPath } from "$lib/filesystem/utils";;
+  import { getDocumentHref, joinPath } from "$lib/filesystem/utils";;
   import DocumentIcon from "./views/iconView/DocumentIcon.svelte";
   import type { FsDocument } from "$lib/types/rustTypes/FsDocument";
   import NewLeafIcon from "$lib/components/icons/NewLeafIcon.svelte";
   import NewBranchIcon from "$lib/components/icons/NewBranchIcon.svelte";
   
   const {path}: {path: string} = $props();
-
-  let children: FsDocument[] = $state([]);
-  let loadingChildren: boolean = $state(true);
   
-  async function readDir(){
-    loadingChildren = true;
-    children = await invoke<FsDocument[]>('read_dir', {path});
-    loadingChildren = false;
+  let separator = $state('');
+  invoke<string>("get_path_separator").then((result)=>{separator = result});
+
+  const pathComponents: string[] = $derived(await invoke("get_path_components", {path}));
+  const cumulativePathComponents = $derived(pathComponents.map((_, i) => pathComponents.slice(0, i+1).join(separator)))
+
+  let refresh = $state(0)
+  let children: FsDocument[] = $derived(await loadChildren(path, refresh));
+  
+  function refreshPage(){
+    console.log("refresh" + refresh)
+    refresh++;
   }
 
-  $effect(()=>{
-    path; // adds path as a dependency
-    readDir()
-  })
+  async function loadChildren(path: string, refresh: number){
+    return await invoke<FsDocument[]>('read_dir', {path})
+  }
 
   async function newDocument(type: "leaf" | "branch"){
     const newFsDocument = await invoke<FsDocument>(`create_${type}`, {path})
-    
-    goto(`/document/${joinPath(path, newFsDocument.filename)}`);
+    goto(`/document/${await joinPath(path, newFsDocument.filename)}`);
   }
 </script>
 
 <div id="container">
   <header>
-    <p id="path">{path}</p>
+    <div id="pathDisplayContainer">
+      {#each pathComponents as _, i}
+        <a class="path link" href={getDocumentHref(cumulativePathComponents[i])}>{pathComponents[i]}</a><span class="path">{separator}</span>
+      {/each}
+    </div>
 
     <div id="buttons">
       <button class="iconButton" id="newProjectButton" title="Create new branch" onclick={()=>{newDocument("branch")}}><IconBase hasHoverEffect={true}><NewBranchIcon/></IconBase></button>
@@ -51,9 +58,9 @@
       {#each children as fsNode}
         <DocumentIcon 
           filename={fsNode.filename} 
-          path={joinPath(path, fsNode.filename)} 
-          color={await /*EXPERIMENTAL ASYNC*/  invoke('get_color', {path: joinPath(path, fsNode.filename)})}
-          viewUpdateCallback={readDir}
+          path={await /*EXPERIMENTAL ASYNC*/ joinPath(path, fsNode.filename)} 
+          color={await /*EXPERIMENTAL ASYNC*/ invoke('get_color', {path: await /*EXPERIMENTAL ASYNC*/ joinPath(path, fsNode.filename)})}
+          viewUpdateCallback={refreshPage}
         />
       {/each}
     </IconView>
@@ -75,11 +82,14 @@
     justify-content: space-between;
     height: 16px;
   }
-  #path{
+  .path{
     position: relative;
     font-family: 'JetBrains Mono';
     font-size: 16px;
     margin: 0;
+  }
+  .link:hover{
+    color: var(--blue);
   }
   #buttons{
     position: relative;

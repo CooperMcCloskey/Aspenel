@@ -4,13 +4,10 @@ use tauri::AppHandle;
 
 use crate::error_handling::command_errors::Error;
 use crate::filesystem::commands::read_document;
-use crate::filesystem::utils::get_sys_path;
 
 #[tauri::command]
 pub fn get_color(app: AppHandle, mut path: PathBuf) -> Result<String, Error> {
   loop {
-    let sys_path = get_sys_path(app.clone(), &path)?;
-    let metadata_sys_path = sys_path.join("meta.json");
     let test_document = read_document(app.clone(), path.clone())?.get_document();
     if let Some(color) = test_document.get_color() {
       return Ok(color);
