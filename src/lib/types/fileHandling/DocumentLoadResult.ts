@@ -1,6 +1,7 @@
 import type { FsDocument } from "../rustTypes/FsDocument";
 
-export interface DocumentLoad{
+export interface LoadedDocument{
   fsDocument: FsDocument,
-  color: string
+  color: string,
+  path: string
 }

@@ -4,36 +4,14 @@ use tauri::{AppHandle, Manager};
 
 use crate::data_handling::types::{Document, FsDocument};
 use crate::error_handling::command_errors::Error;
-use crate::filesystem::utils::{get_sys_path, write_document};
-
-#[tauri::command]
-pub fn create_home_branch(app: AppHandle) -> Result<FsDocument, Error> {
-  let branch = Document::new_branch();
-  let branch = branch.set_color("var(--red)");
-  let fs_document = write_document(app, &PathBuf::from(""), "Home", branch)?;
-  Ok(fs_document)
-}
-
-#[tauri::command]
-pub fn create_branch(app: AppHandle, path: PathBuf) -> Result<FsDocument, Error> {
-  let branch = Document::new_branch();
-  let fs_document = write_document(app, &path, "New Branch", branch)?;
-  Ok(fs_document)
-}
-
-#[tauri::command]
-pub fn create_leaf(app: AppHandle, path: PathBuf) -> Result<FsDocument, Error> {
-  let leaf = Document::new_leaf();
-  let fs_document = write_document(app, &path, "New Leaf", leaf)?;
-  Ok(fs_document)
-}
+use crate::filesystem::utils::{get_sys_path};
 
 #[tauri::command]
 pub fn read_document(app: AppHandle, path: PathBuf) -> Result<FsDocument, Error> {
   let metadata_path = path.join("meta.json");
   let metadata_sys_path = get_sys_path(app, &metadata_path)?;
 
-  println!("{:?}", metadata_sys_path);
+  println!("reading document: {:?}", metadata_path);
   let json = fs::read_to_string(&metadata_sys_path)?;
   let document: Document = serde_json::from_str(&json)?;
   let filename: std::ffi::OsString = path
@@ -49,6 +27,8 @@ pub fn read_document(app: AppHandle, path: PathBuf) -> Result<FsDocument, Error>
 pub fn read_dir(app: AppHandle, path: PathBuf) -> Result<Vec<FsDocument>, Error> {
   let app_data_path = app.path().app_data_dir()?;
   let sys_path = app_data_path.join(path);
+
+  println!("reading dir: {:?}", sys_path);
 
   let files = fs::read_dir(sys_path)?;
   let mut file_data: Vec<FsDocument> = Vec::new();

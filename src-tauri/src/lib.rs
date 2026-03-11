@@ -9,9 +9,6 @@ pub fn run() {
     .plugin(tauri_plugin_dialog::init())
     .plugin(tauri_plugin_opener::init())
     .invoke_handler(tauri::generate_handler![
-      filesystem::commands::create_home_branch,
-      filesystem::commands::create_branch,
-      filesystem::commands::create_leaf,
       filesystem::commands::read_document,
       filesystem::commands::read_dir,
       filesystem::commands::rename_file,
@@ -20,7 +17,11 @@ pub fn run() {
       filesystem::commands::get_path_components,
       filesystem::commands::get_path_separator,
 
-      data_handling::commands::get_color,
+      data_handling::commands::find_color,
+      data_handling::commands::check_color,
+      data_handling::commands::create_home_branch,
+      data_handling::commands::create_branch,
+      data_handling::commands::create_leaf,
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");

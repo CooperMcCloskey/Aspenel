@@ -10,9 +10,10 @@
   import type { FsDocument } from "$lib/types/rustTypes/FsDocument";
   import NewLeafIcon from "$lib/components/icons/NewLeafIcon.svelte";
   import NewBranchIcon from "$lib/components/icons/NewBranchIcon.svelte";
+  import type { LoadedDocument } from "$lib/types/fileHandling/DocumentLoadResult";
   
-  const {path}: {path: string} = $props();
-  
+  const {path, color}: {path: string, color: string} = $props();
+
   let separator = $state('');
   invoke<string>("get_path_separator").then((result)=>{separator = result});
 
@@ -20,16 +21,22 @@
   const cumulativePathComponents = $derived(pathComponents.map((_, i) => pathComponents.slice(0, i+1).join(separator)))
 
   let refresh = $state(0)
-  let children: FsDocument[] = $derived(await loadChildren(path, refresh));
-  
-  function refreshPage(){
-    console.log("refresh" + refresh)
-    refresh++;
-  }
+  let childrenPromise: Promise<LoadedDocument[]> = $derived.by(async ()=>{
+    refresh; //track refreshes
 
-  async function loadChildren(path: string, refresh: number){
-    return await invoke<FsDocument[]>('read_dir', {path})
-  }
+    let children = await invoke<FsDocument[]>('read_dir', {path});
+    return Promise.all(
+      children.map(async (child)=>{
+        return {
+          fsDocument: child,
+          color: await invoke<string>('check_color', {path: await joinPath(path, child.filename), parentColor: color}),
+          path: await joinPath(path, child.filename)
+        }
+      })
+    )
+  });
+
+  function refreshPage(){ refresh++ }
 
   async function newDocument(type: "leaf" | "branch"){
     const newFsDocument = await invoke<FsDocument>(`create_${type}`, {path})
@@ -55,14 +62,19 @@
   <div id="fileViews">
     <!-- TODO: Make rows and columns adjustable -->
     <IconView rows=1 columns=4>
-      {#each children as fsNode}
-        <DocumentIcon 
-          filename={fsNode.filename} 
-          path={await /*EXPERIMENTAL ASYNC*/ joinPath(path, fsNode.filename)} 
-          color={await /*EXPERIMENTAL ASYNC*/ invoke('get_color', {path: await /*EXPERIMENTAL ASYNC*/ joinPath(path, fsNode.filename)})}
-          viewUpdateCallback={refreshPage}
-        />
-      {/each}
+      {#await childrenPromise}
+        <p>loading</p>
+      {:then children} 
+        {#each children as child}
+          <DocumentIcon 
+            filename={child.fsDocument.filename} 
+            path={child.path} 
+            color={child.color}
+            viewUpdateCallback={refreshPage}
+          />
+        {/each}
+      {/await}
+        
     </IconView>
   </div>
 </div>

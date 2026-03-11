@@ -1,4 +1,4 @@
-import type { DocumentLoad } from "$lib/types/fileHandling/DocumentLoadResult";
+import type { LoadedDocument } from "$lib/types/fileHandling/DocumentLoadResult";
 import type { FsDocument } from "$lib/types/rustTypes/FsDocument";
 import { invoke } from "@tauri-apps/api/core";
 import { ask } from "@tauri-apps/plugin-dialog";
@@ -12,13 +12,16 @@ export function getDocumentHref(path: string){
   return path == "" ? "/document/Home" : `/document/${path}`;
 }
 
-export async function loadDocument(path: string | undefined): Promise<DocumentLoad>{
-  if(path=="undefined") throw new Error("Document path undefined")
+export async function loadDocument(path: string | undefined): Promise<LoadedDocument>{
+  console.log("loading document: " + path)
+  if(path === undefined) throw new Error("Document path undefined")
 
-  const fsDocument: Promise<FsDocument> = invoke<FsDocument>('read_document', {path});
-  const color: Promise<string> = invoke<string>('get_color', {path})
+  const fsDocument: Promise<FsDocument> = invoke<FsDocument>('read_document', {path}); //TODO: optimize to reduce the number of document reads
+  const color: Promise<string> = invoke<string>('find_color', {path})
 
-  const result: Promise<DocumentLoad> = Promise.all([fsDocument, color]).then(([fsDocument,color])=>{return {fsDocument,color}})
+  const result: Promise<LoadedDocument> = Promise.all([fsDocument, color]).then(([fsDocument,color])=>{return {fsDocument,color,path}})
+  console.log("load result:");
+  console.log(await result);
   return result;
 }
 
