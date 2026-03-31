@@ -9,7 +9,7 @@ use serde::Serialize;
 use tauri::{AppHandle, Manager};
 
 use crate::{
-  data_handling::types::{Document, FsDocument},
+  branch_data::types::{Branch, FsBranch},
   error_handling::command_errors::Error,
 };
 
@@ -18,16 +18,16 @@ pub fn get_sys_path(app: AppHandle, path: &PathBuf) -> Result<PathBuf, Error> {
   Ok(app_data_path.join(&path))
 }
 
-pub fn write_document(
+pub fn write_branch(
   app: AppHandle,
   path: &PathBuf,
   name: &str,
-  document: Document,
-) -> Result<FsDocument, Error> {
+  branch: Branch,
+) -> Result<FsBranch, Error> {
   let (filename, path) = create_dir(app.clone(), path, name)?;
   let file = create_metadata_file(app, &path)?;
-  write_file(file, &document)?;
-  Ok(FsDocument::new(document, filename))
+  write_file(file, &branch)?;
+  Ok(FsBranch::new(branch, filename))
 }
 
 fn create_dir(app: AppHandle, path: &PathBuf, name: &str) -> Result<(OsString, PathBuf), Error> {

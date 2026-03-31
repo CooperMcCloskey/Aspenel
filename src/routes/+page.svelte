@@ -7,7 +7,7 @@
   <h1>{date}</h1>
 </header>
 
-<a href="/document/Home">asdf</a>
+<a href="/branch/Home">asdf</a>
 <style>
   header{
     grid-area: 2/2/3/5;

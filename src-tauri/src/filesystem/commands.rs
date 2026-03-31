@@ -2,41 +2,40 @@ use std::fs::{self};
 use std::path::{MAIN_SEPARATOR, PathBuf};
 use tauri::{AppHandle, Manager};
 
-use crate::data_handling::types::{Document, FsDocument};
+use crate::branch_data::types::{Branch, FsBranch};
 use crate::error_handling::command_errors::Error;
 use crate::filesystem::utils::{get_sys_path};
 
 #[tauri::command]
-pub fn read_document(app: AppHandle, path: PathBuf) -> Result<FsDocument, Error> {
+pub fn read_branch(app: AppHandle, path: PathBuf) -> Result<FsBranch, Error> {
   let metadata_path = path.join("meta.json");
   let metadata_sys_path = get_sys_path(app, &metadata_path)?;
 
-  println!("reading document: {:?}", metadata_path);
   let json = fs::read_to_string(&metadata_sys_path)?;
-  let document: Document = serde_json::from_str(&json)?;
+  let branch: Branch = serde_json::from_str(&json)?;
   let filename: std::ffi::OsString = path
     .file_name()
     .ok_or(Error::from("Reading illegal file"))?
     .to_os_string();
-  Ok(FsDocument::new(document, filename))
+  Ok(FsBranch::new(branch, filename))
 }
 
 // TODO: add checks for illegal os characters
 // TODO: sanatize user generated names in Rust and TS
 #[tauri::command]
-pub fn read_dir(app: AppHandle, path: PathBuf) -> Result<Vec<FsDocument>, Error> {
+pub fn read_dir(app: AppHandle, path: PathBuf) -> Result<Vec<FsBranch>, Error> {
   let app_data_path = app.path().app_data_dir()?;
   let sys_path = app_data_path.join(path);
 
   println!("reading dir: {:?}", sys_path);
 
   let files = fs::read_dir(sys_path)?;
-  let mut file_data: Vec<FsDocument> = Vec::new();
+  let mut file_data: Vec<FsBranch> = Vec::new();
 
   for file in files {
     let file = file?;
     if file.file_type()?.is_dir() {
-      file_data.push(read_document(app.clone(), file.path())?);
+      file_data.push(read_branch(app.clone(), file.path())?);
     }
   }
 
