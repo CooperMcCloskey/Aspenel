@@ -1,19 +1,31 @@
 <script lang="ts">
-  export let color: string= "var(--black)";
-  export let hasHoverEffect: boolean= false
-  export let size: string = "24px";
+  import type { Snippet } from "svelte";
+
+  const {
+    size = "24px", 
+    hasHoverEffect = false,
+    color, 
+    children
+  }: {
+    size?: string,
+    hasHoverEffect?: boolean,
+    color?: string,
+    children: Snippet<[]>
+  } = $props()
+
+  const resolvedColor = $derived(color ?? (hasHoverEffect ? "var(--gray)" : "var(--black)"))
 </script>
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class:hover={hasHoverEffect} height={size} width={size} fill={hasHoverEffect ? "currentColor" : color}>
-  <slot></slot>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class:hover={hasHoverEffect} height={size} width={size} fill={resolvedColor}>
+  {@render children()}
 </svg>
 
 <style>
   .hover{
-    transition: var(--fastTransition) color;
+    transition: var(--fastTransition) fill;
   }
   .hover:hover{
     /* Hover color should be passed as a style prop */
-    color: var(--hoverColor, var(--black))
+    fill: var(--hoverColor, var(--black))
   }
 </style>

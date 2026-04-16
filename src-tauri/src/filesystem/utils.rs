@@ -9,7 +9,7 @@ use serde::Serialize;
 use tauri::{AppHandle, Manager};
 
 use crate::{
-  branch_data::types::{Branch, FsBranch},
+  data::branches::types::{Branch, FsBranch},
   error_handling::command_errors::Error,
 };
 
@@ -43,7 +43,7 @@ fn create_dir(app: AppHandle, path: &PathBuf, name: &str) -> Result<(OsString, P
 
 fn create_metadata_file(app: AppHandle, path: &PathBuf) -> Result<File, Error> {
   let sys_path = get_sys_path(app, path)?;
-  let file = fs::File::create(sys_path.join("meta.json"))?;
+  let file = fs::File::create(sys_path.join("metadata.json"))?;
   return Ok(file);
 }
 

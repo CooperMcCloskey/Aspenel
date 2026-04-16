@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use ts_rs::TS;
 
-use crate::utils::types::Identity;
+use crate::utils::types::Identifier;
 
 #[derive(Serialize, Deserialize, TS)]
 #[ts(export, export_to = "../../src/lib/types/rustTypes/")]
@@ -14,11 +14,19 @@ pub enum BranchViewData{
 #[derive(Serialize, Deserialize, TS)]
 #[ts(export, export_to = "../../src/lib/types/rustTypes/")]
 pub struct IconViewData{
-  identifier: Identity
+  identifier: Identifier
+}
+
+impl IconViewData {
+    pub fn new_icon_view(name: &str) -> IconViewData {
+      IconViewData { 
+        identifier: Identifier::new_identity(name)
+      }
+    }
 }
 
 #[derive(Serialize, Deserialize, TS)]
 #[ts(export, export_to = "../../src/lib/types/rustTypes/")]
 pub struct TableViewData{
-  identifier: Identity
+  identifier: Identifier
 }

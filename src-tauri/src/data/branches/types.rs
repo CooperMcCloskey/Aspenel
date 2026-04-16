@@ -2,16 +2,15 @@ use std::ffi::OsString;
 
 use serde::{Deserialize, Serialize};
 use ts_rs::TS;
-use ulid::Ulid;
 
-use crate::table_data::views::BranchViewData;
+use crate::{data::branch_data::{properties::{Property, PropertyValue}, views::BranchViewData}, utils::types::Id};
 
 //helper function fro serialization
 fn osstring_to_string<S>(os: &OsString, s: S) -> Result<S::Ok, S::Error>
 where S: serde::Serializer, { s.serialize_str(&os.to_string_lossy()) }
 
 #[derive(Serialize, Deserialize, TS)]
-#[ts(export, export_to = "../../src/lib/types/rustTypes/")]
+#[ts(export, export_to = "../../src/lib/types/rustTypes/branches")]
 pub struct FsBranch {
   branch: Branch,
   #[ts(type = "string")]
@@ -33,22 +32,24 @@ impl FsBranch {
 }
 
 #[derive(Serialize, Deserialize, TS)]
-#[ts(export, export_to = "../../src/lib/types/rustTypes/")]
+#[ts(export, export_to = "../../src/lib/types/rustTypes/branches")]
 pub struct Branch {
   #[ts(type = "string")]
-  id: Ulid,
+  id: Id,
   color: Option<String>,
-  has_children: bool,
-  child_view_data: Vec<BranchViewData>
+  child_view_data: Vec<BranchViewData>,
+  property_values: Vec<PropertyValue>,
+  child_properties: Vec<Property>
 }
 
 impl Branch {
   pub fn new_branch() -> Branch {
     Branch {
-      id: Ulid::new(),
+      id: Id::new(),
       color: None,
-      has_children: false,
-      child_view_data: vec![]
+      child_view_data: vec![],
+      property_values: vec![],
+      child_properties: vec![]
     }
   }
 
@@ -57,7 +58,12 @@ impl Branch {
     self
   }
 
-  pub fn get_id(self) -> Ulid {
+  pub fn add_child_view(mut self, view: BranchViewData) -> Self {
+    self.child_view_data.push(view);
+    self
+  }
+
+  pub fn get_id(self) -> Id {
     self.id
   }
   pub fn get_color(self) -> Option<String> {

@@ -7,10 +7,12 @@
   --largeText: 2rem;
   --mediumText: 1.375rem;
   --standardText: 1rem;
+  --smallText: 0.75rem;
 
   --gridGapSize: 16px;
   --gridRows: 8;
   --gridColumns: 6;
+  --iconSpacing: 2px;
 
   --fastTransition: 0.3s;
 

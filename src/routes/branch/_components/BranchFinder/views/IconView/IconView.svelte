@@ -21,7 +21,7 @@
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-rows: repeat(1, 1fr);
     grid-template-columns: repeat(4, 1fr);
     gap: var(--gridGapSize);
   }

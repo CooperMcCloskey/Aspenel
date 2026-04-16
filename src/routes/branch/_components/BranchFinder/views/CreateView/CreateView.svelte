@@ -12,4 +12,13 @@
   } 
 </script>
 
-<button onclick={(e)=>{createContextMenu(e, createMenu())}}>Add branches</button>
+<button onclick={(e)=>{createContextMenu(e, createMenu())}}>Add sub-branches</button>
+
+<style>
+  button{
+    color: var(--gray);
+  }
+  button:hover{
+    color: var(--black)
+  }
+</style>

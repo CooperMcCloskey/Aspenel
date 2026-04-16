@@ -27,10 +27,12 @@ export const stylingVars = {
   largeText: 2,
   mediumText: 1.375,
   standardText: 1,
+  smallText: 0.75,
 
   gridGapSize: 16,
   gridRows: 8,
   gridColumns: 6,
+  iconSpacing: 2,
 
   fastTransition: 0.3,
 }

@@ -42,9 +42,8 @@ export async function loadDir(path: string, color: string, refresh: any = null):
   )
 }
 
-export async function newBranch(path: string, type: "leaf" | "branch"){
-  const newFsBranch = await invoke<FsBranch>(`create_${type}`, {path})
-  goto(`/branch/${await joinPath(path, newFsBranch.filename)}`);
+export async function createBranch(path: string): Promise<FsBranch>{
+  return await invoke<FsBranch>(`create_branch`, {path})
 }
 
 export async function deleteBranch(filename: string, path: string, viewUpdateCallback: ()=>void){

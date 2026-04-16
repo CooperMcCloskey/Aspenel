@@ -1,14 +1,14 @@
 use std::fs::{self};
-use std::path::{MAIN_SEPARATOR, PathBuf};
+use std::path::{PathBuf};
 use tauri::{AppHandle, Manager};
 
-use crate::branch_data::types::{Branch, FsBranch};
+use crate::data::branches::types::{Branch, FsBranch};
 use crate::error_handling::command_errors::Error;
 use crate::filesystem::utils::{get_sys_path};
 
 #[tauri::command]
 pub fn read_branch(app: AppHandle, path: PathBuf) -> Result<FsBranch, Error> {
-  let metadata_path = path.join("meta.json");
+  let metadata_path = path.join("metadata.json");
   let metadata_sys_path = get_sys_path(app, &metadata_path)?;
 
   let json = fs::read_to_string(&metadata_sys_path)?;
@@ -63,19 +63,3 @@ pub fn delete_file(app: AppHandle, path: PathBuf) -> Result<(), Error> {
   Ok(())
 }
 
-#[tauri::command]
-pub fn join_path(base: PathBuf, part: PathBuf) -> PathBuf{
-  base.join(part)
-}
-
-#[tauri::command]
-pub fn get_path_components(path: PathBuf) -> Vec<String>{
-  path.components()
-    .map(|c| c.as_os_str().to_string_lossy().into_owned())
-    .collect()
-}
-
-#[tauri::command]
-pub fn get_path_separator() -> char{
-  return MAIN_SEPARATOR
-}
