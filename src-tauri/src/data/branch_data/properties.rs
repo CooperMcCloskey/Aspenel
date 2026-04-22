@@ -62,7 +62,7 @@ enum PropertyType{
   Select(Select)
 }
 #[derive(Serialize, Deserialize, TS)]
-#[ts(export, export_to = "../../src/lib/types/rustTypes/")]
+#[ts(export)]
 pub enum PropertyValue{
   Number(f64),
   Text(String),
@@ -71,7 +71,7 @@ pub enum PropertyValue{
   Select(Id),
 }
 #[derive(Serialize, Deserialize, TS)]
-#[ts(export, export_to = "../../src/lib/types/rustTypes/")]
+#[ts(export)]
 pub struct Property{
   identifier: Identifier,
   property_type: PropertyType

@@ -4,7 +4,7 @@ use ts_rs::TS;
 use crate::utils::types::Identifier;
 
 #[derive(Serialize, Deserialize, TS)]
-#[ts(export, export_to = "../../src/lib/types/rustTypes/")]
+#[ts(export)]
 #[serde(tag = "type")]
 pub enum BranchViewData{
   Icon(IconViewData),
@@ -12,7 +12,7 @@ pub enum BranchViewData{
 }
 
 #[derive(Serialize, Deserialize, TS)]
-#[ts(export, export_to = "../../src/lib/types/rustTypes/")]
+#[ts(export)]
 pub struct IconViewData{
   identifier: Identifier
 }
@@ -26,7 +26,7 @@ impl IconViewData {
 }
 
 #[derive(Serialize, Deserialize, TS)]
-#[ts(export, export_to = "../../src/lib/types/rustTypes/")]
+#[ts(export)]
 pub struct TableViewData{
   identifier: Identifier
 }

@@ -3,7 +3,7 @@ use ts_rs::TS;
 use ulid::Ulid;
 
 #[derive(Serialize, Deserialize, TS)]
-#[ts(export, export_to = "../../src/lib/types/rustTypes/utils")]
+#[ts(export)]
 pub struct Identifier {
   name: String,
   #[ts(type = "string")]

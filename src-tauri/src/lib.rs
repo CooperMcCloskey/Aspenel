@@ -10,17 +10,18 @@ pub fn run() {
     .plugin(tauri_plugin_dialog::init())
     .plugin(tauri_plugin_opener::init())
     .invoke_handler(tauri::generate_handler![
-      filesystem::file_commands::read_branch,
-      filesystem::file_commands::read_dir,
-      filesystem::file_commands::rename_file,
-      filesystem::file_commands::delete_file,
+      filesystem::read::read_branch,
+      filesystem::read::read_dir,
+      filesystem::read::delete_file,
       
-      filesystem::path_commands::join_path,
-      filesystem::path_commands::get_path_components,
-      filesystem::path_commands::get_path_separator,
+      filesystem::path_utils::join_path,
+      filesystem::path_utils::get_path_components,
+      filesystem::path_utils::get_path_separator,
 
-      filesystem::write_commands::create_home_branch,
-      filesystem::write_commands::create_branch,
+      filesystem::write::rename_file,
+      filesystem::write::create_home_branch,
+      filesystem::write::create_branch,
+      filesystem::write::save_branch,
 
       data::branches::commands::find_color,
       data::branches::commands::check_color,

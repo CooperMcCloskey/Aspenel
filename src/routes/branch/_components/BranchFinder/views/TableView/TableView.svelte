@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { BranchViewProps } from "$lib/types/branchViews/BranchViewProps";
   import type { TableViewData } from "$lib/types/rustTypes/TableViewData";
-  const {children, viewData, refreshPage}: BranchViewProps<TableViewData> = $props();
+  const {children, viewData}: BranchViewProps<TableViewData> = $props();
 </script>
 
 <table id="container">

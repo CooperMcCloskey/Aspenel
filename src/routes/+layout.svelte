@@ -17,7 +17,7 @@
 <div id="grid">
   {@render children()}
 </div>
-<button id="backArrowContainer" class="iconButton" onclick={backArrow}><IconBase hasHoverEffect={true}><BackArrowIcon/></IconBase></button>
+<button id="backArrowContainer" onclick={backArrow}><IconBase hasHoverEffect={true}><BackArrowIcon/></IconBase></button>
 
 <style> 
   #grid{

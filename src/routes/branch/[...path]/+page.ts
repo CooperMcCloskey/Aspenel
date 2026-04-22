@@ -2,7 +2,7 @@ export const ssr = false;
 import { invoke } from "@tauri-apps/api/core";
 import type { PageLoad } from "./$types";
 import type { LoadedBranch } from "$lib/types/fileHandling/LoadedBranch";
-import { loadBranch } from "$lib/filesystem/utils";
+import { loadBranch } from "$lib/filesystem/loading";
 
 export const load: PageLoad<LoadedBranch> = async ({params}) => {
   return loadBranch(params.path).catch(async (err1)=>{

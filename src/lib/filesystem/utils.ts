@@ -1,4 +1,5 @@
 import { goto } from "$app/navigation";
+import { stateManager } from "$lib/logic/operations.svelte";
 import type { LoadedBranch } from "$lib/types/fileHandling/LoadedBranch";
 import type { FsBranch } from "$lib/types/rustTypes/FsBranch";
 import { invoke } from "@tauri-apps/api/core";
@@ -19,40 +20,18 @@ export function getBranchHref(path: string){
   return path == "" ? "/branch/Home" : `/branch/${path}`;
 }
 
-export async function loadBranch(path: string | undefined): Promise<LoadedBranch>{
-  if(path === undefined) throw new Error("Branch path undefined")
-
-  const fsBranch: Promise<FsBranch> = invoke<FsBranch>('read_branch', {path}); //TODO: optimize to reduce the number of branch reads
-  const color: Promise<string> = invoke<string>('find_color', {path})
-
-  const result: Promise<LoadedBranch> = Promise.all([fsBranch, color]).then(([fsBranch,color])=>{return {fsBranch,color,path}})
-  return result;
-}
-
-export async function loadDir(path: string, color: string, refresh: any = null): Promise<LoadedBranch[]>{
-  let children = await invoke<FsBranch[]>('read_dir', {path});
-  return Promise.all(
-    children.map(async (child)=>{
-      return {
-        fsBranch: child,
-        color: await invoke<string>('check_color', {path: await joinPath(path, child.filename), parentColor: color}),
-        path: await joinPath(path, child.filename)
-      }
-    })
-  )
-}
 
 export async function createBranch(path: string): Promise<FsBranch>{
   return await invoke<FsBranch>(`create_branch`, {path})
 }
 
-export async function deleteBranch(filename: string, path: string, viewUpdateCallback: ()=>void){
+export async function deleteBranch(filename: string, path: string){
   const deleteConfirmed = await ask(`Are you sure you want to delete "${filename}"?`, {
     title: "Aspenel",
     kind: "warning"
   })
   if(deleteConfirmed) {
     await invoke('delete_file', {path});
-    viewUpdateCallback();
+    stateManager.refresh();
   }
 }

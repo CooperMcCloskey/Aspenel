@@ -1,8 +1,9 @@
 <script lang="ts">
+    import { stateManager } from "$lib/logic/operations.svelte";
   import type { BranchViewProps } from "$lib/types/branchViews/BranchViewProps";
   import type { IconViewData } from "$lib/types/rustTypes/IconViewData";
   import BranchFinderIcon from "./BranchFinderIcon.svelte";
-  const {children, viewData, refreshPage}: BranchViewProps<IconViewData> = $props();
+  const {children, viewData}: BranchViewProps<IconViewData> = $props();
 </script>
 
 <div id="container">
@@ -11,7 +12,6 @@
       filename={child.fsBranch.filename} 
       path={child.path} 
       color={child.color}
-      viewUpdateCallback={refreshPage}
     />
   {/each}
 </div>

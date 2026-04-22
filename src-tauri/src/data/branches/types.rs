@@ -10,7 +10,7 @@ fn osstring_to_string<S>(os: &OsString, s: S) -> Result<S::Ok, S::Error>
 where S: serde::Serializer, { s.serialize_str(&os.to_string_lossy()) }
 
 #[derive(Serialize, Deserialize, TS)]
-#[ts(export, export_to = "../../src/lib/types/rustTypes/branches")]
+#[ts(export)]
 pub struct FsBranch {
   branch: Branch,
   #[ts(type = "string")]
@@ -23,8 +23,8 @@ impl FsBranch {
     FsBranch { branch: branch, filename }
   }
 
-  pub fn get_filename(self) -> OsString {
-    self.filename
+  pub fn get_filename(&self) -> &OsString {
+    &self.filename
   }
   pub fn get_branch(self) -> Branch {
     self.branch
@@ -32,7 +32,7 @@ impl FsBranch {
 }
 
 #[derive(Serialize, Deserialize, TS)]
-#[ts(export, export_to = "../../src/lib/types/rustTypes/branches")]
+#[ts(export)]
 pub struct Branch {
   #[ts(type = "string")]
   id: Id,

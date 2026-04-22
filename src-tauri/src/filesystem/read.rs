@@ -4,7 +4,7 @@ use tauri::{AppHandle, Manager};
 
 use crate::data::branches::types::{Branch, FsBranch};
 use crate::error_handling::command_errors::Error;
-use crate::filesystem::utils::{get_sys_path};
+use crate::filesystem::path_utils::get_sys_path;
 
 #[tauri::command]
 pub fn read_branch(app: AppHandle, path: PathBuf) -> Result<FsBranch, Error> {
@@ -40,19 +40,6 @@ pub fn read_dir(app: AppHandle, path: PathBuf) -> Result<Vec<FsBranch>, Error> {
   }
 
   Ok(file_data)
-}
-
-#[tauri::command]
-pub fn rename_file(app: AppHandle, old_path: PathBuf, new_name: &str) -> Result<PathBuf, Error> {
-  let parent_path = old_path.parent().unwrap();
-  let new_path = parent_path.join(new_name);
-
-  let old_sys_path = get_sys_path(app.clone(), &old_path)?;
-  let new_sys_path = get_sys_path(app.clone(), &new_path)?;
-
-  fs::rename(&old_sys_path, &new_sys_path)?;
-
-  Ok(new_path)
 }
 
 #[tauri::command]

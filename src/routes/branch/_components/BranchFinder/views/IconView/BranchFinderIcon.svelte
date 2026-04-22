@@ -9,12 +9,10 @@
     filename, 
     path, 
     color,
-    viewUpdateCallback,
   }: {
     filename: string, 
     path: string, 
     color: string
-    viewUpdateCallback: ()=>void
   } = $props();
 
   function createMenu(): Promise<Menu>{
@@ -22,7 +20,7 @@
       items: [
         { id: "rename", text: "Rename", action: ()=>{/*TODO: Add renaming*/} },
         { id: "copy", text: "Copy", action: ()=>{/*TODO: Add copying*/}},
-        { id: "delete", text: "Delete", action: ()=>{deleteBranch(filename, path, viewUpdateCallback)}},
+        { id: "delete", text: "Delete", action: ()=>{deleteBranch(filename, path)}},
       ],
     })
   } 

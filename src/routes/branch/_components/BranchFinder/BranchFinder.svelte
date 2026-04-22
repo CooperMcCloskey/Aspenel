@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { loadDir, createBranch } from "$lib/filesystem/utils";;
+  import { createBranch } from "$lib/filesystem/utils";;
   import type { LoadedBranch } from "$lib/types/fileHandling/LoadedBranch";
   import IconView from "./views/IconView/IconView.svelte";
   import TableView from "./views/TableView/TableView.svelte";
@@ -7,33 +7,29 @@
   import type { Component } from "svelte";
   import type { BranchViewProps } from "$lib/types/branchViews/BranchViewProps";
   import CreateView from "./views/CreateView/CreateView.svelte";
-    import IconBase from "$lib/components/icons/IconBase.svelte";
-    import NewBranchIcon from "$lib/components/icons/NewBranchIcon.svelte";
-    import MoreHorizontalIcon from "$lib/components/icons/MoreHorizontalIcon.svelte";
+  import IconBase from "$lib/components/icons/IconBase.svelte";
+  import NewBranchIcon from "$lib/components/icons/NewBranchIcon.svelte";
+  import MoreHorizontalIcon from "$lib/components/icons/MoreHorizontalIcon.svelte";
+  import { loadDir } from "$lib/filesystem/loading";
+  import { filedata } from "../../[...path]/filedata.svelte";
+  import { stateManager } from "$lib/logic/operations.svelte";
   
-  const {path, color, viewDataList}: {path: string, color: string, viewDataList: BranchViewData[]} = $props();
-
-  let refresh = $state(0);
-  function refreshComponent(){ refresh++ }
-  
-  let childrenPromise: Promise<LoadedBranch[]> = $derived(loadDir(path, color, refresh));  
+  let childrenPromise: Promise<LoadedBranch[]> = $derived(loadDir(filedata.path, filedata.color)); //TODO: Make this more efficient by making it similar to the filedata global. This will allow removing 1 child without needing to reload the whole view.
   
   const viewMap: Record<string, Component<BranchViewProps<BranchViewData>>> = {
     Icon: IconView,
     Table: TableView,
   }
 
-  let defaultActiveViewData: null | BranchViewData = $derived(viewDataList?.[0] ?? null)
+  let defaultActiveViewData: null | BranchViewData = $derived(filedata.branch.child_view_data[0] ?? null)
   let selectedActiveViewData: null | BranchViewData = $state(null);
   let activeViewData: null | BranchViewData = $derived(selectedActiveViewData ?? defaultActiveViewData)
-  let ActiveView: null | Component<BranchViewProps<BranchViewData>> = $derived(viewMap?.[activeViewData?.type] ?? CreateView)
+  let ActiveView: null | Component<BranchViewProps<BranchViewData>> = $derived(viewMap[activeViewData?.type] ?? CreateView)
 
   async function newBranch(){
-    const branch = await createBranch(path);
-    refreshComponent();
+    const branch = await createBranch(filedata.path);
+    stateManager.refresh();
   }
-
-  
 
 </script>
 
@@ -47,7 +43,7 @@
     {#await childrenPromise}
       <p>...</p>
     {:then children} 
-      <ActiveView {children} refreshPage={refreshComponent} viewData={activeViewData}/>
+      <ActiveView {children} viewData={activeViewData}/>
     {/await}
   </div>
 </div>
