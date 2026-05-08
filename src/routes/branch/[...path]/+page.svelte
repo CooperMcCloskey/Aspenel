@@ -1,17 +1,25 @@
 <script lang="ts">
-  import type { LoadedBranch } from "$lib/types/fileHandling/LoadedBranch";
-  import type { Branch } from "$lib/types/rustTypes/Branch";
-  import BranchFinder from "../_components/BranchFinder/BranchFinder.svelte";
-  import BranchHeader from "../_components/BranchHeader.svelte";
-  import { filedata, setFiledata } from "./filedata.svelte";
-  import { createSaveManager, saveManager } from "../../../lib/filesystem/saving.svelte";
+  import type { LoadedBranch } from "./_types/LoadedBranch";
+  import BranchFinder from "./_components/BranchFinder/BranchFinder.svelte";
+  import BranchHeader from "./_components/BranchHeader.svelte";
+  import { filedata, setChildFiledata, setFiledata, unsetChildFiledata, unsetFiledata } from "./_logic/filedata.svelte";
+  import { saveManager } from "./_logic/saving.svelte";
   
-  let { data }: { data: LoadedBranch } = $props();
-  $effect(()=>{setFiledata(data)})
+  let { data } = $props();
+  let { branchData, childData } = $derived(data)
 
+  $effect(()=>{ 
+    setFiledata(branchData); 
+    setChildFiledata(childData)
+
+    return ()=>{
+      unsetFiledata();
+      unsetChildFiledata();
+    }
+  })
 </script>
 
-<BranchHeader name={filedata.name} path={filedata.path ?? ""}/>
+<BranchHeader name={filedata.filename} path={filedata.path ?? ""}/>
 
 <div id="branchList">
   {#if filedata.path !== undefined}
@@ -21,7 +29,7 @@
 
 <button 
   title="Save" 
-  onclick={()=>{saveManager.save(filedata.branch, filedata.path)}} 
+  onclick={()=>{saveManager.save()}} 
   class:saving={saveManager.saving} 
   class:saveError={saveManager.saveError}
   class:saved={saveManager.saved} 

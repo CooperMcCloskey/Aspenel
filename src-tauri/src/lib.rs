@@ -1,3 +1,5 @@
+use tauri::Manager;
+
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 mod error_handling;
 mod filesystem;
@@ -10,8 +12,10 @@ pub fn run() {
     .plugin(tauri_plugin_dialog::init())
     .plugin(tauri_plugin_opener::init())
     .invoke_handler(tauri::generate_handler![
-      filesystem::read::read_branch,
-      filesystem::read::read_dir,
+      error_handling::log::log,
+      
+      filesystem::read::load_branch,
+      filesystem::read::load_dir,
       filesystem::read::delete_file,
       
       filesystem::path_utils::join_path,

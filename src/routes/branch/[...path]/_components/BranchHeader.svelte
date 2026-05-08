@@ -20,7 +20,7 @@
   const {separator, pathComponents, cumulativePathComponents} = $derived(await separatePath(path))
 
   async function nameUpdate() {
-    const newPath = await invoke<string>("rename_file", {oldPath: path, newName: nameHeader.value});
+    const newPath = await invoke<string>("rename_file", {oldPath: path, newName: nameHeader.value}); //TODO: review this
     goto(`/branch/${newPath}`);
   }
 </script>

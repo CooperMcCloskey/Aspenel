@@ -8,13 +8,13 @@ use tauri::{AppHandle};
 
 use crate::error_handling::command_errors::Error;
 
-use crate::data::branch_data::views::{BranchViewData, IconViewData};
+use crate::data::branch_data::views::{BranchView, IconViewData};
 use crate::filesystem::path_utils::{get_sys_path, join_path, unique_path_name};
-use crate::{data::branches::types::{Branch, FsBranch}};
+use crate::{data::branches::types::{Branch, LoadedBranch}};
 
 #[tauri::command]
 pub fn create_home_branch(app: AppHandle) -> Result<(), Error> {
-  let default_view = BranchViewData::Icon(IconViewData::new_icon_view("Icon View"));
+  let default_view = BranchView::Icon(IconViewData::new_icon_view("Icon View"));
 
   let branch =
     Branch::new_branch()
@@ -26,7 +26,7 @@ pub fn create_home_branch(app: AppHandle) -> Result<(), Error> {
 }
 
 #[tauri::command]
-pub fn create_branch(app: AppHandle, path: PathBuf) -> Result<FsBranch, Error> {
+pub fn create_branch(app: AppHandle, path: PathBuf) -> Result<LoadedBranch, Error> {
   let branch = Branch::new_branch();
   let fs_branch = write_new_branch(app, &path, "New Branch", branch)?;
   Ok(fs_branch)
@@ -67,11 +67,11 @@ pub fn write_new_branch(
   path: &PathBuf,
   name: &str,
   branch: Branch,
-) -> Result<FsBranch, Error> {
+) -> Result<LoadedBranch, Error> {
   let (filename, path) = create_dir(app.clone(), path, name, false)?;
-  let file = create_metadata_file(app, &path)?;
+  let file = create_metadata_file(app.clone(), &path)?;
   write_file(file, &branch)?;
-  Ok(FsBranch::new(branch, filename))
+  Ok(LoadedBranch::new(app, branch, filename, path)?)
 }
 
 pub fn write_branch(

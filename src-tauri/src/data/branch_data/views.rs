@@ -1,12 +1,12 @@
 use serde::{Deserialize, Serialize};
 use ts_rs::TS;
 
-use crate::utils::types::Identifier;
+use crate::utils::types::{Id, Identifier};
 
 #[derive(Serialize, Deserialize, TS)]
 #[ts(export)]
 #[serde(tag = "type")]
-pub enum BranchViewData{
+pub enum BranchView{
   Icon(IconViewData),
   Table(TableViewData)
 }
@@ -28,5 +28,6 @@ impl IconViewData {
 #[derive(Serialize, Deserialize, TS)]
 #[ts(export)]
 pub struct TableViewData{
-  identifier: Identifier
+  identifier: Identifier,
+  visible_property_ids: Vec<Id>
 }

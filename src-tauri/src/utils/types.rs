@@ -10,7 +10,7 @@ pub struct Identifier {
   id: Id
 }
 
-#[derive(Serialize, Deserialize, TS)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize, TS)]
 #[ts(type = "string")]
 pub struct Id(Ulid);
 

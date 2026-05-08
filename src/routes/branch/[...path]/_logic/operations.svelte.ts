@@ -1,22 +1,25 @@
-import { saveManager } from "$lib/filesystem/saving.svelte";
+import { saveManager } from "./saving.svelte";
 
-type VoidFn = ()=>void;  
-export type Operation = {undo: VoidFn, redo: VoidFn};
+export type Operation = {undo: VoidFunction, redo: VoidFunction};
 
 export const stateManager = $state(createStateManager())
 
 export function createStateManager(){
   const undoStack: Operation[] = [];
   const redoStack: Operation[] = [];
-  let refresh: number = 0;
 
   return {
     pushOperation(operation: Operation){
       operation.redo();
-      saveManager.update();
+      saveManager.setEdited();
       undoStack.push(operation);
       redoStack.length = 0;
     },
+    pushChildOperation(id: string, operation: Operation){
+      this.pushOperation(operation),
+      saveManager.addEditedChild(id)
+    },
+    
     undo(){
       const operation = undoStack.pop() ?? {undo: ()=>{}, redo: ()=>{}};
       redoStack.push(operation);
@@ -26,7 +29,6 @@ export function createStateManager(){
       const operation = redoStack.pop() ?? {undo: ()=>{}, redo: ()=>{}};
       undoStack.push(operation);
       operation.redo();
-    },
-    refresh(){ refresh += 1 }
+    }
   };
 }

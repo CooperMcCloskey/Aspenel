@@ -4,7 +4,8 @@ import type { TableViewData } from "$lib/types/rustTypes/TableViewData";
 
 export function newTableView(): TableViewData{
   return {
-    identifier: newIdentifier("Table View")
+    identifier: newIdentifier("Table View"),
+    visible_property_ids: []
   }
 }
 
