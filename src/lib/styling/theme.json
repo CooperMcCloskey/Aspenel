@@ -35,9 +35,7 @@
     "gridGapSize": "16px",
     "gridRows": "8",
     "gridColumns": "6",
+    "borderWidth": "2px",
     "iconSpacing": "2px"
-  },
-  "transitions":{
-    "fastTransition": "0.3s"
   }
 }

@@ -1,26 +1,25 @@
 use std::ffi::OsString;
 use std::fs::{self, File};
-use std::path::{Path, PathBuf};
 use std::io::Write;
+use std::path::{Path, PathBuf};
 
 use serde::Serialize;
-use tauri::{AppHandle};
+use tauri::AppHandle;
 
+use crate::data::views::types::{BranchView, IconViewData};
 use crate::error_handling::command_errors::Error;
 
-use crate::data::branch_data::views::{BranchView, IconViewData};
+use crate::data::branches::types::{Branch, LoadedBranch};
 use crate::filesystem::path_utils::{get_sys_path, join_path, unique_path_name};
-use crate::{data::branches::types::{Branch, LoadedBranch}};
 
 #[tauri::command]
 pub fn create_home_branch(app: AppHandle) -> Result<(), Error> {
   let default_view = BranchView::Icon(IconViewData::new_icon_view("Icon View"));
 
-  let branch =
-    Branch::new_branch()
-      .set_color("var(--red)")
-      .add_child_view(default_view);
-  
+  let branch = Branch::new_branch()
+    .set_color("var(--red)")
+    .add_child_view(default_view);
+
   create_dir(app.clone(), Path::new(""), "Home", true)?;
   write_branch(app, &PathBuf::from("Home"), branch)
 }
@@ -38,10 +37,19 @@ pub fn save_branch(app: AppHandle, branch: Branch, path: &Path) -> Result<(), Er
   Ok(())
 }
 
-fn create_dir(app: AppHandle, path: &Path, name: &str, strict_name: bool) -> Result<(OsString, PathBuf), Error> {
+fn create_dir(
+  app: AppHandle,
+  path: &Path,
+  name: &str,
+  strict_name: bool,
+) -> Result<(OsString, PathBuf), Error> {
   let sys_path = get_sys_path(app.clone(), path)?;
 
-  let filename = if strict_name { join_path(sys_path.clone(), name.into()).into_os_string() } else { unique_path_name(&sys_path, name) };
+  let filename = if strict_name {
+    join_path(sys_path.clone(), name.into()).into_os_string()
+  } else {
+    unique_path_name(&sys_path, name)
+  };
   let path = path.join(&filename);
 
   fs::create_dir_all(sys_path.join(&filename))?;
@@ -74,11 +82,7 @@ pub fn write_new_branch(
   Ok(LoadedBranch::new(app, branch, filename, path)?)
 }
 
-pub fn write_branch(
-  app: AppHandle,
-  path: &Path,
-  branch: Branch,
-) -> Result<(), Error>{
+pub fn write_branch(app: AppHandle, path: &Path, branch: Branch) -> Result<(), Error> {
   let temp_path = join_path(get_sys_path(app.clone(), path)?, "temp.json".into());
 
   let json = serde_json::to_vec(&branch)?;
@@ -96,7 +100,6 @@ fn create_metadata_file(app: AppHandle, path: &PathBuf) -> Result<File, Error> {
   let file = fs::File::create(sys_path.join("metadata.json"))?;
   return Ok(file);
 }
-
 
 fn write_file<T: Serialize>(mut file: File, data: &T) -> Result<(), Error> {
   let json = serde_json::to_vec(data)?;

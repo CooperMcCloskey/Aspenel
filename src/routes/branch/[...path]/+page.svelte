@@ -1,16 +1,15 @@
 <script lang="ts">
-  import type { LoadedBranch } from "./_types/LoadedBranch";
   import BranchFinder from "./_components/BranchFinder/BranchFinder.svelte";
   import BranchHeader from "./_components/BranchHeader.svelte";
-  import { filedata, setChildFiledata, setFiledata, unsetChildFiledata, unsetFiledata } from "./_logic/filedata.svelte";
+  import { filedata, appendChildFiledata, setFiledata, unsetChildFiledata, unsetFiledata } from "./_logic/filedata.svelte";
   import { saveManager } from "./_logic/saving.svelte";
   
   let { data } = $props();
-  let { branchData, childData } = $derived(data)
+  let { branchLoadData, childLoadData } = $derived(data)
 
   $effect(()=>{ 
-    setFiledata(branchData); 
-    setChildFiledata(childData)
+    setFiledata(branchLoadData); 
+    appendChildFiledata(childLoadData)
 
     return ()=>{
       unsetFiledata();
@@ -34,9 +33,7 @@
   class:saveError={saveManager.saveError}
   class:saved={saveManager.saved} 
   id="saveIndicator" 
->
-</button>
-
+></button>
 
 <style>
 #branchList{

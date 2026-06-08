@@ -53,7 +53,7 @@ pub fn read_dir(app: AppHandle, path: PathBuf) -> Result<Vec<Branch>, Error> {
 #[tauri::command]
 pub fn load_dir(app: AppHandle, path: PathBuf) -> Result<Vec<LoadedBranch>, Error> {
   let app_data_path = app.path().app_data_dir()?;
-  let sys_path = app_data_path.join(path);
+  let sys_path = app_data_path.join(&path);
 
   println!("reading dir: {:?}", sys_path);
 
@@ -63,7 +63,9 @@ pub fn load_dir(app: AppHandle, path: PathBuf) -> Result<Vec<LoadedBranch>, Erro
   for file in files {
     let file = file?;
     if file.file_type()?.is_dir() {
-      file_data.push(load_branch(app.clone(), file.path())?);
+      let filename = file.file_name();
+      let path = path.join(filename);
+      file_data.push(load_branch(app.clone(), path)?);
     }
   }
 

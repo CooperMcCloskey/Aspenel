@@ -1,9 +1,8 @@
 <script lang="ts">
-  import type { BranchViewProps } from "../../../../_types/BranchViewTypes";
   import type { IconViewData } from "$lib/types/rustTypes/IconViewData";
   import { childFiledata } from "../../../../_logic/filedata.svelte";
   import BranchFinderIcon from "./BranchFinderIcon.svelte";
-  const {viewData}: BranchViewProps<IconViewData> = $props();
+  const {viewData}: {viewData: IconViewData} = $props();
 
   //TODO: currently repeated; see if this can be shared across components for performaance
   const childFiledataArray = $derived(Object.values(childFiledata))

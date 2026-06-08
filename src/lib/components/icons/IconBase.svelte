@@ -21,9 +21,6 @@
 </svg>
 
 <style>
-  .hover{
-    transition: var(--fastTransition) fill;
-  }
   .hover:hover{
     /* Hover color should be passed as a style prop */
     fill: var(--hoverColor, var(--black))

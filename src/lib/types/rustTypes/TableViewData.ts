@@ -2,4 +2,4 @@
 import type { Id } from "./Id";
 import type { Identifier } from "./Identifier";
 
-export type TableViewData = { identifier: Identifier, visible_property_ids: Array<Id>, };
+export type TableViewData = { identifier: Identifier, hidden_property_ids: Array<Id>, };

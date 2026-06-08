@@ -1,4 +1,4 @@
-import type { LoadedBranch } from "$lib/types/rustTypes/LoadedBranch";
+import type { LoadedBranch } from "../../../../../lib/types/rustTypes/LoadedBranch";
 import { ask } from "@tauri-apps/plugin-dialog";
 import { createBranch } from "../../_data/branch";
 import { appendChildFiledata, childFiledata, removeChildFiledata } from "../../_logic/filedata.svelte";

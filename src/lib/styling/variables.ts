@@ -32,7 +32,6 @@ export const stylingVars = {
   gridGapSize: 16,
   gridRows: 8,
   gridColumns: 6,
+  borderWidth: 2,
   iconSpacing: 2,
-
-  fastTransition: 0.3,
 }

@@ -1,7 +1,6 @@
 import type { LoadedBranch } from "../_types/LoadedBranch";
-import type { Branch } from "$lib/types/rustTypes/Branch";
+import type { Branch } from "../../../../lib/types/rustTypes/Branch";
 import { invoke } from "@tauri-apps/api/core";
-import { ask } from "@tauri-apps/plugin-dialog";
 
 export function newEmptyBranch(): Branch{
   return {

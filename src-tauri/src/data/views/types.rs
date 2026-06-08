@@ -18,6 +18,8 @@ pub struct IconViewData{
 }
 
 impl IconViewData {
+  //this function is necessary because the default home branch needs an icon view.
+  //ensure that this constructor for the iconView lines up with the one in the frontend.
     pub fn new_icon_view(name: &str) -> IconViewData {
       IconViewData { 
         identifier: Identifier::new_identity(name)
@@ -29,5 +31,5 @@ impl IconViewData {
 #[ts(export)]
 pub struct TableViewData{
   identifier: Identifier,
-  visible_property_ids: Vec<Id>
+  hidden_property_ids: Vec<Id>
 }

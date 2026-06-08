@@ -1,2 +1,3 @@
 TODO: Trash
 TODO: Sanatize user generated string
+TODO: Check bug, if you delete a branch, then create a new one with the same name, it has the deleted one's data

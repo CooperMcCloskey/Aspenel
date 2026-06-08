@@ -4,13 +4,20 @@ import { childFiledata, filedata } from "./filedata.svelte";
 export const saveManager = createSaveManager();
 
 export function createSaveManager(){
-  const editedChildIds = new Set<string>();
+  let editedChildIds = new Set<string>();
 
   let saving: boolean = $state(false);
   let saveError: boolean = $state(false);
   let saved: boolean = $state(true);
 
   return {
+    reload(){
+      editedChildIds = new Set<string>();
+      saving = false;
+      saveError = false;
+      saved = true;
+    },
+
     get saving() { return saving; },
     get saveError() { return saveError; },
     get saved() { return saved; },
@@ -27,6 +34,7 @@ export function createSaveManager(){
         invoke("save_branch", {branch: filedata.branch, path: filedata.path}), //save current branch
       
         [...editedChildIds].map((cId)=>{ //save edited children
+          //FIXME: broken
           const child = childFiledata[cId];
           return invoke<void>("save_branch", {branch: child.branch, path: child.path})
         })
