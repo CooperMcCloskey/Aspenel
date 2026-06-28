@@ -7,5 +7,5 @@ export const viewTypes = ["Icon", "Table"] satisfies readonly BranchViewType[];
 
 export type BranchViewData = WithoutTypeDiscriminator<BranchView>
 
-type BranchViewDataMap = {[T in BranchView as T["type"]]: Omit<T, "type">}
+type BranchViewDataMap = {[K in BranchView as K["type"]]: Omit<K, "type">}
 export type BranchViewComponent = {[K in BranchViewType]: Component<{viewData: BranchViewDataMap[K]}>}

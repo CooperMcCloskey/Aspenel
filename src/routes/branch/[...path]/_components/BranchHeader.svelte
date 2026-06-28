@@ -1,18 +1,13 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import { getBranchHref, separatePath } from "$lib/filesystem/utils";
+  import { branchHref, separatePath } from "$lib/filesystem/utils";
+    import { onCommit } from "$lib/utils/actions";
   import { invoke } from "@tauri-apps/api/core";
   
-  let {
-    name,
-    path, 
-  }: {
-    name: string, 
-    path: string, 
-  } = $props()
-  $effect(()=>{
-    nameHeader.value = name;
-  })
+  let {name, path}: {name: string, path: string} = $props()
+
+  //FIXME: this is probably wrong
+  $effect(()=>{nameHeader.value = name})
   
   let nameHeader: HTMLInputElement;
 
@@ -21,7 +16,7 @@
 
   async function nameUpdate() {
     const newPath = await invoke<string>("rename_file", {oldPath: path, newName: nameHeader.value}); //TODO: review this
-    goto(`/branch/${newPath}`);
+    goto(`/branch/${newPath}`); //TODO: save before changing the page
   }
 </script>
 
@@ -29,8 +24,8 @@
   <div id="pathDisplayContainer">
     {#each pathComponents as _, i}
       <div class="pathComponent">
-        <a class="path" href={getBranchHref(cumulativePathComponents[i])}>{pathComponents[i]}</a>
-        <a class="path pathSeparator" href={getBranchHref(cumulativePathComponents[i])}>{separator}</a>
+        <a class="path" href={branchHref(cumulativePathComponents[i])}>{pathComponents[i]}</a>
+        <a class="path pathSeparator" href={branchHref(cumulativePathComponents[i])}>{separator}</a>
       </div>
     {/each}
   </div>
@@ -39,8 +34,7 @@
     bind:this={nameHeader}
     type="text" 
     placeholder={`New Branch`} 
-    onkeydown={(e)=>{ if (e.key == "Enter") nameHeader.blur()}}
-    onblur={nameUpdate}
+    use:onCommit={nameUpdate}
   />
 </header>
 
@@ -49,7 +43,8 @@
     grid-area: 2/2/3/6;
   }
   input {
-    font-size: 2em;
+    font-size: var(--largeText);
+    font-weight: 400;
     margin-block-start: 0.67em;
     margin-block-end: 0.67em;
     text-overflow: ellipsis;
@@ -58,14 +53,13 @@
   #pathDisplayContainer{
     width: 100%;
     position: absolute;
-    top: 0px;
+    top: 4px;
     height: 16px;
   }
   .pathComponent{
     display: inline;
     color: var(--gray);
     position: relative;
-    font-family: 'JetBrains Mono';
     margin: 0;
     font-size: 0; /* eliminate space between component and separator */
   }

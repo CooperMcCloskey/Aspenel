@@ -2,6 +2,6 @@
 import type { BranchView } from "./BranchView";
 import type { Id } from "./Id";
 import type { PropertySchema } from "./PropertySchema";
-import type { PropertyValue } from "./PropertyValue";
+import type { Property } from "./Property";
 
-export type Branch = { id: string, color: string | null, child_view_data: Array<BranchView>, property_values: { [key in Id]: PropertyValue }, child_properties: Array<PropertySchema>, };
+export type Branch = { id: string, color: string | null, child_view_data: Array<BranchView>, property_values: { [key in Id]: Property }, child_properties: Array<PropertySchema>, };

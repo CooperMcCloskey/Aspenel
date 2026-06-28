@@ -1,5 +1,7 @@
 <script lang="ts">
-  const {valueData}: {valueData: String} = $props();
+  import type { LoadedProperty } from "../../../properties/types";
+
+  let {propertyData}: {propertyData: LoadedProperty<"Text">} = $props();
 </script>
 
 <div>

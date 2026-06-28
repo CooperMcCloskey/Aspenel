@@ -1,5 +1,7 @@
 <script lang="ts">
-  const {valueData}: {valueData: string[]}  = $props();
+  import type { LoadedProperty } from "../../../properties/types";
+
+  let {propertyData}: {propertyData: LoadedProperty<"MultiSelect">} = $props();
 </script>
 
 <div>

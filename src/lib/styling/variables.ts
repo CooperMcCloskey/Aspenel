@@ -22,7 +22,8 @@ export const stylingVars = {
     black: "#c5c5c5",
   },
 
-  fontFamily: "'Times New Roman', Times, serif",
+  fontFamily: "'Josefin Sans'",
+  monoFontFamily: "'JetBrains Mono'",
   headerText: 3,
   largeText: 2,
   mediumText: 1.375,
@@ -32,6 +33,7 @@ export const stylingVars = {
   gridGapSize: 16,
   gridRows: 8,
   gridColumns: 6,
+  tablePadding: 4,
   borderWidth: 2,
   iconSpacing: 2,
 }

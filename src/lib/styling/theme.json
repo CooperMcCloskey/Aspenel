@@ -24,7 +24,8 @@
     }
   },
   "font": {
-    "fontFamily": "'Times New Roman', Times, serif",
+    "fontFamily": "'Josefin Sans'",
+    "monoFontFamily": "'JetBrains Mono'",
     "headerText": "3rem",
     "largeText": "2rem",
     "mediumText": "1.375rem",
@@ -35,6 +36,7 @@
     "gridGapSize": "16px",
     "gridRows": "8",
     "gridColumns": "6",
+    "tablePadding": "4px",
     "borderWidth": "2px",
     "iconSpacing": "2px"
   }

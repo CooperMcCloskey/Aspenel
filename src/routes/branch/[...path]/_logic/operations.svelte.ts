@@ -3,7 +3,7 @@ import { saveManager } from "./saving.svelte";
 export type Operation = {undo: VoidFunction, redo: VoidFunction};
 
 export const stateManager = $state(createStateManager())
-
+//FIXME: make ctrl z ctrl shift z work.
 export function createStateManager(){
   const undoStack: Operation[] = [];
   const redoStack: Operation[] = [];

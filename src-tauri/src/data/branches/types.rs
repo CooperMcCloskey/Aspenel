@@ -7,7 +7,7 @@ use ts_rs::TS;
 use crate::{
   data::{
     branches::commands::find_color,
-    properties::{schemas::PropertySchema, values::PropertyValue},
+    properties::{schemas::PropertySchema, values::Property},
     views::types::BranchView,
   },
   error_handling::command_errors::Error,
@@ -69,7 +69,7 @@ pub struct Branch {
   id: Id,
   color: Option<String>, //If unset, it will inherit from a parent
   child_view_data: Vec<BranchView>,
-  property_values: HashMap<Id, PropertyValue>,
+  property_values: HashMap<Id, Property>,
   child_properties: Vec<PropertySchema>,
 }
 

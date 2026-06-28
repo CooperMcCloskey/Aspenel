@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { createContextMenu } from "$lib/contextMenus/rightClickHandler";
+  import { createContextMenu } from "$lib/utils/contextMenus";
   import { createViewMenu } from "../menus";
 
   
 </script>
 
-<button onclick={(e)=>{createContextMenu(e, createViewMenu())}}>Add sub-branches</button>
+<button onclick={(e)=>{createContextMenu(e, createViewMenu())}}>Add View</button>
 
 <style>
   button{

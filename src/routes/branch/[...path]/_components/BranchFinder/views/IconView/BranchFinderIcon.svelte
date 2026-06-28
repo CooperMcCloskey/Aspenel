@@ -1,27 +1,14 @@
 <script lang="ts">
-  import { Menu } from "@tauri-apps/api/menu";
-  import { createContextMenu } from "$lib/contextMenus/rightClickHandler";
+  import { createContextMenu } from "$lib/utils/contextMenus";
   import type { LoadedBranch } from "../../../../_types/LoadedBranch";
-  import { getBranchHref } from "$lib/filesystem/utils";
-    import { deleteBranch } from "../../operations";
+  import { branchHref } from "$lib/filesystem/utils";
+  import { branchEditMenu } from "../menus";
 
   //TODO: Make this icon able to be dragged and rearranged.
-
   let { branch }: {branch: LoadedBranch} = $props();
-
-  function createMenu(): Promise<Menu>{
-    return Menu.new({
-      items: [
-        { id: "rename", text: "Rename", action: ()=>{/*TODO: Add renaming*/} },
-        { id: "copy", text: "Copy", action: ()=>{/*TODO: Add copying pasting*/}},
-        { id: "delete", text: "Delete", action: ()=>{deleteBranch(branch)}}, //TODO: Make this an operation that only actually deletes on save.
-      ],
-    })
-  } 
-  
 </script>
 
-<a id="container" href={getBranchHref(branch.path)} oncontextmenu={(e)=>{createContextMenu(e, createMenu())}}>
+<a id="container" href={branchHref(branch.path)} oncontextmenu={(e)=>createContextMenu(e, branchEditMenu(branch))}>
   <header style="background: {branch.color}">
     <h2>{branch.filename}</h2>
   </header>
@@ -38,6 +25,7 @@
   }
   header{
     position: absolute;
+    font-family: var(--fontFamily);
     top: 0;
     width: 100%;
     height: var(--gridUnitHeight);
