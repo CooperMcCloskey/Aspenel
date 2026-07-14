@@ -6,7 +6,7 @@ use std::path::{Path, PathBuf};
 use serde::Serialize;
 use tauri::AppHandle;
 
-use crate::data::views::types::{BranchView, IconViewData};
+use crate::data::views::types::{ChildView, IconViewData};
 use crate::error_handling::command_errors::Error;
 
 use crate::data::branches::types::{Branch, LoadedBranch};
@@ -14,7 +14,7 @@ use crate::filesystem::path_utils::{get_sys_path, join_path, unique_path_name};
 
 #[tauri::command]
 pub fn create_home_branch(app: AppHandle) -> Result<(), Error> {
-  let default_view = BranchView::Icon(IconViewData::new_icon_view("Icon View"));
+  let default_view = ChildView::Icon(IconViewData::new_icon_view("Icon View"));
 
   let branch = Branch::new_branch()
     .set_color("var(--red)")
@@ -31,6 +31,7 @@ pub fn create_branch(app: AppHandle, path: PathBuf) -> Result<LoadedBranch, Erro
   Ok(fs_branch)
 }
 
+// TODO: implement atomic writes 
 #[tauri::command]
 pub fn save_branch(app: AppHandle, branch: Branch, path: &Path) -> Result<(), Error> {
   write_branch(app, path, branch)?;

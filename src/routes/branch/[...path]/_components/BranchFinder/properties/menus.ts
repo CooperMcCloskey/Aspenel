@@ -1,26 +1,25 @@
-import { propertyTypes } from "./types";
-import { createPropertySchema } from "./data";
+import { propertyTypes } from "$lib/data/property/types";
+import { createPropertySchema } from "$lib/data/property/schema/data";
 import { Menu } from "@tauri-apps/api/menu";
-import { attachPropertySchema } from "./operations";
-import type { PropertySchema } from "$lib/types/rustTypes/PropertySchema";
-import { renameElement } from "$lib/utils/uiLogic";
-
+import { attachProperty, deleteProperty, hideProperty, renameProperty } from "./operations";
+import type { Id } from "$lib/types/bindings/Id";
+import type { ChildView } from "$lib/types/bindings/ChildView";
 
 export function newPropertyMenu(): Promise<Menu>{
   return Menu.new({
     items: propertyTypes.map(type => ({
       text: `New ${type == "MultiSelect" ? "Multi-select" : type}`,
-      action: ()=>attachPropertySchema(createPropertySchema(type)),
+      action: ()=>attachProperty(createPropertySchema(type)),
     }))
   })
 }
 
-export function editPropertyMenu(propertyElement: HTMLSpanElement, property: PropertySchema): Promise<Menu>{
+export function editPropertyMenu(propertyElement: HTMLSpanElement, view: ChildView, propertyId: Id): Promise<Menu>{
   return Menu.new({
     items: [
-      {text: "Rename", action: ()=>renameElement(propertyElement, (name: string)=>property.identifier.name = name)},
-      {text: "Hide", action: ()=>{/*TODO:*/}},
-      {text: "Delete", action: ()=>{/*TODO:*/}}
+      { text: "Rename", action: ()=>renameProperty(propertyElement, propertyId) },
+      { text: "Hide", action: ()=>hideProperty(view.id, propertyId) },
+      { text: "Delete", action: ()=>deleteProperty(propertyId) }
     ]
   })
 }

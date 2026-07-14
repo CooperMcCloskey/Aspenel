@@ -20,7 +20,7 @@ pub fn read_branch(app: AppHandle, path: PathBuf) -> Result<Branch, Error> {
 #[tauri::command]
 pub fn load_branch(app: AppHandle, path: PathBuf) -> Result<LoadedBranch, Error> {
   let branch = read_branch(app.clone(), path.clone())?;
-  let filename: std::ffi::OsString = path
+  let filename = path
     .file_name()
     .ok_or(Error::from("Reading illegal file"))?
     .to_os_string();

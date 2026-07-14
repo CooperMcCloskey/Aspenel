@@ -1,12 +1,13 @@
 use serde::{Deserialize, Serialize};
 use ts_rs::TS;
 
-use crate::utils::types::{Id, Identifier};
+use crate::utils::types::{Id};
 
 #[derive(Serialize, Deserialize, TS)]
 //TODO: add the option for forumlas instead of just numbers.
 pub struct NumberSchema {
-  identifier: Identifier,
+  id: Id,
+  name: String,
   min: Option<f64>,
   max: Option<f64>,
 }
@@ -15,7 +16,8 @@ pub struct NumberSchema {
 
 #[derive(Serialize, Deserialize, TS)]
 pub struct TextSchema {
-  identifier: Identifier,
+  id: Id,
+  name: String,
 }
 
 // ------------------------------------------------------
@@ -37,7 +39,8 @@ enum TimeFormat {
 
 #[derive(Serialize, Deserialize, TS)]
 pub struct DateSchema {
-  identifier: Identifier,
+  id: Id,
+  name: String,
   date_format: DateFormat,
   time_format: TimeFormat,
 }
@@ -53,20 +56,23 @@ struct SelectOption {
 
 #[derive(Serialize, Deserialize, TS)]
 struct SelectCategory {
-  identifier: Identifier,
+  id: Id,
+  name: String,
   color: String,
 }
 
 #[derive(Serialize, Deserialize, TS)]
 pub struct SelectSchema {
-  identifier: Identifier,
+  id: Id,
+  name: String,
   options: Vec<SelectOption>,
   categories: Vec<SelectCategory>,
 }
 
 #[derive(Serialize, Deserialize, TS)]
 pub struct MultiSelectSchema {
-  identifier: Identifier,
+  id: Id,
+  name: String,
   options: Vec<SelectOption>,
   categories: Vec<SelectCategory>,
 }

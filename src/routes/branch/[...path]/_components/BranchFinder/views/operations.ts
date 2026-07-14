@@ -1,17 +1,5 @@
-import type { BranchView } from "../../../../../../lib/types/rustTypes/BranchView";
-import { filedata } from "../../../_logic/filedata.svelte";
-import { stateManager, type Operation } from "../../../_logic/operations.svelte";
+import type { ChildView } from "$lib/types/bindings/ChildView";
+import type { Mutable } from "$lib/types/utils";
+import { stateManager } from "../../../../../../lib/logic/state.svelte";
 
-export function attachView(view: BranchView) {
-  stateManager.pushOperation({
-    redo: ()=>{
-      filedata.branch.child_view_data.push(view)
-    },
-    undo: ()=>{
-      filedata.branch.child_view_data = filedata.branch.child_view_data.filter(
-        v => v.identifier.id !== view.identifier.id
-      );
-    }
-  });
-}
-
+export function attachView(view: Mutable<ChildView>){ stateManager.applyOperationRecipe((draft)=>draft.node.filedata.child_views[view.id] = view) }

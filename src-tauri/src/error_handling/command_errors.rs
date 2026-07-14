@@ -1,7 +1,7 @@
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
   #[error(transparent)]
-  Io(#[from] std::io::Error),
+  Io(std::io::Error),
 
   #[error(transparent)]
   Tauri(#[from] tauri::Error),
@@ -21,6 +21,15 @@ impl serde::Serialize for Error {
     eprintln!("\x1b[31mERROR: {}\x1b[m", self);
     serializer.serialize_str(self.to_string().as_ref())
   }
+}
+
+impl From<std::io::Error> for Error {
+    #[track_caller]
+    fn from(value: std::io::Error) -> Self {
+        let loc = std::panic::Location::caller();
+        eprintln!("\x1b[33mIO ERROR at {}:{} -> {}\x1b[m", loc.file(), loc.line(), value);
+        Error::Io(value)
+    }
 }
 
 impl From<&str> for Error {

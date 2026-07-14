@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { onCommit } from "$lib/utils/actions";
-  import { checkNumberValue } from "../../../properties/data";
-  import { updatePropertyValue } from "../../../properties/operations";
-  import type { LoadedProperty } from "../../../properties/types";
+  import type { LoadedPropertyValue } from "$lib/data/property/value/types";
+  import { checkNumberValue } from "$lib/data/property/value/variants/number";
+  import { onCommit } from "$lib/logic/actions";
+  import { updatePropertyValue } from "../../../properties/operations";;
 
-  let {propertyData}: {propertyData: LoadedProperty<"Number">} = $props();
+  let {propertyData}: {propertyData: LoadedPropertyValue<"Number">} = $props();
 
   let validInput = $state(true);
 
   function updateValue(e: FocusEvent, el: HTMLElement){
     let input = el as HTMLInputElement
     try{ 
-      propertyData.value = checkNumberValue(propertyData.schema, input.value);
+      propertyData.value = checkNumberValue(propertyData.schemaData, input.value);
       updatePropertyValue(propertyData);
     }
     catch{ input.value = `${propertyData.value ?? ""}` }
@@ -21,15 +21,16 @@
   function checkInputValue(e: {currentTarget: HTMLInputElement}){
     const input = e.currentTarget;
     try {
-      checkNumberValue(propertyData.schema, input.value);
+      checkNumberValue(propertyData.schemaData, input.value);
       validInput = true;
     }
-    catch{ validInput = false; }
+    catch (error) { console.error(error); validInput = false; }
   }
 
 </script>
 
 <div>
+  <!-- FIXME: operation being pushed on focus -->
   <input 
     value={propertyData.value} 
     use:onCommit={updateValue} 

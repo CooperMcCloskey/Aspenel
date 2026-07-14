@@ -10,13 +10,15 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "tauri": "tauri",
-    "updateStylingVariables": "node ./updateStylingVariables.js"
+    "gen-style-vars": "node scripts/generateStyleVariables.mjs",
+    "gen-bindings": "cd src-tauri && cargo test export_bindings && cd .. && node scripts/setBindingsImmutable.mjs"
   },
   "license": "MIT",
   "dependencies": {
     "@tauri-apps/api": "^2.10.1",
     "@tauri-apps/plugin-dialog": "^2.6.0",
     "@tauri-apps/plugin-opener": "^2",
+    "immer": "^11.1.11",
     "ulid": "^3.0.2"
   },
   "devDependencies": {

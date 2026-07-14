@@ -1,11 +1,11 @@
-import type { BranchView } from "$lib/types/rustTypes/BranchView";
-import type { WithoutTypeDiscriminator } from "$lib/types/utils";
+import type { ChildViewType, TypedChildView } from "$lib/data/childView/types";
 import type { Component } from "svelte";
+import IconView from "./IconView/IconView.svelte";
+import TableView from "./TableView/TableView.svelte";
 
-export type BranchViewType = BranchView["type"];
-export const viewTypes = ["Icon", "Table"] satisfies readonly BranchViewType[];
+export type ChildViewComponent<T extends ChildViewType> = Component<{ viewData: TypedChildView<T>; }>;
 
-export type BranchViewData = WithoutTypeDiscriminator<BranchView>
-
-type BranchViewDataMap = {[K in BranchView as K["type"]]: Omit<K, "type">}
-export type BranchViewComponent = {[K in BranchViewType]: Component<{viewData: BranchViewDataMap[K]}>}
+export const childViewComponentMap: {[T in ChildViewType]: ChildViewComponent<T>} = {
+  Icon: IconView,
+  Table: TableView,
+};

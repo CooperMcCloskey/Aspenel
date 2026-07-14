@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { LoadedProperty } from "../../../properties/types";
+  import type { LoadedPropertyValue } from "$lib/data/property/value/types";
 
-  let {propertyData}: {propertyData: LoadedProperty<"Select">} = $props();
+  let {propertyData}: {propertyData: LoadedPropertyValue<"Select">} = $props();
 </script>
 
 <div>

@@ -1,24 +1,21 @@
-<script lang="ts">
+<script lang="ts" generics="T extends PropertyType">
   import AddIcon from "$lib/components/icons/AddIcon.svelte";
   import IconBase from "$lib/components/icons/IconBase.svelte";
-  import type { TableViewData } from "$lib/types/rustTypes/TableViewData";
-  import { childFiledata, filedata } from "../../../../_logic/filedata.svelte";
+  import type { TableViewData } from "$lib/types/bindings/TableViewData";
   import { editPropertyMenu, newPropertyMenu } from "../../properties/menus";
-  import { createContextMenu } from "$lib/utils/contextMenus"; 
-  import type { PropertySchema } from "$lib/types/rustTypes/PropertySchema";
-  import { branchHref } from "$lib/filesystem/utils";
+  import { createContextMenu } from "$lib/logic/contextMenus"; 
+  import { branchHref } from "$lib/logic/filesystem";
   import { branchEditMenu } from "../menus";
-  import { newBranch } from "../../operations";
-  import { getLoadedProperty, getPropertyValueComponent } from "../../properties/data";
-  import type { LoadedPropertyUnion } from "../../properties/types";
+  import { newChild } from "../../operations";
+  import type { PropertyType } from "$lib/data/property/types";
+  import { type PropertyValueComponent, propertyValueComponentMap } from "../../properties/types";
+  import { getLoadedProperty } from "$lib/data/property/value/data";
+  import { stateManager } from "$lib/logic/state.svelte";
+  const { viewData }: { viewData:  TableViewData} = $props();
 
-  const { viewData }: { viewData: TableViewData} = $props();
-
-  //TODO: currently repeated; see if this can be shared across components for performaance)
-  let childFiledataArray = $derived(Object.values(childFiledata))
-  let visibleProperties: PropertySchema[] = $derived(
-    filedata.branch.child_properties.filter((p)=>!viewData.hidden_property_ids.includes(p.identifier.id))
-  )
+  stateManager.loadChildren();
+  const children = $derived(stateManager.activeChildren)
+  const visibleProperties = $derived(Object.values(stateManager.activeBranch.filedata.properties).filter((p)=>!viewData.hidden_property_ids.includes(p.id)))
 
 </script>
 
@@ -33,9 +30,9 @@
         <th 
           role="button" 
           onclick={()=>{}} 
-          oncontextmenu={(e)=>createContextMenu(e, editPropertyMenu(e.currentTarget, property))}
+          oncontextmenu={(e)=>createContextMenu(e, editPropertyMenu(e.currentTarget, {type: "Table", ...viewData}, property.id))}
         >
-          {property.identifier.name}
+          {property.name}
         </th>
       {/each}
 
@@ -48,14 +45,22 @@
   </thead>
   
   <tbody>
-    {#each childFiledataArray as child}
+    {#each children as child}
       <tr>
-        <td class="startCell"><a oncontextmenu={(e)=>createContextMenu(e, branchEditMenu(child))} href={branchHref(child.path)}>{child.filename}</a></td>
+        <td class="startCell">
+          <a
+            oncontextmenu={(e)=>createContextMenu(e, branchEditMenu([child.filedata.id]))} 
+            href={branchHref(child.path)}
+          >
+            {child.filename}
+          </a>
+        </td>
 
         {#each visibleProperties as property}
-          {@const PropertyValue = getPropertyValueComponent(property.type)}
+          {@const PropertyValue: PropertyValueComponent<T> = propertyValueComponentMap[property.type as T]} <!-- T is not fixed. It is cast to the given property type as needed -->
+            
           <td style="padding: 0px">
-            <PropertyValue propertyData={getLoadedProperty(property.type, property, child.branch) as LoadedPropertyUnion}></PropertyValue> <!--Union cast is necessary because typescript can't correlate that the type of the component and the type of the data match-->
+            <PropertyValue propertyData={getLoadedProperty<T>(property, [child.filedata.id])}></PropertyValue>
           </td>
         {/each}
 
@@ -66,7 +71,7 @@
 
   <tfoot>
     <tr>
-      <td class="startCell"><button onclick={()=>newBranch(filedata.path)}><IconBase hasHoverEffect={true}><AddIcon/></IconBase></button></td>
+      <td class="startCell"><button onclick={()=>newChild()}><IconBase hasHoverEffect={true}><AddIcon/></IconBase></button></td>
 
       {#each visibleProperties}
         <td></td>
@@ -92,7 +97,7 @@
   th{ 
     border-top: none; 
     user-select: none;
-    -webkit-user-select: none;
+    -webkit-user-select: none; /* Necessary for mac right now but maybe there is a better choice? */
   }
   tfoot > tr > td{ border-bottom: none; } 
   .startCell{ border-left: none; }

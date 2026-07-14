@@ -1,15 +1,17 @@
 <script lang="ts">
-  import type { IconViewData } from "$lib/types/rustTypes/IconViewData";
-  import { childFiledata } from "../../../../_logic/filedata.svelte";
+  import { stateManager } from "$lib/logic/state.svelte";
+  import type { IconViewData } from "$lib/types/bindings/IconViewData";;
+  import { onMount } from "svelte";
   import BranchFinderIcon from "./BranchFinderIcon.svelte";
   const {viewData}: {viewData: IconViewData} = $props();
 
-  //TODO: currently repeated; see if this can be shared across components for performaance
-  const childFiledataArray = $derived(Object.values(childFiledata))
+  stateManager.loadChildren();
+  const children = $derived(stateManager.activeChildren)
+  
 </script>
 
 <div id="container">
-  {#each childFiledataArray as child}
+  {#each children as child}
     <BranchFinderIcon branch={child}/>
   {/each}
 </div>

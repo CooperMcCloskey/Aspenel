@@ -1,17 +1,12 @@
 export const ssr = false;
 import { invoke } from "@tauri-apps/api/core";
 import type { PageLoad } from "./$types";
-import type { LoadedBranch } from "./_types/LoadedBranch";
-import { loadBranch, loadDir } from "./_logic/loading";
-import { saveManager } from "./_logic/saving.svelte";
+import { loadBranch } from "$lib/logic/filesystem";
+import type { LoadedBranchNode } from "$lib/data/branch/types";
+import { stateManager } from "$lib/logic/state.svelte";
 
-//TODO: make children lazy load as they become visible to improve FCP time
-export const load: PageLoad<{
-  branchLoadData: LoadedBranch
-  childLoadData: Record<string, LoadedBranch>
-}> = async ({params}) => {
-  saveManager.reload();
-  const branchLoadData = await loadBranch(params.path).catch(async (err1)=>{
+export const load: PageLoad<LoadedBranchNode> = async ({params}) => {
+  const branch = await loadBranch(params.path).catch(async (err1)=>{
     if(params.path == "Home"){
       await invoke('create_home_branch')
       return loadBranch(params.path).catch((err2)=>{
@@ -21,7 +16,6 @@ export const load: PageLoad<{
     }
     else{ throw err1 }
   })
-  const childLoadData = await loadDir(params.path, branchLoadData.color);
-  return {branchLoadData, childLoadData}
+  return {node: branch}
 };
 

@@ -1,0 +1,32 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "typescript",
+      "tsconfig": "tsconfig.json",
+      "problemMatcher": ["$tsc"],
+      "group": "build",
+      "label": "tsc: check all files"
+    },
+    {
+      "label": "gen-bindings",
+      "type": "shell",
+      "command": "npm run gen-bindings",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "gen-style-vars",
+      "type": "shell",
+      "command": "npm run gen-style-vars",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+  ]
+}

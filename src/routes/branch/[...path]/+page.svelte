@@ -1,37 +1,32 @@
 <script lang="ts">
+  import { stateManager } from "$lib/logic/state.svelte";
   import BranchFinder from "./_components/BranchFinder/BranchFinder.svelte";
   import BranchHeader from "./_components/BranchHeader.svelte";
-  import { filedata, appendChildFiledata, setFiledata, unsetChildFiledata, unsetFiledata } from "./_logic/filedata.svelte";
-  import { saveManager } from "./_logic/saving.svelte";
   
   let { data } = $props();
-  let { branchLoadData, childLoadData } = $derived(data)
-
-  $effect(()=>{ 
-    setFiledata(branchLoadData); 
-    appendChildFiledata(childLoadData)
-
+  $effect(()=>{
+    stateManager.new(data)
     return ()=>{
-      unsetFiledata();
-      unsetChildFiledata();
+      stateManager.new()
     }
   })
+
 </script>
 
-<BranchHeader name={filedata.filename} path={filedata.path ?? ""}/>
+<BranchHeader name={stateManager.activeBranch.filename} path={stateManager.activeBranch.path ?? ""}/>
 
 <div id="branchList">
-  {#if filedata.path !== undefined}
+  {#if stateManager.activeBranch.path !== undefined}
     <BranchFinder/>
   {/if}
 </div>
 
 <button 
   title="Save" 
-  onclick={()=>{saveManager.save()}} 
-  class:saving={saveManager.saving} 
-  class:saveError={saveManager.saveError}
-  class:saved={saveManager.saved} 
+  onclick={()=>{stateManager.save()}} 
+  class:saving={stateManager.saveState == "saving"} 
+  class:saveError={stateManager.saveState == "save error"}
+  class:saved={stateManager.saveState == "saved"} 
   id="saveIndicator" 
 ></button>
 

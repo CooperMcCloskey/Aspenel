@@ -2,4 +2,4 @@ TODO: Trash
 TODO: Sanatize user generated string
 TODO: Check bug, if you delete a branch, then create a new one with the same name, it has the deleted one's data
 TODO: Only render visible table cells?
-TODO: Don't delete undo history on save
+TODO: Don't just read all children on load, give a list of the necessary ones.

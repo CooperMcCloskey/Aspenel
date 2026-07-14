@@ -1,6 +1,8 @@
-import type { LoadedBranch } from "./rustTypes/LoadedBranch";
+import type { Draft } from "immer";
+import type { LoadedBranch } from "./bindings/LoadedBranch";
 
 export type WithoutTypeDiscriminator<T> = T extends any ? Omit<T, "type"> : never;
+export type Mutable<T> = Draft<T>;
 
 export function isLoadedBranch(arg: any): arg is LoadedBranch {
   return arg && typeof arg === "object" && "branch" in arg;

@@ -1,34 +1,33 @@
-<script lang="ts">
-  import IconView from "./views/IconView/IconView.svelte";
-  import TableView from "./views/TableView/TableView.svelte";
-  import type { Component } from "svelte";
-  import CreateView from "./views/CreateView/CreateView.svelte";
+<script lang="ts" generics="ActiveViewType extends ChildViewType">
   import IconBase from "$lib/components/icons/IconBase.svelte";
   import NewBranchIcon from "$lib/components/icons/NewBranchIcon.svelte";
   import MoreHorizontalIcon from "$lib/components/icons/MoreHorizontalIcon.svelte";
-  import type { BranchView } from "$lib/types/rustTypes/BranchView";
-  import { filedata } from "../../_logic/filedata.svelte";
-  import { newBranch } from "./operations";
-  import type { BranchViewComponent } from "./views/types";
-  
-  const viewComponentMap: BranchViewComponent = {
-    Icon: IconView,
-    Table: TableView,
-  };
+  import type { ChildView } from "$lib/types/bindings/ChildView";
+  import  { type ChildViewType, type TypedChildView } from "../../../../../lib/data/childView/types";
+  import { getChildView } from "../../../../../lib/data/childView/data";
+  import CreateView from "./views/CreateView/CreateView.svelte";
+  import type { ChildViewComponent } from "./views/types";
+  import { stateManager } from "$lib/logic/state.svelte";
+  import { newChild } from "./operations";
 
-  let defaultActiveViewData: null | BranchView = $derived(filedata.branch.child_view_data[0] ?? null)
-  let selectedActiveViewData: null | BranchView = $state(null);
-  let activeViewData: null | BranchView = $derived(selectedActiveViewData ?? defaultActiveViewData)
-  let ActiveView: Component<any> = $derived(viewComponentMap[activeViewData?.type] ?? CreateView) //TODO: Potentially get rid of Component<any> in the future
+  let defaultActiveView: null | ChildView = $derived(Object.values(stateManager.activeBranch.filedata.child_views)[0] ?? null) //TODO: check if this needs sorting
+  let selectedActiveView: null | ChildView = $state(null);
+  let activeView: null | TypedChildView<ActiveViewType> = $derived(selectedActiveView ?? defaultActiveView) as null | TypedChildView<ActiveViewType>
+  let ActiveViewComponent: null | ChildViewComponent<ActiveViewType> = $derived(activeView === null ? null : getChildView(activeView.type))
+  
 </script>
 
 <div id="container">
   <header>
-    <button title="More..." onclick={()=>{}}><IconBase hasHoverEffect={true}><MoreHorizontalIcon/></IconBase></button>
-    <button title="New Branch" onclick={()=>newBranch(filedata.path)}><IconBase hasHoverEffect={true}><NewBranchIcon/></IconBase></button>
+    <button title="More..."><IconBase hasHoverEffect={true}><MoreHorizontalIcon/></IconBase></button>
+    <button title="New Branch" onclick={()=>newChild()}><IconBase hasHoverEffect={true}><NewBranchIcon/></IconBase></button>
   </header>
   <div id="fileViews">
-    <ActiveView viewData={activeViewData}/>
+    {#if activeView === null}
+      <CreateView/>
+    {:else}
+      <ActiveViewComponent viewData={activeView}/>
+    {/if}
   </div>
 </div>
 
