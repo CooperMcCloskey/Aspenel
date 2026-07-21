@@ -1,4 +1,3 @@
-
 import { getNode } from "$lib/data/branch/data";
 import type { IdPath, LoadedBranchNode } from "$lib/data/branch/types";
 import type { Id } from "$lib/types/bindings/Id";
@@ -7,9 +6,6 @@ import { invoke } from "@tauri-apps/api/core";
 import type { SaveState } from "./state.svelte";
 import type { Immutable } from "immer";
 
-export function joinPath(base: string, part: string): Promise<string> {
-  return invoke<string>("join_path", {base, part}); //TODO: check if this can run without an aysnc invoke call
-}
 
 export async function separatePath(path: string): Promise<{separator: string, pathComponents: {single: string, cumulative: string}[]}>{
   const separator = await invoke<string>("get_path_separator");

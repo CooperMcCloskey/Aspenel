@@ -6,13 +6,14 @@ use crate::utils::types::{Id};
 #[derive(Serialize, Deserialize, TS)]
 #[ts(export)]
 #[serde(tag = "type")]
+//TODO: generalize into UiComponent
 pub enum ChildView{
   Icon(IconViewData),
   Table(TableViewData)
 }
 
 impl ChildView {
-  pub fn get_id(&self) -> Id {
+  pub fn id(&self) -> Id {
     match self {
       ChildView::Icon(data)=>data.id,
       ChildView::Table(data)=>data.id

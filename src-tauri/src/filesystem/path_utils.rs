@@ -1,47 +1,30 @@
-use std::{ffi::OsString, path::{MAIN_SEPARATOR, Path, PathBuf}};
+use std::{path::{Path, PathBuf}};
 
 use tauri::{AppHandle, Manager};
 
 use crate::error_handling::command_errors::Error;
 
-#[tauri::command]
-pub fn join_path(base: PathBuf, part: PathBuf) -> PathBuf{
-  base.join(part)
-}
-
-#[tauri::command]
-pub fn get_path_components(path: PathBuf) -> Vec<String>{
-  path.components()
-    .map(|c| c.as_os_str().to_string_lossy().into_owned())
-    .collect()
-}
-
-#[tauri::command]
-pub fn get_path_separator() -> char{
-  return MAIN_SEPARATOR
-}
-
-pub fn unique_path_name(parent_path: &PathBuf, name: &str) -> OsString {
-  let path = parent_path.join(name);
-  if !path.exists() {
-    return OsString::from(name);
+pub fn unique_path_name(app: AppHandle, path: &Path) -> Result<PathBuf, Error> {
+  let sys_path = get_sys_path(app.clone(), path)?;
+  if !sys_path.exists() {
+    return Ok(path.to_path_buf());
   }
-
+  
   let mut counter = 1;
-  let stem = path.file_stem().and_then(|s| s.to_str()).unwrap_or(name);
-
-  let ext = path.extension().and_then(|e| e.to_str());
-
+  let ext = path.extension().map(|e| e.to_string_lossy());
+  let stem = path.file_stem().unwrap().to_string_lossy();
+  
   loop {
-    let test_name = match ext {
+    let test_name = match &ext {
       Some(ext) => format!("{stem} ({counter}).{ext}"),
       None => format!("{stem} ({counter})"),
     };
 
-    let test_path = parent_path.join(&test_name);
-
-    if !test_path.exists() {
-      return OsString::from(test_name);
+    let test_path = path.parent().unwrap().join(test_name);
+    let test_sys_path = get_sys_path(app.clone(), &test_path)?;
+    
+    if !test_sys_path.exists() {
+      return Ok(test_path)
     }
     counter += 1;
   }
@@ -49,5 +32,5 @@ pub fn unique_path_name(parent_path: &PathBuf, name: &str) -> OsString {
 
 pub fn get_sys_path(app: AppHandle, path: &Path) -> Result<PathBuf, Error> {
   let app_data_path = app.path().app_data_dir()?;
-  Ok(app_data_path.join(&path))
+  Ok(app_data_path.join(path))
 }
