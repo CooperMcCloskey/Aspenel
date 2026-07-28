@@ -1,7 +1,6 @@
 <script lang="ts" generics="T extends PropertyType">
   import AddIcon from "$lib/components/icons/AddIcon.svelte";
   import IconBase from "$lib/components/icons/IconBase.svelte";
-  import type { TableViewData } from "$lib/types/bindings/TableViewData";
   import { editPropertyMenu, newPropertyMenu } from "../../properties/menus";
   import { createContextMenu } from "$lib/logic/contextMenus"; 
   import { branchHref } from "$lib/logic/filesystem";
@@ -11,11 +10,15 @@
   import { type PropertyValueComponent, propertyValueComponentMap } from "../../properties/types";
   import { getLoadedProperty } from "$lib/data/property/value/data";
   import { stateManager } from "$lib/logic/state.svelte";
+    import type { TableViewData } from "$lib/bindings";
   const { viewData }: { viewData:  TableViewData} = $props();
+  $effect(()=>{
+    viewData;
+    stateManager.loadChildren();
+  })
 
-  stateManager.loadChildren();
   const children = $derived(stateManager.activeChildren)
-  const visibleProperties = $derived(Object.values(stateManager.activeBranch.filedata.properties).filter((p)=>!viewData.hidden_property_ids.includes(p.id)))
+  const visibleProperties = $derived(Object.values(stateManager.rootBranch.properties).filter((p)=>!viewData.hidden_property_ids.includes(p.id)))
 
 </script>
 
@@ -49,7 +52,7 @@
       <tr>
         <td class="startCell">
           <a
-            oncontextmenu={(e)=>createContextMenu(e, branchEditMenu([child.filedata.id]))} 
+            oncontextmenu={(e)=>createContextMenu(e, branchEditMenu([child.id]))} 
             href={branchHref(child.path)}
           >
             {child.filename}
@@ -60,7 +63,7 @@
           {@const PropertyValue: PropertyValueComponent<T> = propertyValueComponentMap[property.type as T]} <!-- T is not fixed. It is cast to the given property type as needed -->
             
           <td style="padding: 0px">
-            <PropertyValue propertyData={getLoadedProperty<T>(property, [child.filedata.id])}></PropertyValue>
+            <PropertyValue propertyData={getLoadedProperty<T>(property, [child.id])}></PropertyValue>
           </td>
         {/each}
 

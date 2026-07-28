@@ -2,8 +2,7 @@ import { propertyTypes } from "$lib/data/property/types";
 import { createPropertySchema } from "$lib/data/property/schema/data";
 import { Menu } from "@tauri-apps/api/menu";
 import { attachProperty, deleteProperty, hideProperty, renameProperty } from "./operations";
-import type { Id } from "$lib/types/bindings/Id";
-import type { ChildView } from "$lib/types/bindings/ChildView";
+import type { ChildView, Id } from "$lib/bindings";
 
 export function newPropertyMenu(): Promise<Menu>{
   return Menu.new({

@@ -1,39 +1,31 @@
 import { getNode } from "$lib/data/branch/data";
-import type { IdPath, LoadedBranchNode } from "$lib/data/branch/types";
-import type { Id } from "$lib/types/bindings/Id";
-import type { LoadedBranch } from "$lib/types/bindings/LoadedBranch";
-import { invoke } from "@tauri-apps/api/core";
+import type { IdPath, StateTreeNode, StateTreeRoot } from "$lib/data/branch/types";
 import type { SaveState } from "./state.svelte";
 import type { Immutable } from "immer";
+import { sep as pathSeparator } from '@tauri-apps/api/path';
+import { commands } from "$lib/bindings";
 
-
-export async function separatePath(path: string): Promise<{separator: string, pathComponents: {single: string, cumulative: string}[]}>{
-  const separator = await invoke<string>("get_path_separator");
-  const singlePathComponents: string[] = await invoke("get_path_components", {path}); //TODO: check if this could be done without a rust command
+export async function separatePath(path: string): Promise<{single: string, cumulative: string}[]>{
+  const separator = pathSeparator()
+  const singlePathComponents: string[] = path.split(separator)
   const pathComponents = singlePathComponents.map((single, i) => ({single, cumulative: singlePathComponents.slice(0, i+1).join(separator)}));
 
-  return {separator, pathComponents}
+  return pathComponents
 }
+
+export function joinPath(part1: string, part2: string): string { return part1.concat(pathSeparator(), part2) }
 
 export function branchHref(path: string){
   return path == "" ? "/branch/Home" : `/branch/${path}`;
 }
 
-export async function loadBranch(path: string): Promise<LoadedBranch> {
-  return invoke<LoadedBranch>('load_branch', { path }); //TODO: optimize to reduce the number of branch reads
-}
-
-export async function loadDir(path: string, color: string): Promise<Record<Id, LoadedBranchNode>> {
-  const children = await invoke<LoadedBranch[]>('load_dir', { path });
-  const entries = children.map(c => [c.filedata.id, {node: c, children: {}}]);
-  return Object.fromEntries(entries);
-}
-
-export async function saveTree(tree: LoadedBranchNode, editedBranchPaths: Immutable<IdPath[]>, rootPath: string): Promise<SaveState>{
+export async function saveTree(tree: StateTreeRoot, editedBranchPaths: Immutable<IdPath[]>, rootPath: string): Promise<SaveState>{
   let savePromise = Promise.all(
-    [...editedBranchPaths].map((path)=>{
-      const branch = getNode(tree, path).node
-      return invoke<void>("save_branch", {branch: branch.filedata, path: branch.path})
+    [...editedBranchPaths].map(async (path)=>{
+      const node = getNode(tree, path)
+      const branch = node.branch
+      const branchResult = await commands.writeBranch(branch, branch.path)
+      if(branchResult.status === "error") throw new Error(branchResult.error);
     })
   )
 

@@ -1,4 +1,4 @@
-import type { ChildView } from "$lib/types/bindings/ChildView";
+import type { ChildView } from "$lib/bindings";
 
 export type ChildViewType = ChildView["type"];
 export const viewTypes = ["Icon", "Table"] satisfies readonly ChildViewType[];

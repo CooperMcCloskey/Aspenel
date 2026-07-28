@@ -1,23 +1,25 @@
-import type { LoadedBranch } from "../../../../../lib/types/bindings/LoadedBranch";
 import { ask } from "@tauri-apps/plugin-dialog";;
 import { stateManager } from "../../../../../lib/logic/state.svelte";
-import { invoke } from "@tauri-apps/api/core";
-import { createBranch, getNode } from "$lib/data/branch/data";
-import type { Mutable } from "$lib/types/utils";
-import type { IdPath, LoadedBranchNode } from "$lib/data/branch/types";
-import type { Id } from "$lib/types/bindings/Id";
+import { getNode } from "$lib/data/branch/data";
+import type { IdPath, NodeChildren, ParentStateTreeVariant } from "$lib/data/branch/types";
+import { commands, type LoadedBranch, type LoadedRootBranch } from "$lib/bindings";
+import { joinPath } from "$lib/logic/filesystem";
 
 export async function newChild(parentPath?: IdPath){
   const parent = stateManager.getNode(parentPath);
-  const child = await createBranch(parent.node.path) as Mutable<LoadedBranch>;
+
+  const childResult = await commands.createBranch(joinPath(parent.branch.path, "New Branch"));
+  if(childResult.status === "error") throw new Error(childResult.error);
+  const child = childResult.data
+
   stateManager.applyOperationRecipe((draft)=>{
-    const parent = getNode(draft, parentPath);
-    parent.children = {...parent.children, [child.filedata.id]: {node: child, children: {}}}
-  });
+    const parent = getNode<true>(draft, parentPath);
+    parent.children = {...parent.children, [child.id]: {branch: {...child, type: "LoadedBranch"}, children: {}}}
+  });  
 }
 
 export async function deleteChild(childPath: IdPath){
-  const child = stateManager.getNode(childPath).node
+  const child = stateManager.getNode(childPath).branch
   //TODO: make this send the branch to a trash folder rather than outright deleting it.
   const deleteConfirmed = await ask(`Are you sure you want to delete "${child.filename}"?`, {
     title: "Aspenel",
@@ -26,9 +28,11 @@ export async function deleteChild(childPath: IdPath){
   if(!deleteConfirmed) return
 
   stateManager.applyOperationRecipe((draft)=>{
-    invoke('delete_file', {path: child.path}); //TODO: side effect in the operation. Not sure how to deal with it
+    const deleteResult = commands.deleteFile(child.path); //TODO: side effect in the operation. Not sure how to deal with it
+    deleteResult.then((result)=>{if(result.status === "error") throw new Error(result.error)})
+
     const parentPath = childPath.slice(0,-1);
-    const parent = getNode(draft, parentPath) as {node: LoadedBranch, children: Record<Id, LoadedBranchNode>}
-    delete parent.children[child.filedata.id];
+    const parent = getNode(draft, parentPath) as ParentStateTreeVariant //Cast to make children a required field
+    delete parent.children[child.id];
   })
 }

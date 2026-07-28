@@ -1,5 +1,5 @@
+import type { PropertyValue } from "$lib/bindings";
 import type { IdPath } from "$lib/data/branch/types";
-import type { PropertyValue } from "$lib/types/bindings/PropertyValue";
 import type { TypedPropertySchemaData } from "../schema/types";
 import type { PropertyType } from "../types";
 

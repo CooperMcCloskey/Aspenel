@@ -1,10 +1,9 @@
 use serde::{Deserialize, Serialize};
-use ts_rs::TS;
+use specta::Type;
 
 use crate::utils::types::{Id};
 
-#[derive(Serialize, Deserialize, TS)]
-#[ts(export)]
+#[derive(Serialize, Deserialize, Type)]
 #[serde(tag = "type")]
 //TODO: generalize into UiComponent
 pub enum ChildView{
@@ -21,8 +20,7 @@ impl ChildView {
   }
 }
 
-#[derive(Serialize, Deserialize, TS)]
-#[ts(export)]
+#[derive(Serialize, Deserialize, Type)]
 pub struct IconViewData{
   id: Id,
   name: String,
@@ -41,8 +39,7 @@ impl IconViewData {
     }
 }
 
-#[derive(Serialize, Deserialize, TS)]
-#[ts(export)]
+#[derive(Serialize, Deserialize, Type)]
 pub struct TableViewData{
   id: Id,
   name: String,

@@ -1,5 +1,3 @@
-import type { Branch } from "$lib/types/bindings/Branch";
-import type { PropertySchema } from "$lib/types/bindings/PropertySchema";
 import type { LoadedPropertyValue } from "./types";
 import type { TypedPropertySchemaData } from "../schema/types";
 import type { TypedPropertyValue } from "./types";
@@ -12,6 +10,7 @@ import { checkSelectValue } from "./variants/select";
 import { checkTextValue } from "./variants/text";
 import type { IdPath } from "$lib/data/branch/types";
 import { stateManager } from "$lib/logic/state.svelte";
+import type { PropertySchema } from "$lib/bindings";
 
 export type PropertyCheckFunction<T extends PropertyType> = (schema: TypedPropertySchemaData<T>, value: unknown)=>TypedPropertyValue<T>
 export const propertyCheckMap: { [T in PropertyType]: PropertyCheckFunction<T> } = {
@@ -28,8 +27,8 @@ export function checkProperty<T extends PropertyType>(type: T, schema: TypedProp
 
 //TODO: Important; Make this function actually check rigorously and have fallbacks for when it fails
 export function getProperty<T extends PropertyType>(type: T, property: TypedPropertySchemaData<T>, branchPath: IdPath): TypedPropertyValue<T> | null {
-  let branch = stateManager.getNode(branchPath).node;
-  let value = branch.filedata.property_values[property.id]?.value ?? null;
+  let branch = stateManager.getNode(branchPath).branch;
+  let value = branch.property_values[property.id]?.value ?? null;
   return value == null ? null : checkProperty<T>(type, property, value);
 }
 

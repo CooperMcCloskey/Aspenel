@@ -1,8 +1,8 @@
-import type { ChildView } from "$lib/types/bindings/ChildView";
 import { type ChildViewType } from "./types";
 import { childViewComponentMap, type ChildViewComponent } from "../../../routes/branch/[...path]/_components/BranchFinder/views/types";
 import { ulid } from "ulid";
 import type { Mutable } from "$lib/types/utils";
+import type { ChildView } from "$lib/bindings";
 
 export function createChildView(type: ChildViewType): Mutable<ChildView> { 
   const name = `${type} View`;

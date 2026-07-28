@@ -1,39 +1,21 @@
-#[derive(Debug, thiserror::Error)]
-pub enum Error {
-  #[error(transparent)]
-  Io(std::io::Error),
+use serde::Serialize;
+use specta::Type;
 
-  #[error(transparent)]
-  Tauri(#[from] tauri::Error),
+#[derive(Debug, Serialize, Type)]
+#[serde(transparent)]
+pub struct Error(String);
 
-  #[error(transparent)]
-  SerdeJson(#[from] serde_json::Error),
-
-  #[error("{0}")]
-  Message(String),
-}
-
-impl serde::Serialize for Error {
-  fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-  where
-    S: serde::ser::Serializer,
-  {
-    eprintln!("\x1b[31mERROR: {}\x1b[m", self);
-    serializer.serialize_str(self.to_string().as_ref())
-  }
-}
-
-impl From<std::io::Error> for Error {
-    #[track_caller]
-    fn from(value: std::io::Error) -> Self {
-        let loc = std::panic::Location::caller();
-        eprintln!("\x1b[33mIO ERROR at {}:{} -> {}\x1b[m", loc.file(), loc.line(), value);
-        Error::Io(value)
+impl Error {
+    pub fn msg(s: impl Into<String>) -> Self {
+        Error(s.into())
     }
 }
 
-impl From<&str> for Error {
-  fn from(value: &str) -> Self {
-    Error::Message(value.to_string())
-  }
+impl<E> From<E> for Error
+where
+    E: std::error::Error,
+{
+    fn from(e: E) -> Self {
+        Error(e.to_string())
+    }
 }

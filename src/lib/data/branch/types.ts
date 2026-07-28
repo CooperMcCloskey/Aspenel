@@ -1,7 +1,12 @@
-import type { Id } from "$lib/types/bindings/Id";
-import type { LoadedBranch } from "$lib/types/bindings/LoadedBranch";
-import type { Immutable } from "immer";
+import type { Branch, Id, LoadedBranch, LoadedBranchVariant, LoadedRootBranch, RootBranch } from "$lib/bindings";
 
-export type LoadedBranchNode = {node: LoadedBranch, children?: Record<Id, LoadedBranchNode>};
-export type LoadedBranchNodeWithChildren = Required<LoadedBranchNode>
-export type IdPath = Immutable<Id[]>;
+export type UntypedBranchVariant = Branch | LoadedBranch | RootBranch | LoadedRootBranch
+
+export type NodeChildren = Record<Id, StateTreeNode>
+
+export interface StateTreeRoot extends StateTreeVariant {readonly branch: LoadedRootBranch & {type: "LoadedRootBranch"}, readonly children?: NodeChildren};
+export interface StateTreeNode extends StateTreeVariant {readonly branch: LoadedBranch & {type: "LoadedBranch"}, readonly children?: NodeChildren}
+export type StateTreeVariant = {readonly branch: LoadedBranchVariant, readonly children?: NodeChildren}
+export type ParentStateTreeVariant = Required<StateTreeVariant>
+
+export type IdPath = readonly Id[];

@@ -13,10 +13,10 @@
 
 </script>
 
-<BranchHeader name={stateManager.activeBranch.filename} path={stateManager.activeBranch.path ?? ""}/>
+<BranchHeader name={stateManager.rootBranch.filename} path={stateManager.rootBranch.path ?? ""}/>
 
 <div id="branchList">
-  {#if stateManager.activeBranch.path !== undefined}
+  {#if stateManager.rootBranch.path !== undefined}
     <BranchFinder/>
   {/if}
 </div>

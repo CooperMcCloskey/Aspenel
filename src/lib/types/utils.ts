@@ -1,5 +1,5 @@
+import type { LoadedBranch } from "$lib/bindings";
 import type { Draft } from "immer";
-import type { LoadedBranch } from "./bindings/LoadedBranch";
 
 export type WithoutTypeDiscriminator<T> = T extends any ? Omit<T, "type"> : never;
 export type Mutable<T> = Draft<T>;

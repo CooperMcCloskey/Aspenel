@@ -1,37 +1,36 @@
-import type { Branch } from "$lib/types/bindings/Branch";
-import type { LoadedBranch } from "$lib/types/bindings/LoadedBranch";
-import { invoke } from "@tauri-apps/api/core";
-import type { LoadedBranchNode, IdPath } from "./types";
-import { stateManager } from "$lib/logic/state.svelte";
-import { loadDir } from "$lib/logic/filesystem";
+import type { LoadedFields, RootFields } from "$lib/bindings";
+import type { Mutable } from "$lib/types/utils";
+import type { StateTreeNode, IdPath, StateTreeRoot, UntypedBranchVariant, StateTreeVariant } from "./types";
 
-export function newEmptyBranch(): Branch {
+export function newEmptyLoadedFields(): LoadedFields {
+  return {
+    filename: "...",
+    computed_color: "var(--gray)",
+    path: "loading"
+  }
+}
+
+export function newEmptyRootFields(): RootFields {
+  return {
+    properties: {},
+    ui_components: {}
+  }
+}
+
+export function newEmptyBranch<T extends UntypedBranchVariant>(): T {
   return {
     id: "0",
     color: "var(--gray)",
-    child_views: {},
     property_values: {},
-    properties: {}
-  };
+    ...newEmptyLoadedFields(),
+    ...newEmptyRootFields()
+  } as T;
 }
 
-export function newEmptyLoadedBranch(): LoadedBranch {
-  return {
-    filedata: newEmptyBranch(),
-    filename: "...",
-    color: "var(--gray)",
-    path: "..."
-  };
-}
+export function newStateTree(): StateTreeRoot { return {branch: newEmptyBranch()} }
 
-export function newEmptyLoadedBranchNode(): LoadedBranchNode { return {node: newEmptyLoadedBranch()} }
-
-export async function createBranch(path: string): Promise<LoadedBranch>{
-  return await invoke<LoadedBranch>(`create_branch`, {path})
-}
-
-export function getNode(tree: LoadedBranchNode, path?: IdPath): LoadedBranchNode{
-  let node = tree;
+export function getNode<M extends boolean = false>(tree: StateTreeRoot, path?: IdPath): M extends true ? Mutable<StateTreeVariant> : StateTreeVariant{
+  let node: StateTreeNode | StateTreeRoot = tree;
   for(const id of path ?? []) {
     if(node.children === undefined || node.children[id] === undefined) throw new Error(`Invalid Path: ${path}`)
     node = node.children[id];

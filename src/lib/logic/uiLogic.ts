@@ -1,8 +1,8 @@
-import type { LoadedBranchNode } from "$lib/data/branch/types";
+import type { StateTreeRoot } from "$lib/data/branch/types";
 import type { Mutable } from "$lib/types/utils";
 import { stateManager } from "./state.svelte";
 
-export function renameElement(el: HTMLElement, renameOperation: (name: string, draft: Mutable<LoadedBranchNode>)=>void){
+export function renameElement(el: HTMLElement, renameOperation: (name: string, draft: Mutable<StateTreeRoot>)=>void){
   el.contentEditable = "true";
   el.focus();
 
@@ -16,6 +16,8 @@ export function renameElement(el: HTMLElement, renameOperation: (name: string, d
   el.onkeydown = (e)=>{ if (e.key == "Enter") el.blur()}
   el.onblur = ()=>{
     el.contentEditable = "false";
-    stateManager.applyOperationRecipe((draft) => renameOperation(el.innerText, draft))
+    stateManager.applyOperationRecipe((draft) => {
+      renameOperation(el.innerText, draft)
+    });
   }
 }

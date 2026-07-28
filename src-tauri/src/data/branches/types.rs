@@ -1,7 +1,7 @@
 use std::{collections::HashMap, path::PathBuf};
 
 use serde::{Deserialize, Serialize};
-use ts_rs::TS;
+use specta::Type;
 
 use crate::{
   data::{
@@ -11,60 +11,62 @@ use crate::{
   utils::types::Id,
 };
 
-#[derive(Serialize, Deserialize, TS)]
+#[derive(Serialize, Deserialize, Type)]
+pub struct LoadedFields {
+  pub filename: String,
+  pub path: PathBuf,
+  pub computed_color: String,
+}
+
+#[derive(Serialize, Deserialize, Type)]
 pub struct RootFields {
   pub properties: HashMap<Id, PropertySchema>,
   pub ui_components: HashMap<Id, ChildView>,
 }
 
-#[derive(Serialize, Deserialize, TS)]
-pub struct LoadedFields {
-  pub filename: String,
-  pub path: PathBuf,
-  pub color: String,
-}
-
-#[derive(Serialize, Deserialize, TS)]
-#[ts(export)]
+#[derive(Serialize, Deserialize, Type)]
 pub struct Branch {
-  #[ts(type = "string")]
   pub id: Id,
   pub color: Option<String>, //If unset, it will inherit from a parent
   pub property_values: HashMap<Id, PropertyValue>,
 }
 
-#[derive(Serialize, Deserialize, TS)]
-#[ts(export)]
+#[derive(Serialize, Deserialize, Type)]
 pub struct LoadedBranch {
   #[serde(flatten)]
-  #[ts(flatten)]
   pub branch: Branch,
   #[serde(flatten)]
-  #[ts(flatten)]
   pub load_data: LoadedFields,
 }
 
-#[derive(Serialize, Deserialize, TS)]
-#[ts(export)]
+#[derive(Serialize, Deserialize, Type)]
 pub struct RootBranch {
   #[serde(flatten)]
-  #[ts(flatten)]
   pub branch: Branch,
   #[serde(flatten)]
-  #[ts(flatten)]
   pub root_data: RootFields,
 }
 
-#[derive(Serialize, Deserialize, TS)]
-#[ts(export)]
+#[derive(Serialize, Deserialize, Type)]
 pub struct LoadedRootBranch {
   #[serde(flatten)]
-  #[ts(flatten)]
   pub branch: Branch,
   #[serde(flatten)]
-  #[ts(flatten)]
   pub load_data: LoadedFields,
   #[serde(flatten)]
-  #[ts(flatten)]
   pub root_data: RootFields,
+}
+
+#[derive(Serialize, Deserialize, Type)]
+#[serde(tag = "type")]
+pub enum UnloadedBranchVariant {
+  Branch(Branch),
+  RootBranch(RootBranch)
+}
+
+#[derive(Serialize, Deserialize, Type)]
+#[serde(tag = "type")]
+pub enum LoadedBranchVariant {
+  LoadedBranch(LoadedBranch),
+  LoadedRootBranch(LoadedRootBranch)
 }

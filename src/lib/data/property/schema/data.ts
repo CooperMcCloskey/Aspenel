@@ -1,8 +1,8 @@
-import type { PropertySchema } from "$lib/types/bindings/PropertySchema";
 import type { TypedPropertySchemaData } from "./types";
 import type { PropertyType } from "../types";
 import { ulid } from "ulid";
 import type { Mutable } from "$lib/types/utils";
+import type { PropertySchema } from "$lib/bindings";
 
 
 export function splitSchema<T extends PropertyType>(schema: PropertySchema): { type: T; schemaData: TypedPropertySchemaData<T>; } {
@@ -13,7 +13,7 @@ export function splitSchema<T extends PropertyType>(schema: PropertySchema): { t
 export function createPropertySchema(type: PropertyType): Mutable<PropertySchema> {
   const name = `New ${type == "MultiSelect" ? "Multi-select" : type}`;
   const id = ulid();
-
+ 
   switch (type) {
     case "Number": return {
       type,

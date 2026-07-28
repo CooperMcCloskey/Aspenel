@@ -15,7 +15,7 @@ pub fn create_dir(app: AppHandle, test_path: PathBuf, strict_name: bool) -> Resu
   };
 
   let sys_path = get_sys_path(app, &path)?;
-  fs::create_dir_all(sys_path);
+  fs::create_dir_all(sys_path)?;
 
   Ok(path)
 }
@@ -25,10 +25,13 @@ pub fn write_file(
   path: &Path,
   data: impl Serialize,
 ) -> Result<(), Error> {
-  let filename = path.file_stem().unwrap().to_string_lossy().into_owned();
+  println!("Writing file at: {path:?}");
+  let filename = path.file_name().unwrap().to_string_lossy().into_owned();
   let temp_filename = format!("temp_{filename}");
-  let sys_path = get_sys_path(app.clone(), &path.join(filename))?;
-  let temp_sys_path = get_sys_path(app.clone(), &path.join(temp_filename))?;
+
+  let parent_path = path.parent().unwrap();
+  let sys_path = get_sys_path(app.clone(), &parent_path.join(filename))?;
+  let temp_sys_path = get_sys_path(app.clone(), &parent_path.join(temp_filename))?;
 
   let json = serde_json::to_vec(&data)?;
   let mut file = File::create(&temp_sys_path)?;

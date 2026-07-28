@@ -1,10 +1,9 @@
 use serde::{Deserialize, Serialize};
-use ts_rs::TS;
+use specta::Type;
 
 use crate::utils::types::{Id};
 
-#[derive(Serialize, Deserialize, TS)]
-//TODO: add the option for forumlas instead of just numbers.
+#[derive(Serialize, Deserialize, Type)]
 pub struct NumberSchema {
   id: Id,
   name: String,
@@ -14,7 +13,7 @@ pub struct NumberSchema {
 
 // ------------------------------------------------------
 
-#[derive(Serialize, Deserialize, TS)]
+#[derive(Serialize, Deserialize, Type)]
 pub struct TextSchema {
   id: Id,
   name: String,
@@ -22,7 +21,7 @@ pub struct TextSchema {
 
 // ------------------------------------------------------
 
-#[derive(Serialize, Deserialize, TS)]
+#[derive(Serialize, Deserialize, Type)]
 enum DateFormat {
   Relative,
   Text,
@@ -31,13 +30,13 @@ enum DateFormat {
   YMD,
 }
 
-#[derive(Serialize, Deserialize, TS)]
+#[derive(Serialize, Deserialize, Type)]
 enum TimeFormat {
   H24,
   H12,
 }
 
-#[derive(Serialize, Deserialize, TS)]
+#[derive(Serialize, Deserialize, Type)]
 pub struct DateSchema {
   id: Id,
   name: String,
@@ -47,21 +46,20 @@ pub struct DateSchema {
 
 // ------------------------------------------------------
 
-#[derive(Serialize, Deserialize, TS)]
+#[derive(Serialize, Deserialize, Type)]
 struct SelectOption {
   color: String,
-  #[ts(type = "string")]
   category_id: Option<Id>,
 }
 
-#[derive(Serialize, Deserialize, TS)]
+#[derive(Serialize, Deserialize, Type)]
 struct SelectCategory {
   id: Id,
   name: String,
   color: String,
 }
 
-#[derive(Serialize, Deserialize, TS)]
+#[derive(Serialize, Deserialize, Type)]
 pub struct SelectSchema {
   id: Id,
   name: String,
@@ -69,7 +67,7 @@ pub struct SelectSchema {
   categories: Vec<SelectCategory>,
 }
 
-#[derive(Serialize, Deserialize, TS)]
+#[derive(Serialize, Deserialize, Type)]
 pub struct MultiSelectSchema {
   id: Id,
   name: String,
@@ -79,7 +77,7 @@ pub struct MultiSelectSchema {
 
 // ------------------------------------------------------
 
-#[derive(Serialize, Deserialize, TS)]
+#[derive(Serialize, Deserialize, Type)]
 #[serde(tag = "type")]
 pub enum PropertySchema {
   Number(NumberSchema),

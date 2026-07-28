@@ -1,11 +1,13 @@
 <script lang="ts">
+  import type { IconViewData } from "$lib/bindings";
   import { stateManager } from "$lib/logic/state.svelte";
-  import type { IconViewData } from "$lib/types/bindings/IconViewData";;
-  import { onMount } from "svelte";
   import BranchFinderIcon from "./BranchFinderIcon.svelte";
   const {viewData}: {viewData: IconViewData} = $props();
-
-  stateManager.loadChildren();
+  $effect(()=>{
+    viewData;
+    stateManager.loadChildren();
+  })
+  
   const children = $derived(stateManager.activeChildren)
   
 </script>

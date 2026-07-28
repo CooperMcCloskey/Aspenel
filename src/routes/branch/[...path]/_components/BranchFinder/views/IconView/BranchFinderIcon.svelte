@@ -1,16 +1,15 @@
 <script lang="ts">
+  import type { LoadedBranch } from "$lib/bindings";
   import { createContextMenu } from "$lib/logic/contextMenus";
   import { branchHref } from "$lib/logic/filesystem";
-    import { stateManager } from "$lib/logic/state.svelte";
-  import type { LoadedBranch } from "$lib/types/bindings/LoadedBranch";
   import { branchEditMenu } from "../menus";
 
   //TODO: Make this icon able to be dragged and rearranged.
   let { branch }: {branch: LoadedBranch} = $props();
 </script>
 
-<a id="container" href={branchHref(branch.path)} oncontextmenu={(e)=>createContextMenu(e, branchEditMenu([branch.filedata.id]))}>
-  <header style="background: {branch.color}">
+<a id="container" href={branchHref(branch.path)} oncontextmenu={(e)=>createContextMenu(e, branchEditMenu([branch.id]))}>
+  <header style="background: {branch.computed_color}">
     <h2>{branch.filename}</h2>
   </header>
 </a>

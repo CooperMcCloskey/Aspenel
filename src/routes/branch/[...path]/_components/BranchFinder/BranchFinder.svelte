@@ -2,15 +2,15 @@
   import IconBase from "$lib/components/icons/IconBase.svelte";
   import NewBranchIcon from "$lib/components/icons/NewBranchIcon.svelte";
   import MoreHorizontalIcon from "$lib/components/icons/MoreHorizontalIcon.svelte";
-  import type { ChildView } from "$lib/types/bindings/ChildView";
   import  { type ChildViewType, type TypedChildView } from "../../../../../lib/data/childView/types";
   import { getChildView } from "../../../../../lib/data/childView/data";
   import CreateView from "./views/CreateView/CreateView.svelte";
   import type { ChildViewComponent } from "./views/types";
   import { stateManager } from "$lib/logic/state.svelte";
   import { newChild } from "./operations";
+    import type { ChildView } from "$lib/bindings";
 
-  let defaultActiveView: null | ChildView = $derived(Object.values(stateManager.activeBranch.filedata.child_views)[0] ?? null) //TODO: check if this needs sorting
+  let defaultActiveView: null | ChildView = $derived(Object.values(stateManager.rootBranch.ui_components)[0] ?? null)
   let selectedActiveView: null | ChildView = $state(null);
   let activeView: null | TypedChildView<ActiveViewType> = $derived(selectedActiveView ?? defaultActiveView) as null | TypedChildView<ActiveViewType>
   let ActiveViewComponent: null | ChildViewComponent<ActiveViewType> = $derived(activeView === null ? null : getChildView(activeView.type))

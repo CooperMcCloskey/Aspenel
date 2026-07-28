@@ -1,21 +1,28 @@
 export const ssr = false;
-import { invoke } from "@tauri-apps/api/core";
 import type { PageLoad } from "./$types";
-import { loadBranch } from "$lib/logic/filesystem";
-import type { LoadedBranchNode } from "$lib/data/branch/types";
-import { stateManager } from "$lib/logic/state.svelte";
+import type { StateTreeRoot } from "$lib/data/branch/types";
+import { commands } from "$lib/bindings";
+import { newEmptyRootFields } from "$lib/data/branch/data";
 
-export const load: PageLoad<LoadedBranchNode> = async ({params}) => {
-  const branch = await loadBranch(params.path).catch(async (err1)=>{
-    if(params.path == "Home"){
-      await invoke('create_home_branch')
-      return loadBranch(params.path).catch((err2)=>{
-        if(err1 instanceof Error && err2 instanceof Error) throw new Error(err1.message + "; " + err2.message)
-        else throw err2;
-      })
-    }
-    else{ throw err1 }
-  })
-  return {node: branch}
+export const load: PageLoad<StateTreeRoot> = async ({params}) => {
+  console.log(`loading page: ${params.path}`)
+  try { return await loadRootBranch(params.path) }
+  catch(e1) {
+    if(params.path !== "Home") throw e1;
+    try { return await createHomeBranch() }
+    catch (e2) { throw new AggregateError([e1, e2])}
+  }
 };
 
+async function loadRootBranch(path: string): Promise<StateTreeRoot> {
+  const loadResult = await commands.loadRootBranch(path);
+  if(loadResult.status === "error") throw new Error(`Failed to load ${path} as root branch.`)
+  const {type, ...branch} = {...loadResult.data}
+  return {branch: { ...newEmptyRootFields(), ...branch, type: "LoadedRootBranch"}}
+}
+
+async function createHomeBranch(): Promise<StateTreeRoot>{
+  const createHomeResult = await commands.createHomeBranch()
+  if(createHomeResult.status === "ok") return await loadRootBranch("Home");
+  else {throw createHomeResult.error}
+}

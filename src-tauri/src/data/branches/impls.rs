@@ -4,9 +4,9 @@ use tauri::AppHandle;
 
 use crate::{
   data::{
-    branches::types::{Branch, LoadedBranch, LoadedFields, LoadedRootBranch, RootBranch, RootFields}, views::types::{ChildView, IconViewData},
+    branches::types::{Branch, LoadedBranch, LoadedBranchVariant, LoadedFields, LoadedRootBranch, RootBranch, RootFields, UnloadedBranchVariant}, views::types::{ChildView, IconViewData},
   }, error_handling::command_errors::Error, filesystem::{
-    constants::{BRANCH_PATH, ROOT_DATA_PATH}, read::find_color, write::write_file,
+    constants::{BRANCH_PATH, ROOT_DATA_PATH}, path_utils::get_sys_path, read::{find_color, read_file}, write::write_file,
   }, utils::types::Id,
 };
 
@@ -17,6 +17,9 @@ impl Branch {
       property_values: HashMap::new(),
       color: None,
     }
+  }
+  pub fn read(app: AppHandle, path: &Path) -> Result<Branch, Error>{
+    read_file::<Branch>(app, &path.join(BRANCH_PATH))
   }
 }
 
@@ -46,6 +49,16 @@ impl RootBranch {
       },
     }
   }
+
+  pub fn read(app: AppHandle, path: &Path) -> Result<UnloadedBranchVariant, Error>{
+    let branch = read_file::<Branch>(app.clone(), &path.join(BRANCH_PATH))?;
+    let root_data_path = &path.join(ROOT_DATA_PATH);
+    let root_data_sys_path = get_sys_path(app.clone(), root_data_path)?;
+    
+    if !root_data_sys_path.exists() { return Ok(UnloadedBranchVariant::Branch(branch)) }
+    let root_data = read_file::<RootFields>(app,root_data_path)?;
+    Ok(UnloadedBranchVariant::RootBranch(RootBranch { branch, root_data }))
+  }
 }
 
 impl LoadedFields {
@@ -53,7 +66,7 @@ impl LoadedFields {
     Ok(LoadedFields {
       filename: path.file_name().unwrap().to_string_lossy().into(),
       path: path.into(),
-      color: color.unwrap_or(find_color(app, path.into())?),
+      computed_color: color.unwrap_or(find_color(app, path.into())?),
     })
   }
 }
@@ -86,6 +99,16 @@ impl Loadable for RootBranch {
   }
 }
 
+impl Loadable for UnloadedBranchVariant {
+  type Loaded = LoadedBranchVariant;
+  fn load(self, app: AppHandle, path: &Path) -> Result<Self::Loaded, Error> {
+    match self {
+        UnloadedBranchVariant::Branch(b) => Ok(LoadedBranchVariant::LoadedBranch(b.load(app, path)?)),
+        UnloadedBranchVariant::RootBranch(rb) => Ok(LoadedBranchVariant::LoadedRootBranch(rb.load(app, path)?))
+    }
+  }
+}
+
 pub trait Writeable {
   fn write(&self, app: AppHandle, path: &Path) -> Result<(), Error>;
 }
@@ -96,9 +119,37 @@ impl Writeable for Branch {
   }
 }
 
+impl Writeable for RootFields {
+  fn write(&self, app: AppHandle, path: &Path) -> Result<(), Error> {
+    write_file(app,  &path.join(ROOT_DATA_PATH), &self)
+  }
+}
+
 impl Writeable for RootBranch {
   fn write(&self, app: AppHandle, path: &Path) -> Result<(), Error> {
-    write_file(app.clone(), &path.join(BRANCH_PATH), &self.branch)?;
-    write_file(app.clone(), &path.join(ROOT_DATA_PATH), &self.root_data)
+    self.branch.write(app.clone(), path)?;
+    self.root_data.write(app, path)
+  }
+}
+
+impl Writeable for LoadedBranch {
+  fn write(&self, app: AppHandle, path: &Path) -> Result<(), Error> {
+      self.branch.write(app, path)
+  }
+}
+
+impl Writeable for LoadedRootBranch {
+  fn write(&self, app: AppHandle, path: &Path) -> Result<(), Error> {
+    self.branch.write(app.clone(), path)?;
+    self.root_data.write(app, path)
+  }
+}
+
+impl Writeable for LoadedBranchVariant {
+  fn write(&self, app: AppHandle, path: &Path) -> Result<(), Error> {
+      match self {
+        LoadedBranchVariant::LoadedBranch(lb) => lb.write(app, path),
+        LoadedBranchVariant::LoadedRootBranch(lrb) => lrb.write(app, path)
+      }
   }
 }

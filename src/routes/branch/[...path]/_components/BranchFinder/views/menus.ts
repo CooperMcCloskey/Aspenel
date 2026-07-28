@@ -2,7 +2,6 @@ import { Menu } from "@tauri-apps/api/menu"
 import { attachView } from "./operations"
 import { viewTypes } from "../../../../../../lib/data/childView/types"
 import { createChildView } from "../../../../../../lib/data/childView/data"
-import type { LoadedBranch } from "$lib/types/bindings/LoadedBranch"
 import { deleteChild } from "../operations"
 import type { IdPath } from "$lib/data/branch/types"
 

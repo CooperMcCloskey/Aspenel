@@ -2,7 +2,9 @@
   import { goto } from "$app/navigation";
   import { branchHref, separatePath } from "$lib/logic/filesystem";
   import { onCommit } from "$lib/logic/actions";
-  import { invoke } from "@tauri-apps/api/core";
+  import { commands } from "$lib/bindings";
+  import { sep as separator } from "@tauri-apps/api/path"
+
   
   let {name, path}: {name: string, path: string} = $props()
 
@@ -12,10 +14,10 @@
   let nameHeader: HTMLInputElement;
 
   //separating path for the navigation at the top of the table.
-  const {separator, pathComponents } = $derived(await separatePath(path))
+  const pathComponents = $derived(await separatePath(path))
 
   async function nameUpdate() {
-    const newPath = await invoke<string>("rename_file", {oldPath: path, newName: nameHeader.value}); //TODO: review this
+    const newPath = await commands.renameFile(path, nameHeader.value);
     goto(`/branch/${newPath}`); //TODO: save before changing the page
   }
 </script>
@@ -25,7 +27,7 @@
     {#each pathComponents as pathComponent}
       <div class="pathComponent">
         <a class="path" href={branchHref(pathComponent.cumulative)}>{pathComponent.single}</a>
-        <a class="path pathSeparator" href={branchHref(pathComponent.cumulative)}>{separator}</a>
+        <a class="path pathSeparator" href={branchHref(pathComponent.cumulative)}>{separator()}</a>
       </div>
     {/each}
   </div>

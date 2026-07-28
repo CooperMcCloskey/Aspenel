@@ -1,10 +1,9 @@
-import { getNode, newEmptyLoadedBranchNode } from "$lib/data/branch/data";
-import type { LoadedBranchNode, IdPath } from "$lib/data/branch/types";
-import type { Id } from "$lib/types/bindings/Id";
-import type { LoadedBranch } from "$lib/types/bindings/LoadedBranch";
+import { getNode, newStateTree } from "$lib/data/branch/data";
+import type { IdPath, NodeChildren, StateTreeRoot, StateTreeVariant } from "$lib/data/branch/types";
 import { applyPatches, produce, produceWithPatches, type Draft, type Immutable, type Patch } from "immer";
-import { loadDir, saveTree } from "./filesystem";
+import { saveTree } from "./filesystem";
 import type { Mutable } from "$lib/types/utils";
+import { commands, type Id, type LoadedBranch, type LoadedRootBranch } from "$lib/bindings";
 
 export type SaveState = "edited" | "saving" | "saved" | "save error";
 
@@ -13,13 +12,13 @@ type Operation = {
   inversePatches: Patch[];
 };
 
-type State = Immutable<{
-  tree: LoadedBranchNode;
+type State = {
+  readonly tree: StateTreeRoot;
   saveState: SaveState;
   editedPaths: IdPath[];
   undoStack: Operation[];
   redoStack: Operation[];
-}>;
+};
 
 export const stateManager = createStateManager();
 
@@ -29,9 +28,9 @@ export function createStateManager(){
   
   let state: State = $state.raw(createNewState());
 
-  function createNewState(tree?: LoadedBranchNode): State{
+  function createNewState(tree?: StateTreeRoot): State{
     return {
-      tree: tree ?? newEmptyLoadedBranchNode(),
+      tree: tree ?? newStateTree(),
       saveState: "saved",
       editedPaths: [],
       undoStack: [],
@@ -56,26 +55,36 @@ export function createStateManager(){
 
   return {
     get state(): State{ return state },
-    get tree(): LoadedBranchNode{ return state.tree },
-    get activeBranch(): LoadedBranch{ return state.tree.node },
-    get activeChildren(): LoadedBranch[]{ return state.tree.children ? Object.values(state.tree.children).map(c=>c.node) : []},
+    get tree(): StateTreeRoot{ return state.tree },
+    get rootBranch(): LoadedRootBranch{ return state.tree.branch },
+    get activeChildren(): LoadedBranch[]{ return state.tree.children ? Object.values(state.tree.children).map(c=>c.branch) : []},
     get saveState(): SaveState{ return state.saveState },
     
-    new(tree?: LoadedBranchNode){ state = createNewState(tree) },
+    new(tree?: StateTreeRoot){ state = createNewState(tree) },
 
     getNode(path?: IdPath){ return getNode(state.tree, path) },
 
     async loadChildren(path?: IdPath){ 
       const parent = this.getNode(path)
       if(parent.children) return;
-      const children = await loadDir(parent.node.path, parent.node.color); 
+      console.log(`Loading children at ${parent.branch.path}`);
+      
+      const children = await commands.loadDir(parent.branch.path); 
+      if(children.status === "error") throw children.error;
+
+      const childrenAsNodes = Object.entries(children.data)
+        .reduce<NodeChildren>((acc, [id, child])=>{
+          acc[id] = {branch: {...child, type: "LoadedBranch"}}
+          return acc
+        }, {});
+
       this.applyOperationRecipe((draft)=>{
-        const parent = getNode(draft, path);
-        parent.children = children;
+        const parent = getNode<true>(draft, path);
+        parent.children = childrenAsNodes;
       })
     },
 
-    async applyOperationRecipe(operationRecipe: (draft: Draft<LoadedBranchNode>)=>void) {
+    async applyOperationRecipe(operationRecipe: (draft: Draft<StateTreeRoot>)=>void) {
       const [tree, patches, inversePatches] = produceWithPatches(state.tree, (draft)=>{operationRecipe(draft)});
       
       const history = {patches, inversePatches, editedChildren: [...state.editedPaths]}
@@ -86,7 +95,6 @@ export function createStateManager(){
       const redoStack = [] as Operation[];
 
       state = {tree, saveState, editedPaths: editedChildPaths, undoStack, redoStack}
-      console.log(state)
     },
 
     undo() {
@@ -119,9 +127,8 @@ export function createStateManager(){
     },
 
     async save(){
-      console.log("saving")
       state = produce(state, (draft)=>{draft.saveState = "saving"});
-      const result = await saveTree(state.tree, state.editedPaths, state.tree.node.path)
+      const result = await saveTree(state.tree, state.editedPaths, state.tree.branch.path)
       state = produce(state, (draft)=>{draft.saveState = result});
     }
   }

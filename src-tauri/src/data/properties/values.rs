@@ -1,12 +1,11 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use ts_rs::TS;
+use specta::Type;
 
 use crate::utils::types::Id;
 
-#[derive(Serialize, Deserialize, TS)]
+#[derive(Serialize, Deserialize, Type)]
 #[serde(tag = "type", content = "value")]
-#[ts(export)]
 pub enum PropertyValue {
   Number(f64),
   Text(String),
