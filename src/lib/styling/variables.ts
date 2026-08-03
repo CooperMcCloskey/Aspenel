@@ -24,6 +24,7 @@ export const stylingVars = {
 
   fontFamily: "'Josefin Sans'",
   monoFontFamily: "'JetBrains Mono'",
+  lineHeight: 1.2,
   headerText: 3,
   largeText: 2,
   mediumText: 1.375,
@@ -33,7 +34,7 @@ export const stylingVars = {
   gridGapSize: 16,
   gridRows: 8,
   gridColumns: 6,
-  tablePadding: 4,
+  standardPadding: 4,
   borderWidth: 2,
   iconSpacing: 2,
 }

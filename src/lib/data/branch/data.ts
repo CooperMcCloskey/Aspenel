@@ -17,6 +17,8 @@ export function newEmptyRootFields(): RootFields {
   }
 }
 
+
+//TODO: Check how this behaves at runtime
 export function newEmptyBranch<T extends UntypedBranchVariant>(): T {
   return {
     id: "0",

@@ -9,6 +9,7 @@
   let {name, path}: {name: string, path: string} = $props()
 
   //FIXME: this is probably wrong
+  //FIXME: if focused when redirected, a breaking error is caused.
   $effect(()=>{nameHeader.value = name})
   
   let nameHeader: HTMLInputElement;

@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { LoadedBranch } from "$lib/bindings";
+    import { branchEditMenu } from "$lib/data/branch/menus/contextMenus";
   import { createContextMenu } from "$lib/logic/contextMenus";
   import { branchHref } from "$lib/logic/filesystem";
-  import { branchEditMenu } from "../menus";
 
   //TODO: Make this icon able to be dragged and rearranged.
   let { branch }: {branch: LoadedBranch} = $props();

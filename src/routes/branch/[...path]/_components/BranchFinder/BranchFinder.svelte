@@ -5,9 +5,9 @@
   import  { type ChildViewType, type TypedChildView } from "../../../../../lib/data/childView/types";
   import { getChildView } from "../../../../../lib/data/childView/data";
   import CreateView from "./views/CreateView/CreateView.svelte";
-  import type { ChildViewComponent } from "./views/types";
+  import type { ChildViewComponent } from "./views/map";
   import { stateManager } from "$lib/logic/state.svelte";
-  import { newChild } from "./operations";
+    import { newChild } from "$lib/data/branch/operations";
     import type { ChildView } from "$lib/bindings";
 
   let defaultActiveView: null | ChildView = $derived(Object.values(stateManager.rootBranch.ui_components)[0] ?? null)

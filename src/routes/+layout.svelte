@@ -5,7 +5,7 @@
   import BackArrowIcon from '$lib/components/icons/BackArrowIcon.svelte';
   import { goto } from '$app/navigation';
 
-  let { children } = $props();
+  const { children } = $props();
 
   function backArrow(){
     //TODO: Make this work

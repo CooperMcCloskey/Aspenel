@@ -1,49 +1,48 @@
 <script lang="ts">
-  import type { LoadedPropertyValue } from "$lib/data/property/value/types";
+  import { updatePropertyValue } from "$lib/data/property/value/operations";
+  import type { CheckValueResult, LoadedPropertyValue } from "$lib/data/property/value/types";
   import { checkNumberValue } from "$lib/data/property/value/variants/number";
   import { onCommit } from "$lib/logic/actions";
-  import { updatePropertyValue } from "../../../properties/operations";;
 
-  let {propertyData}: {propertyData: LoadedPropertyValue<"Number">} = $props();
+  let {
+    propertyData,
+    checkResult = $bindable()
+  }: {
+    propertyData: LoadedPropertyValue<"Number">
+    checkResult: CheckValueResult<"Number">
+  } = $props();
 
-  let validInput = $state(true);
+  $effect(()=>{
+    checkResult = checkNumberValue(propertyData.schema, propertyData.value)
+  })
 
-  function updateValue(e: FocusEvent, el: HTMLElement){
-    let input = el as HTMLInputElement
-    try{ 
-      propertyData.value = checkNumberValue(propertyData.schemaData, input.value);
-      updatePropertyValue(propertyData);
-    }
-    catch{ input.value = `${propertyData.value ?? ""}` }
-    validInput = true;
-  }
-
-  function checkInputValue(e: {currentTarget: HTMLInputElement}){
-    const input = e.currentTarget;
-    try {
-      checkNumberValue(propertyData.schemaData, input.value);
-      validInput = true;
-    }
-    catch (error) { console.error(error); validInput = false; }
+  // $inspect(propertyData.schema, propertyData.value)
+ 
+  function updateValue(e: FocusEvent, input: HTMLInputElement){
+    checkResult = checkNumberValue(propertyData.schema, input.value)
+    if(checkResult.status === "ok") updatePropertyValue(propertyData, checkResult.data);
+    else {
+      input.value = `${propertyData.value ?? ""}`;
+      checkResult = checkNumberValue(propertyData.schema, input.value)
+    }  
   }
 
 </script>
 
-<div>
-  <!-- FIXME: operation being pushed on focus -->
-  <input 
-    value={propertyData.value} 
-    use:onCommit={updateValue} 
-    class={validInput ? "valid" : "invalid"}
-    oninput={checkInputValue}
-    type="text"
-  >
-</div>
+<!-- FIXME: operation being pushed on focus -->
+<input 
+  value={propertyData.value} 
+  use:onCommit={updateValue} 
+  oninput={(e)=>{checkResult = checkNumberValue(propertyData.schema, e.currentTarget.value)}}
+  type="text"
+  autocorrect="off"
+  autocapitalize="off"
+  autocomplete="off"
+  spellcheck="false"
+>
 
 <style>
   input{ 
     text-align: right; 
-    padding: var(--tablePadding);
   }
-  .invalid:focus{ box-shadow: inset 0 0 0 calc(var(--tablePadding) - var(--borderWidth)) var(--red); }
 </style>

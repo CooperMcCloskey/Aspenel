@@ -1,5 +1,5 @@
-import type { TypedPropertySchemaData } from "../../schema/types";
+import type { TypedPropertySchema } from "../../schema/types";
 import type { TypedPropertyValue } from "../types";
 
 
-export function checkTextValue(schema: TypedPropertySchemaData<"Text">, value: unknown): TypedPropertyValue<"Text"> { throw new Error("Function not implemented"); }
+export function checkTextValue(schema: TypedPropertySchema<"Text">, value: unknown): TypedPropertyValue<"Text"> { throw new Error("Function not implemented"); }

@@ -1,53 +1,22 @@
-import type { TypedPropertySchemaData } from "./types";
+import type { TypedPropertySchema } from "./types";
 import type { PropertyType } from "../types";
 import { ulid } from "ulid";
 import type { Mutable } from "$lib/types/utils";
-import type { PropertySchema } from "$lib/bindings";
+import type { Id } from "$lib/bindings";
+import { enforceExhaustiveSwitch } from "$lib/data/utils";
 
+const propertySchemaFactoryMap: {[T in PropertyType]: (name: string, id: Id)=>Mutable<TypedPropertySchema<T>>} = {
+  "Date": (name, id)=>({type: "Date", name, id, date_format: "DMY", time_format: "H24"}),
+  "MultiSelect": (name, id)=>({type: "MultiSelect", name, id, options: [], categories: []}),
+  "Number": (name, id)=>({type: "Number", name, id, min: undefined, max: undefined}),
+  "Select": (name, id)=>({type: "Select", name, id, options: [], categories: []}),
+  "Text": (name, id)=>({type: "Text", name,  id}),
+} 
 
-export function splitSchema<T extends PropertyType>(schema: PropertySchema): { type: T; schemaData: TypedPropertySchemaData<T>; } {
-  const { type, ...schemaData } = { ...schema };
-  return { type: type as T, schemaData: schemaData as TypedPropertySchemaData<T> };
-}
-
-export function createPropertySchema(type: PropertyType): Mutable<PropertySchema> {
+export function createPropertySchema<T extends PropertyType>(type: T): Mutable<TypedPropertySchema<T>> {
   const name = `New ${type == "MultiSelect" ? "Multi-select" : type}`;
   const id = ulid();
  
-  switch (type) {
-    case "Number": return {
-      type,
-      name,
-      id,
-      min: null,
-      max: null,
-    };
-    case "Text": return {
-      type,
-      name, 
-      id,
-    };
-    case "Date": return {
-      type,
-      name,
-      id,
-      date_format: "DMY",
-      time_format: "H24",
-    };
-    case "MultiSelect": return {
-      type,
-      name,
-      id,
-      options: [],
-      categories: [],
-    };
-    case "Select": return {
-      type,
-      name,
-      id,
-      options: [],
-      categories: [],
-    };
-  }
+  return propertySchemaFactoryMap[type](name, id);
 }
 

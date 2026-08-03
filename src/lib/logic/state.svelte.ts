@@ -4,6 +4,7 @@ import { applyPatches, produce, produceWithPatches, type Draft, type Immutable, 
 import { saveTree } from "./filesystem";
 import type { Mutable } from "$lib/types/utils";
 import { commands, type Id, type LoadedBranch, type LoadedRootBranch } from "$lib/bindings";
+import { sortByTimeCreated } from "$lib/data/utils";
 
 export type SaveState = "edited" | "saving" | "saved" | "save error";
 
@@ -20,8 +21,9 @@ type State = {
   redoStack: Operation[];
 };
 
-export const stateManager = createStateManager();
+//TODO: eliminate immer for optimization
 
+export const stateManager = createStateManager();
 
 //FIXME: make ctrl z ctrl shift z work.
 export function createStateManager(){
@@ -57,11 +59,14 @@ export function createStateManager(){
     get state(): State{ return state },
     get tree(): StateTreeRoot{ return state.tree },
     get rootBranch(): LoadedRootBranch{ return state.tree.branch },
-    get activeChildren(): LoadedBranch[]{ return state.tree.children ? Object.values(state.tree.children).map(c=>c.branch) : []},
     get saveState(): SaveState{ return state.saveState },
-    
-    new(tree?: StateTreeRoot){ state = createNewState(tree) },
+    get activeChildren(): LoadedBranch[]{ 
+      if(state.tree.children === undefined) return [];
+      const children = Object.values(state.tree.children).map(c=>c.branch);
+      return sortByTimeCreated(children)
+    },
 
+    new(tree?: StateTreeRoot){ state = createNewState(tree) },
     getNode(path?: IdPath){ return getNode(state.tree, path) },
 
     async loadChildren(path?: IdPath){ 

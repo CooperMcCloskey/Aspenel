@@ -7,7 +7,11 @@ use crate::utils::types::{Id};
 pub struct NumberSchema {
   id: Id,
   name: String,
+  #[specta(type = specta_typescript::Number)] 
+  #[specta(optional)]
   min: Option<f64>,
+  #[specta(type = specta_typescript::Number)] 
+  #[specta(optional)]
   max: Option<f64>,
 }
 

@@ -1,21 +1,21 @@
-import { ask } from "@tauri-apps/plugin-dialog";;
-import { stateManager } from "../../../../../lib/logic/state.svelte";
-import { getNode } from "$lib/data/branch/data";
-import type { IdPath, NodeChildren, ParentStateTreeVariant } from "$lib/data/branch/types";
-import { commands, type LoadedBranch, type LoadedRootBranch } from "$lib/bindings";
+import { commands } from "$lib/bindings";
 import { joinPath } from "$lib/logic/filesystem";
+import { stateManager } from "$lib/logic/state.svelte";
+import { ask } from "@tauri-apps/plugin-dialog";
+import { getNode } from "./data";
+import type { IdPath, ParentStateTreeVariant } from "./types";
 
-export async function newChild(parentPath?: IdPath){
+export async function newChild(parentPath?: IdPath) {
   const parent = stateManager.getNode(parentPath);
 
   const childResult = await commands.createBranch(joinPath(parent.branch.path, "New Branch"));
-  if(childResult.status === "error") throw new Error(childResult.error);
-  const child = childResult.data
+  if (childResult.status === "error") throw new Error(childResult.error);
+  const child = childResult.data;
 
-  stateManager.applyOperationRecipe((draft)=>{
+  stateManager.applyOperationRecipe((draft) => {
     const parent = getNode<true>(draft, parentPath);
-    parent.children = {...parent.children, [child.id]: {branch: {...child, type: "LoadedBranch"}, children: {}}}
-  });  
+    parent.children = { ...parent.children, [child.id]: { branch: { ...child, type: "LoadedBranch" }, children: {} } };
+  });
 }
 
 export async function deleteChild(childPath: IdPath){

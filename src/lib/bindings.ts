@@ -73,8 +73,8 @@ export type MultiSelectSchema = {
 export type NumberSchema = {
 	readonly id: Id,
 	readonly name: string,
-	readonly min: number | null,
-	readonly max: number | null,
+	readonly min?: number,
+	readonly max?: number,
 };
 
 export type PropertySchema = {
@@ -89,7 +89,7 @@ export type PropertySchema = {
 	readonly type: "Select",
 } & SelectSchema;
 
-export type PropertyValue = { readonly type: "Number"; readonly value: number | null } | { readonly type: "Text"; readonly value: string } | { readonly type: "Date"; readonly value: string } | { readonly type: "MultiSelect"; readonly value: Id[] } | { readonly type: "Select"; readonly value: Id };
+export type PropertyValue = { readonly type: "Number"; readonly value: number } | { readonly type: "Text"; readonly value: string } | { readonly type: "Date"; readonly value: string } | { readonly type: "MultiSelect"; readonly value: Id[] } | { readonly type: "Select"; readonly value: Id };
 
 export type RootFields = {
 	readonly properties: { [key in Id]: PropertySchema },

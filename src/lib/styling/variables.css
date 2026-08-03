@@ -4,6 +4,7 @@
 
   --fontFamily: 'Josefin Sans';
   --monoFontFamily: 'JetBrains Mono';
+  --lineHeight: 1.2;
   --headerText: 3rem;
   --largeText: 2rem;
   --mediumText: 1.375rem;
@@ -13,7 +14,7 @@
   --gridGapSize: 16px;
   --gridRows: 8;
   --gridColumns: 6;
-  --tablePadding: 4px;
+  --standardPadding: 4px;
   --borderWidth: 2px;
   --iconSpacing: 2px;
 

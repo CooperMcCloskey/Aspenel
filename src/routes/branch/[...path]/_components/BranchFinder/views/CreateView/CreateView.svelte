@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createContextMenu } from "$lib/logic/contextMenus";
-  import { createViewMenu } from "../menus";
+    import { createViewMenu } from "$lib/data/childView/menus/contextMenus";
 </script>
 
 <button onclick={(e)=>{createContextMenu(e, createViewMenu())}}>Add View</button>

@@ -1,24 +1,29 @@
 <script lang="ts" generics="T extends PropertyType">
   import AddIcon from "$lib/components/icons/AddIcon.svelte";
   import IconBase from "$lib/components/icons/IconBase.svelte";
-  import { editPropertyMenu, newPropertyMenu } from "../../properties/menus";
   import { createContextMenu } from "$lib/logic/contextMenus"; 
   import { branchHref } from "$lib/logic/filesystem";
-  import { branchEditMenu } from "../menus";
-  import { newChild } from "../../operations";
-  import type { PropertyType } from "$lib/data/property/types";
-  import { type PropertyValueComponent, propertyValueComponentMap } from "../../properties/types";
-  import { getLoadedProperty } from "$lib/data/property/value/data";
+  import { branchEditMenu } from "$lib/data/branch/menus/contextMenus";
+  import { newChild } from "$lib/data/branch/operations";
   import { stateManager } from "$lib/logic/state.svelte";
-    import type { TableViewData } from "$lib/bindings";
+  import type { TableViewData } from "$lib/bindings";
+  import PropertyValueContainer from "./PropertyValues/PropertyValueContainer.svelte";
+  import MenuContainer from "$lib/components/MenuContainer.svelte";
+  import { propertySchemaConfigMenuMap, type PropertySchemaConfigMenu } from "$lib/data/property/schema/menus/configMenus/map";
+  import { editPropertySchemaMenu, newPropertySchemaMenu } from "$lib/data/property/schema/menus/contextMenus";
+  import type { PropertyType } from "$lib/data/property/types";
+  import type{ TypedPropertySchema } from "$lib/data/property/schema/types";
+
   const { viewData }: { viewData:  TableViewData} = $props();
+
   $effect(()=>{
     viewData;
     stateManager.loadChildren();
   })
 
   const children = $derived(stateManager.activeChildren)
-  const visibleProperties = $derived(Object.values(stateManager.rootBranch.properties).filter((p)=>!viewData.hidden_property_ids.includes(p.id)))
+  const visiblePropertySchemas = $derived(Object.values(stateManager.rootBranch.properties).filter((p)=>!viewData.hidden_property_ids.includes(p.id))); //TODO: Sort
+  $inspect(visiblePropertySchemas)
 
 </script>
 
@@ -29,18 +34,25 @@
     <tr id="row1">
       <th class="startCell">Branch</th>
       
-      {#each visibleProperties as property}
-        <th 
-          role="button" 
-          onclick={()=>{}} 
-          oncontextmenu={(e)=>createContextMenu(e, editPropertyMenu(e.currentTarget, {type: "Table", ...viewData}, property.id))}
-        >
-          {property.name}
-        </th>
+      {#each visiblePropertySchemas as propertySchema}
+        <MenuContainer Menu={propertySchemaConfigMenuMap[propertySchema.type] as PropertySchemaConfigMenu<T>} menuProps={{schema: propertySchema as TypedPropertySchema<T>}}>
+          {#snippet children(setOpen, menuSnippet)}
+            <th 
+              role="button" 
+              style="cursor: pointer"
+              onclick={setOpen} 
+              oncontextmenu={(e)=>createContextMenu(e, editPropertySchemaMenu(e.currentTarget, {type: "Table", ...viewData}, propertySchema.id))}
+            >
+              {propertySchema.name}
+              {@render menuSnippet()}
+            </th>
+          {/snippet}
+          
+        </MenuContainer>
       {/each}
 
       <th class="endCell">
-        <button onclick={(e)=>createContextMenu(e, newPropertyMenu())}>
+        <button onclick={(e)=>createContextMenu(e, newPropertySchemaMenu())}>
           <IconBase hasHoverEffect={true}><AddIcon/></IconBase>
         </button>
       </th>
@@ -59,11 +71,9 @@
           </a>
         </td>
 
-        {#each visibleProperties as property}
-          {@const PropertyValue: PropertyValueComponent<T> = propertyValueComponentMap[property.type as T]} <!-- T is not fixed. It is cast to the given property type as needed -->
-            
-          <td style="padding: 0px">
-            <PropertyValue propertyData={getLoadedProperty<T>(property, [child.id])}></PropertyValue>
+        {#each visiblePropertySchemas as propertySchema}
+          <td class="propertyValueCell" style="padding: 0px">
+            <PropertyValueContainer {propertySchema} childId={child.id}></PropertyValueContainer>
           </td>
         {/each}
 
@@ -76,7 +86,7 @@
     <tr>
       <td class="startCell"><button onclick={()=>newChild()}><IconBase hasHoverEffect={true}><AddIcon/></IconBase></button></td>
 
-      {#each visibleProperties}
+      {#each visiblePropertySchemas}
         <td></td>
       {/each}
 
@@ -92,7 +102,8 @@
     border-collapse: collapse;
   }
   th, td{
-    padding: var(--tablePadding);
+    position: relative;
+    padding: var(--standardPadding);
     text-align: left;
     font-weight: normal;
     border: var(--borderWidth) solid color-mix(in srgb, var(--gray) 25%, transparent);
