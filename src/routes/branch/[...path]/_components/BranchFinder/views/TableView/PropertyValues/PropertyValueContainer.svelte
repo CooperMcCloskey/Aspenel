@@ -1,9 +1,9 @@
 <script lang="ts" generics="T extends PropertyType">
-  import type { Id, PropertySchema } from '$lib/bindings';
-    import type { TypedPropertySchema } from '$lib/data/property/schema/types';
+  import type { Id } from '$lib/bindings';
+  import type { TypedPropertySchema } from '$lib/data/property/schema/types';
   import type { PropertyType } from '$lib/data/property/types';
   import { getLoadedProperty } from '$lib/data/property/value/data';
-  import type { CheckValueResult } from '$lib/data/property/value/types';
+  import type { PropertyValueValidationResult, LoadedPropertyValue } from '$lib/data/property/value/types';
   import { propertyValueComponentMap, type PropertyValueComponent } from './map';
 
   const { 
@@ -14,18 +14,16 @@
     childId: Id
   } = $props();
 
+  const property: LoadedPropertyValue<T> = $derived(getLoadedProperty<T>(propertySchema, [childId]));
   const PropertyValue: PropertyValueComponent<T> = $derived(propertyValueComponentMap[propertySchema.type]);
-  let checkResult: CheckValueResult<T> = $state({status:"ok", data: undefined});
+  let checkResult: PropertyValueValidationResult<T> = $state({status:"ok", data: undefined});
 </script>
 
 <div 
   class={checkResult.status === "ok" ? "valid" : "invalid"}
   class:text={propertySchema.type === "Number" || propertySchema.type === 'Text'}
 >
-  <PropertyValue 
-    propertyData={getLoadedProperty<T>(propertySchema, [childId])}
-    bind:checkResult
-  />
+  <PropertyValue {property} bind:checkResult/>
 </div>
 
 {#if checkResult.status === "error"}

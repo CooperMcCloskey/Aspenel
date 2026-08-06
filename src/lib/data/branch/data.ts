@@ -1,6 +1,7 @@
 import type { LoadedFields, RootFields } from "$lib/bindings";
-import type { Mutable } from "$lib/types/utils";
-import type { StateTreeNode, IdPath, StateTreeRoot, UntypedBranchVariant, StateTreeVariant } from "./types";
+import type { StateTreeRoot } from "$lib/logic/stateManager/types";
+import type { UntypedBranchVariant } from "./types";
+
 
 export function newEmptyLoadedFields(): LoadedFields {
   return {
@@ -30,12 +31,3 @@ export function newEmptyBranch<T extends UntypedBranchVariant>(): T {
 }
 
 export function newStateTree(): StateTreeRoot { return {branch: newEmptyBranch()} }
-
-export function getNode<M extends boolean = false>(tree: StateTreeRoot, path?: IdPath): M extends true ? Mutable<StateTreeVariant> : StateTreeVariant{
-  let node: StateTreeNode | StateTreeRoot = tree;
-  for(const id of path ?? []) {
-    if(node.children === undefined || node.children[id] === undefined) throw new Error(`Invalid Path: ${path}`)
-    node = node.children[id];
-  }
-  return node
-}

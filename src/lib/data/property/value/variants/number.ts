@@ -1,7 +1,7 @@
 import type { TypedPropertySchema } from "../../schema/types";
-import type { CheckValueResult } from "../types";
+import type { PropertyValueValidationResult } from "../types";
 
-export function checkNumberValue(schema: TypedPropertySchema<"Number">, value: unknown): CheckValueResult<"Number"> {
+export function checkNumberValue(schema: TypedPropertySchema<"Number">, value: unknown): PropertyValueValidationResult<"Number"> {
   if (value === "" || value === undefined) return {status: "ok", data: undefined};
   if (typeof value != "string" && typeof value != "number") return {status: "error", error: `${value} is type ${typeof value}, not number.`};
   const num = Number(value)

@@ -1,6 +1,6 @@
 import { Menu } from "@tauri-apps/api/menu";
-import { deleteChild } from "../operations";
-import type { IdPath } from "../types";
+import { deleteChild } from "../commands";
+import type { IdPath } from "$lib/data/utils";
 
 
 export function branchEditMenu(path: IdPath): Promise<Menu> {

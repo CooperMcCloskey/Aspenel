@@ -1,7 +1,4 @@
-import { getNode } from "$lib/data/branch/data";
-import type { IdPath, StateTreeNode, StateTreeRoot } from "$lib/data/branch/types";
-import type { SaveState } from "./state.svelte";
-import type { Immutable } from "immer";
+import type { IdPath } from "$lib/data/utils";
 import { sep as pathSeparator } from '@tauri-apps/api/path';
 import { commands } from "$lib/bindings";
 
@@ -19,17 +16,17 @@ export function branchHref(path: string){
   return path == "" ? "/branch/Home" : `/branch/${path}`;
 }
 
-export async function saveTree(tree: StateTreeRoot, editedBranchPaths: Immutable<IdPath[]>, rootPath: string): Promise<SaveState>{
-  let savePromise = Promise.all(
-    [...editedBranchPaths].map(async (path)=>{
-      const node = getNode(tree, path)
-      const branch = node.branch
-      const branchResult = await commands.writeBranch(branch, branch.path)
-      if(branchResult.status === "error") throw new Error(branchResult.error);
-    })
-  )
+// export async function saveTree(tree: StateTreeRoot, editedBranchPaths: Immutable<IdPath[]>, rootPath: string): Promise<SaveState>{
+//   let savePromise = Promise.all(
+//     [...editedBranchPaths].map(async (path)=>{
+//       const node = getNode(tree, path)
+//       const branch = node.branch
+//       const branchResult = await commands.writeBranch(branch, branch.path)
+//       if(branchResult.status === "error") throw new Error(branchResult.error);
+//     })
+//   )
 
-  return await savePromise
-    .then(() => "saved" as SaveState)
-    .catch((err) => "save error" as SaveState)
-}
+//   return await savePromise
+//     .then(() => "saved" as SaveState)
+//     .catch((err) => "save error" as SaveState)
+// }

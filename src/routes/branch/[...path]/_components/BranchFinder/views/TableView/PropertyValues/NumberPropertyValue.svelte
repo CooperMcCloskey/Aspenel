@@ -1,39 +1,34 @@
 <script lang="ts">
-  import { updatePropertyValue } from "$lib/data/property/value/operations";
-  import type { CheckValueResult, LoadedPropertyValue } from "$lib/data/property/value/types";
+  import { setPropertyValue } from "$lib/data/property/value/commands";
+  import type { PropertyValueValidationResult, LoadedPropertyValue } from "$lib/data/property/value/types";
   import { checkNumberValue } from "$lib/data/property/value/variants/number";
   import { onCommit } from "$lib/logic/actions";
 
   let {
-    propertyData,
+    property,
     checkResult = $bindable()
   }: {
-    propertyData: LoadedPropertyValue<"Number">
-    checkResult: CheckValueResult<"Number">
+    property: LoadedPropertyValue<"Number">
+    checkResult: PropertyValueValidationResult<"Number">
   } = $props();
 
-  $effect(()=>{
-    checkResult = checkNumberValue(propertyData.schema, propertyData.value)
-  })
-
-  // $inspect(propertyData.schema, propertyData.value)
+  $inspect(property)
  
-  function updateValue(e: FocusEvent, input: HTMLInputElement){
-    checkResult = checkNumberValue(propertyData.schema, input.value)
-    if(checkResult.status === "ok") updatePropertyValue(propertyData, checkResult.data);
-    else {
-      input.value = `${propertyData.value ?? ""}`;
-      checkResult = checkNumberValue(propertyData.schema, input.value)
-    }  
+  function setValue(value: unknown){
+    checkResult = setPropertyValue(property, value);
+    if(checkResult.status === "error"){
+      checkResult = setPropertyValue(property, property.value);
+      if(checkResult.status === "error") throw new Error("Illegal property value saved");
+    }
   }
 
 </script>
 
 <!-- FIXME: operation being pushed on focus -->
 <input 
-  value={propertyData.value} 
-  use:onCommit={updateValue} 
-  oninput={(e)=>{checkResult = checkNumberValue(propertyData.schema, e.currentTarget.value)}}
+  value={property.value ?? ""} 
+  use:onCommit={(e, el)=>setValue(el.value)} 
+  oninput={(e)=>{checkResult = checkNumberValue(property.schema, e.currentTarget.value)}}
   type="text"
   autocorrect="off"
   autocapitalize="off"

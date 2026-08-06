@@ -1,14 +1,14 @@
 <script lang="ts">
   import type { IconViewData } from "$lib/bindings";
-  import { stateManager } from "$lib/logic/state.svelte";
+  import { stateManager } from "$lib/logic/stateManager/StateManager.svelte";
   import BranchFinderIcon from "./BranchFinderIcon.svelte";
   const {viewData}: {viewData: IconViewData} = $props();
   $effect(()=>{
     viewData;
-    stateManager.loadChildren();
+    stateManager.rootNodeHandle.loadChildren();
   })
   
-  const children = $derived(stateManager.activeChildren)
+  const children = $derived(stateManager.rootNodeHandle.childArray)
   
 </script>
 

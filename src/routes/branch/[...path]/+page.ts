@@ -1,8 +1,8 @@
 export const ssr = false;
 import type { PageLoad } from "./$types";
-import type { StateTreeRoot } from "$lib/data/branch/types";
 import { commands } from "$lib/bindings";
 import { newEmptyRootFields } from "$lib/data/branch/data";
+import type { StateTreeRoot } from "$lib/logic/stateManager/types";
 
 export const load: PageLoad<StateTreeRoot> = async ({params}) => {
   console.log(`loading page: ${params.path}`)

@@ -1,17 +1,16 @@
 import type { ChildView, Id } from "$lib/bindings";
 import { Menu } from "@tauri-apps/api/menu";
-import { deletePropertySchema } from "../operations";
-import { hidePropertySchema } from "../operations";
-import { renamePropertySChema } from "../operations";
-import { attachPropertySchema } from "../operations";
-import { createPropertySchema } from "../data";
+import { deletePropertySchema } from "../commands";
+import { hidePropertySchema } from "../commands";
+import { renamePropertySchema } from "../commands";
+import { createPropertySchema } from "../commands";
 import { propertyTypes } from "../../types";
 
 
 export function editPropertySchemaMenu(propertyElement: HTMLSpanElement, view: ChildView, propertyId: Id): Promise<Menu> {
   return Menu.new({
     items: [
-      { text: "Rename", action: () => renamePropertySChema(propertyElement, propertyId) },
+      { text: "Rename", action: () => renamePropertySchema(propertyElement, propertyId) },
       { text: "Hide", action: () => hidePropertySchema(view.id, propertyId) },
       { text: "Delete", action: () => deletePropertySchema(propertyId) }
     ]
@@ -20,7 +19,7 @@ export function editPropertySchemaMenu(propertyElement: HTMLSpanElement, view: C
   return Menu.new({
     items: propertyTypes.map(type => ({
       text: `New ${type == "MultiSelect" ? "Multi-select" : type}`,
-      action: () => attachPropertySchema(createPropertySchema(type)),
+      action: () => createPropertySchema(type),
     }))
   });
 }

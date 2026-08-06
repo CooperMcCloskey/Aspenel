@@ -1,17 +1,27 @@
 <script lang="ts">
-  import { stateManager } from "$lib/logic/state.svelte";
+  import { stateManager } from "$lib/logic/stateManager/StateManager.svelte";
   import BranchFinder from "./_components/BranchFinder/BranchFinder.svelte";
   import BranchHeader from "./_components/BranchHeader.svelte";
   
   let { data } = $props();
   $effect(()=>{
-    stateManager.new(data)
-    return ()=>{
-      stateManager.new()
-    }
+    if(data.branch.id !== stateManager.rootBranch.id) stateManager.reset(data)
   })
 
+  function handleKeydown(e: KeyboardEvent) {
+    if (!(e.ctrlKey || e.metaKey) || e.key.toLowerCase() !== "z") return;
+    const target = e.target as HTMLElement | null;
+    if (target?.isContentEditable || target?.tagName === "INPUT" || target?.tagName === "TEXTAREA") return;
+
+
+    e.preventDefault();
+    if (e.shiftKey) stateManager.redo();
+    else stateManager.undo();
+  }
+
 </script>
+
+<svelte:window onkeydown={handleKeydown} />
 
 <BranchHeader name={stateManager.rootBranch.filename} path={stateManager.rootBranch.path ?? ""}/>
 

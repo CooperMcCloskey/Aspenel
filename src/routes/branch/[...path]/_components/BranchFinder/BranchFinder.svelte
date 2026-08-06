@@ -3,17 +3,16 @@
   import NewBranchIcon from "$lib/components/icons/NewBranchIcon.svelte";
   import MoreHorizontalIcon from "$lib/components/icons/MoreHorizontalIcon.svelte";
   import  { type ChildViewType, type TypedChildView } from "../../../../../lib/data/childView/types";
-  import { getChildView } from "../../../../../lib/data/childView/data";
   import CreateView from "./views/CreateView/CreateView.svelte";
-  import type { ChildViewComponent } from "./views/map";
-  import { stateManager } from "$lib/logic/state.svelte";
-    import { newChild } from "$lib/data/branch/operations";
-    import type { ChildView } from "$lib/bindings";
+  import { childViewComponentMap, type ChildViewComponent } from "./views/map";
+  import { newChild } from "$lib/data/branch/commands";
+  import type { ChildView } from "$lib/bindings";
+  import { stateManager } from "$lib/logic/stateManager/StateManager.svelte";
 
-  let defaultActiveView: null | ChildView = $derived(Object.values(stateManager.rootBranch.ui_components)[0] ?? null)
+  let defaultActiveView: null | ChildView = $derived(Object.values(stateManager.tree.branch.ui_components)[0] ?? null)
   let selectedActiveView: null | ChildView = $state(null);
   let activeView: null | TypedChildView<ActiveViewType> = $derived(selectedActiveView ?? defaultActiveView) as null | TypedChildView<ActiveViewType>
-  let ActiveViewComponent: null | ChildViewComponent<ActiveViewType> = $derived(activeView === null ? null : getChildView(activeView.type))
+  let ActiveViewComponent: null | ChildViewComponent<ActiveViewType> = $derived(activeView === null ? null : childViewComponentMap[activeView.type])
   
 </script>
 

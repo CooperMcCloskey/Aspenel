@@ -1,6 +1,6 @@
 import { Menu } from "@tauri-apps/api/menu";
-import { createChildView } from "../data";
-import { attachView } from "../operations";
+import { newChildView } from "../data";
+import { attachView } from "../commands";
 import { viewTypes } from "../types";
 
 
@@ -9,7 +9,7 @@ export function createViewMenu(): Promise<Menu> {
     items: viewTypes.map(type => ({
       id: type,
       text: `New ${type} View`,
-      action: () => attachView(createChildView(type)),
+      action: () => attachView(newChildView(type)),
     }))
   })
 }

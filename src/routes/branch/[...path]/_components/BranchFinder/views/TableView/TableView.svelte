@@ -4,8 +4,8 @@
   import { createContextMenu } from "$lib/logic/contextMenus"; 
   import { branchHref } from "$lib/logic/filesystem";
   import { branchEditMenu } from "$lib/data/branch/menus/contextMenus";
-  import { newChild } from "$lib/data/branch/operations";
-  import { stateManager } from "$lib/logic/state.svelte";
+  import { newChild } from "$lib/data/branch/commands";
+  import { stateManager } from "$lib/logic/stateManager/StateManager.svelte";
   import type { TableViewData } from "$lib/bindings";
   import PropertyValueContainer from "./PropertyValues/PropertyValueContainer.svelte";
   import MenuContainer from "$lib/components/MenuContainer.svelte";
@@ -18,12 +18,11 @@
 
   $effect(()=>{
     viewData;
-    stateManager.loadChildren();
+    stateManager.rootNodeHandle.loadChildren();
   })
 
-  const children = $derived(stateManager.activeChildren)
+  const children = $derived(stateManager.rootNodeHandle.childArray)
   const visiblePropertySchemas = $derived(Object.values(stateManager.rootBranch.properties).filter((p)=>!viewData.hidden_property_ids.includes(p.id))); //TODO: Sort
-  $inspect(visiblePropertySchemas)
 
 </script>
 

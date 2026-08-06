@@ -1,12 +1,12 @@
 <script lang="ts">
-  import type { CheckValueResult, LoadedPropertyValue } from "$lib/data/property/value/types";
+  import type { PropertyValueValidationResult, LoadedPropertyValue } from "$lib/data/property/value/types";
 
   let {
     propertyData,
     checkResult = $bindable()
   }: {
     propertyData: LoadedPropertyValue<"Select">
-    checkResult: CheckValueResult<"Select">
+    checkResult: PropertyValueValidationResult<"Select">
   } = $props();
 
 </script>
