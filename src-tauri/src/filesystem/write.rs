@@ -20,11 +20,7 @@ pub fn create_dir(app: AppHandle, test_path: PathBuf, strict_name: bool) -> Resu
   Ok(path)
 }
 
-pub fn write_file(
-  app: AppHandle,
-  path: &Path,
-  data: impl Serialize,
-) -> Result<(), Error> {
+pub fn write_file(app: AppHandle, path: &Path, data: impl Serialize) -> Result<(), Error> {
   println!("Writing file at: {path:?}");
   let filename = path.file_name().unwrap().to_string_lossy().into_owned();
   let temp_filename = format!("temp_{filename}");
@@ -40,4 +36,3 @@ pub fn write_file(
   fs::rename(temp_sys_path, sys_path)?;
   Ok(())
 }
-

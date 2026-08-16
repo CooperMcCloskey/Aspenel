@@ -1,4 +1,4 @@
-use std::{path::{Path, PathBuf}};
+use std::path::{Path, PathBuf};
 
 use tauri::{AppHandle, Manager};
 
@@ -9,11 +9,11 @@ pub fn unique_path_name(app: AppHandle, path: &Path) -> Result<PathBuf, Error> {
   if !sys_path.exists() {
     return Ok(path.to_path_buf());
   }
-  
+
   let mut counter = 1;
   let ext = path.extension().map(|e| e.to_string_lossy());
   let stem = path.file_stem().unwrap().to_string_lossy();
-  
+
   loop {
     let test_name = match &ext {
       Some(ext) => format!("{stem} ({counter}).{ext}"),
@@ -22,9 +22,9 @@ pub fn unique_path_name(app: AppHandle, path: &Path) -> Result<PathBuf, Error> {
 
     let test_path = path.parent().unwrap().join(test_name);
     let test_sys_path = get_sys_path(app.clone(), &test_path)?;
-    
+
     if !test_sys_path.exists() {
-      return Ok(test_path)
+      return Ok(test_path);
     }
     counter += 1;
   }

@@ -1,3 +1,4 @@
 pub mod branches;
-pub mod views;
+pub mod components;
 pub mod properties;
+pub mod settings;

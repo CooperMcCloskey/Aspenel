@@ -6,16 +6,16 @@ use specta::Type;
 pub struct Error(String);
 
 impl Error {
-    pub fn msg(s: impl Into<String>) -> Self {
-        Error(s.into())
-    }
+  pub fn msg(s: impl Into<String>) -> Self {
+    Error(s.into())
+  }
 }
 
 impl<E> From<E> for Error
 where
-    E: std::error::Error,
+  E: std::error::Error,
 {
-    fn from(e: E) -> Self {
-        Error(e.to_string())
-    }
+  fn from(e: E) -> Self {
+    Error(e.to_string())
+  }
 }

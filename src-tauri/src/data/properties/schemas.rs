@@ -1,16 +1,18 @@
+use std::collections::HashMap;
+
 use serde::{Deserialize, Serialize};
 use specta::Type;
 
-use crate::utils::types::{Id};
+use crate::utils::types::Id;
 
 #[derive(Serialize, Deserialize, Type)]
 pub struct NumberSchema {
   id: Id,
   name: String,
-  #[specta(type = specta_typescript::Number)] 
+  #[specta(type = specta_typescript::Number)]
   #[specta(optional)]
   min: Option<f64>,
-  #[specta(type = specta_typescript::Number)] 
+  #[specta(type = specta_typescript::Number)]
   #[specta(optional)]
   max: Option<f64>,
 }
@@ -52,14 +54,8 @@ pub struct DateSchema {
 
 #[derive(Serialize, Deserialize, Type)]
 struct SelectOption {
-  color: String,
-  category_id: Option<Id>,
-}
-
-#[derive(Serialize, Deserialize, Type)]
-struct SelectCategory {
-  id: Id,
   name: String,
+  id: Id,
   color: String,
 }
 
@@ -67,16 +63,14 @@ struct SelectCategory {
 pub struct SelectSchema {
   id: Id,
   name: String,
-  options: Vec<SelectOption>,
-  categories: Vec<SelectCategory>,
+  options: HashMap<Id, SelectOption>,
 }
 
 #[derive(Serialize, Deserialize, Type)]
 pub struct MultiSelectSchema {
   id: Id,
   name: String,
-  options: Vec<SelectOption>,
-  categories: Vec<SelectCategory>,
+  options: HashMap<Id, SelectOption>,
 }
 
 // ------------------------------------------------------

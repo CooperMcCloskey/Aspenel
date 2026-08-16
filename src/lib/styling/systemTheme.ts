@@ -1,0 +1,43 @@
+/* Generated from systemTheme.json — do not edit. */
+export const systemTheme = {
+  "colors": {
+    "light": {
+      "red": "#c85040",
+      "yellow": "#c8b63f",
+      "blue": "#504d61",
+      "green": "#4d6158",
+      "white": "#e8dfcd",
+      "gray": "#c5c5c5",
+      "black": "#000000",
+      "background": "#F7F1E0"
+    },
+    "dark": {
+      "red": "#c85040",
+      "yellow": "#c8b63f",
+      "blue": "#504d61",
+      "green": "#4d6158",
+      "background": "#1E1E1E",
+      "white": "#292936",
+      "gray": "#4F4F69",
+      "black": "#c5c5c5"
+    }
+  },
+  "font": {
+    "fontFamily": "'Josefin Sans'",
+    "monoFontFamily": "'JetBrains Mono'",
+    "lineHeight": "1.2",
+    "headerText": "3rem",
+    "largeText": "2rem",
+    "mediumText": "1.375rem",
+    "standardText": "1rem",
+    "smallText": "0.75rem"
+  },
+  "layout": {
+    "gridGapSize": "16px",
+    "gridRows": "8",
+    "gridColumns": "6",
+    "standardPadding": "4px",
+    "borderWidth": "2px",
+    "iconSpacing": "2px"
+  }
+};

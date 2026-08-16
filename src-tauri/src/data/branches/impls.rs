@@ -4,10 +4,20 @@ use tauri::AppHandle;
 
 use crate::{
   data::{
-    branches::types::{Branch, LoadedBranch, LoadedBranchVariant, LoadedFields, LoadedRootBranch, RootBranch, RootFields, UnloadedBranchVariant}, views::types::{ChildView, IconViewData},
-  }, error_handling::command_errors::Error, filesystem::{
-    constants::{BRANCH_PATH, ROOT_DATA_PATH}, path_utils::get_sys_path, read::{find_color, read_file}, write::write_file,
-  }, utils::types::Id,
+    branches::types::{
+      Branch, LoadedBranch, LoadedBranchVariant, LoadedFields, LoadedRootBranch, RootBranch,
+      RootFields, UnloadedBranchVariant,
+    },
+    components::types::{ChildView, IconViewData},
+  },
+  error_handling::command_errors::Error,
+  filesystem::{
+    constants::{BRANCH_PATH, ROOT_DATA_PATH},
+    path_utils::get_sys_path,
+    read::{find_color, read_file},
+    write::write_file,
+  },
+  utils::types::Id,
 };
 
 impl Branch {
@@ -18,7 +28,7 @@ impl Branch {
       color: None,
     }
   }
-  pub fn read(app: AppHandle, path: &Path) -> Result<Branch, Error>{
+  pub fn read(app: AppHandle, path: &Path) -> Result<Branch, Error> {
     read_file::<Branch>(app, &path.join(BRANCH_PATH))
   }
 }
@@ -50,14 +60,19 @@ impl RootBranch {
     }
   }
 
-  pub fn read(app: AppHandle, path: &Path) -> Result<UnloadedBranchVariant, Error>{
+  pub fn read(app: AppHandle, path: &Path) -> Result<UnloadedBranchVariant, Error> {
     let branch = read_file::<Branch>(app.clone(), &path.join(BRANCH_PATH))?;
     let root_data_path = &path.join(ROOT_DATA_PATH);
     let root_data_sys_path = get_sys_path(app.clone(), root_data_path)?;
-    
-    if !root_data_sys_path.exists() { return Ok(UnloadedBranchVariant::Branch(branch)) }
-    let root_data = read_file::<RootFields>(app,root_data_path)?;
-    Ok(UnloadedBranchVariant::RootBranch(RootBranch { branch, root_data }))
+
+    if !root_data_sys_path.exists() {
+      return Ok(UnloadedBranchVariant::Branch(branch));
+    }
+    let root_data = read_file::<RootFields>(app, root_data_path)?;
+    Ok(UnloadedBranchVariant::RootBranch(RootBranch {
+      branch,
+      root_data,
+    }))
   }
 }
 
@@ -103,8 +118,10 @@ impl Loadable for UnloadedBranchVariant {
   type Loaded = LoadedBranchVariant;
   fn load(self, app: AppHandle, path: &Path) -> Result<Self::Loaded, Error> {
     match self {
-        UnloadedBranchVariant::Branch(b) => Ok(LoadedBranchVariant::LoadedBranch(b.load(app, path)?)),
-        UnloadedBranchVariant::RootBranch(rb) => Ok(LoadedBranchVariant::LoadedRootBranch(rb.load(app, path)?))
+      UnloadedBranchVariant::Branch(b) => Ok(LoadedBranchVariant::LoadedBranch(b.load(app, path)?)),
+      UnloadedBranchVariant::RootBranch(rb) => {
+        Ok(LoadedBranchVariant::LoadedRootBranch(rb.load(app, path)?))
+      }
     }
   }
 }
@@ -121,7 +138,7 @@ impl Writeable for Branch {
 
 impl Writeable for RootFields {
   fn write(&self, app: AppHandle, path: &Path) -> Result<(), Error> {
-    write_file(app,  &path.join(ROOT_DATA_PATH), &self)
+    write_file(app, &path.join(ROOT_DATA_PATH), &self)
   }
 }
 
@@ -134,7 +151,7 @@ impl Writeable for RootBranch {
 
 impl Writeable for LoadedBranch {
   fn write(&self, app: AppHandle, path: &Path) -> Result<(), Error> {
-      self.branch.write(app, path)
+    self.branch.write(app, path)
   }
 }
 
@@ -147,9 +164,9 @@ impl Writeable for LoadedRootBranch {
 
 impl Writeable for LoadedBranchVariant {
   fn write(&self, app: AppHandle, path: &Path) -> Result<(), Error> {
-      match self {
-        LoadedBranchVariant::LoadedBranch(lb) => lb.write(app, path),
-        LoadedBranchVariant::LoadedRootBranch(lrb) => lrb.write(app, path)
-      }
+    match self {
+      LoadedBranchVariant::LoadedBranch(lb) => lb.write(app, path),
+      LoadedBranchVariant::LoadedRootBranch(lrb) => lrb.write(app, path),
+    }
   }
 }

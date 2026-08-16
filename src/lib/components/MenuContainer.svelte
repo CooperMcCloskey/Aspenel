@@ -1,39 +1,49 @@
 <script lang="ts" generics="T extends Record<string, any>">
   import type { Component, Snippet } from "svelte";
+    import type { Action } from "svelte/action";
   import type { MouseEventHandler } from "svelte/elements";
-  let { 
-    Menu, 
-    menuProps, 
-    children 
-  }: { 
-    Menu: Component<T>, 
-    menuProps: T, 
+
+  type Props = { 
     children: Snippet<[
-      setOpen: MouseEventHandler<HTMLTableCellElement>, 
+      menuTrigger: Action<HTMLElement>, 
       menuSnippet: Snippet,
-    ]>,
-  } = $props()
-    
+    ]>
+  } & (
+    | {type: "Component", menu: Component<T>, menuProps: T} 
+    | {type: "Snippet", menu: Snippet}
+  ) 
+
+  let props: Props = $props()
   let open: boolean = $state(false);
   
-  function setOpen(e: MouseEvent & {currentTarget: HTMLTableCellElement}){ 
-    e.stopPropagation(); 
-    open = true; 
+  const menuTrigger: Action<HTMLElement> = (node)=>{
+    const handler = (e: MouseEvent)=>{
+      const target = e.target as Node
+      if(node.contains(target)){
+        if(e.target === node) open = !open;
+        else open = true; 
+      }
+      else open = false
+    }
+    window.addEventListener("click", handler);
+    return {destroy: ()=>window.removeEventListener("click", handler)}
   }
 
 </script>
 
-<svelte:window onclick={()=>{open=false}} />
-
 {#snippet menuSnippet()}
   {#if open}
     <div id="menu">
-      <Menu {...menuProps}/>
+      {#if props.type === "Component"}
+        <props.menu {...props.menuProps}/> 
+      {:else} 
+        {@render props.menu()} 
+      {/if}
     </div>  
   {/if}
 {/snippet}
 
-{@render children(setOpen, menuSnippet)}
+{@render props.children(menuTrigger, menuSnippet)}
 
 <style>
   #menu{

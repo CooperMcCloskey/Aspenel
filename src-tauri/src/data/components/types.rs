@@ -1,47 +1,47 @@
 use serde::{Deserialize, Serialize};
 use specta::Type;
 
-use crate::utils::types::{Id};
+use crate::utils::types::Id;
 
 #[derive(Serialize, Deserialize, Type)]
 #[serde(tag = "type")]
 //TODO: generalize into UiComponent
-pub enum ChildView{
+pub enum ChildView {
   Icon(IconViewData),
-  Table(TableViewData)
+  Table(TableViewData),
 }
 
 impl ChildView {
   pub fn id(&self) -> Id {
     match self {
-      ChildView::Icon(data)=>data.id,
-      ChildView::Table(data)=>data.id
+      ChildView::Icon(data) => data.id,
+      ChildView::Table(data) => data.id,
     }
   }
 }
 
 #[derive(Serialize, Deserialize, Type)]
-pub struct IconViewData{
+pub struct IconViewData {
   id: Id,
   name: String,
-  visible_property_ids: Vec<Id>
+  visible_property_ids: Vec<Id>,
 }
 
 impl IconViewData {
   //this function is necessary because the default home branch needs an icon view.
   //ensure that this constructor for the iconView lines up with the one in the frontend.
-    pub fn new_icon_view(name: &str) -> IconViewData {
-      IconViewData { 
-        id: Id::new(),
-        name: name.to_string(),
-        visible_property_ids: vec![]
-      }
+  pub fn new_icon_view(name: &str) -> IconViewData {
+    IconViewData {
+      id: Id::new(),
+      name: name.to_string(),
+      visible_property_ids: vec![],
     }
+  }
 }
 
 #[derive(Serialize, Deserialize, Type)]
-pub struct TableViewData{
+pub struct TableViewData {
   id: Id,
   name: String,
-  hidden_property_ids: Vec<Id>
+  hidden_property_ids: Vec<Id>,
 }

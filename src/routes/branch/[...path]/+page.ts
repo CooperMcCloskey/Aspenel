@@ -1,4 +1,3 @@
-export const ssr = false;
 import type { PageLoad } from "./$types";
 import { commands } from "$lib/bindings";
 import { newEmptyRootFields } from "$lib/data/branch/data";

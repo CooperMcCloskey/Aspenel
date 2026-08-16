@@ -10,6 +10,8 @@
 // Usage: node merge-bindings.mjs [bindingsPath] [typesPath]
 // Defaults match the paths in the export() calls from the Rust test.
 
+//FIXME: AI generated
+
 import fs from "node:fs";
 import path from "node:path";
 

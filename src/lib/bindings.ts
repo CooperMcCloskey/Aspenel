@@ -13,6 +13,7 @@ export const commands = {
 	writeBranch: (data: LoadedBranchVariant, path: string) => typedError<null, Error>(__TAURI_INVOKE("write_branch", { data, path })),
 	renameFile: (oldPath: string, newName: string) => typedError<null, Error>(__TAURI_INVOKE("rename_file", { oldPath, newName })),
 	deleteFile: (path: string) => typedError<null, Error>(__TAURI_INVOKE("delete_file", { path })),
+	readSettings: () => typedError<SettingsData, Error>(__TAURI_INVOKE("read_settings")),
 };
 
 /* Types */
@@ -27,6 +28,8 @@ export type ChildView = {
 } & IconViewData | {
 	readonly type: "Table",
 } & TableViewData;
+
+export type ColorVariable = string | SplitColorVariable;
 
 export type DateFormat = "Relative" | "Text" | "MDY" | "DMY" | "YMD";
 
@@ -66,8 +69,7 @@ export type LoadedRootBranch = Branch & LoadedFields & RootFields;
 export type MultiSelectSchema = {
 	readonly id: Id,
 	readonly name: string,
-	readonly options: SelectOption[],
-	readonly categories: SelectCategory[],
+	readonly options: { [key in Id]: SelectOption },
 };
 
 export type NumberSchema = {
@@ -96,22 +98,37 @@ export type RootFields = {
 	readonly ui_components: { [key in Id]: ChildView },
 };
 
-export type SelectCategory = {
-	readonly id: Id,
-	readonly name: string,
-	readonly color: string,
-};
-
 export type SelectOption = {
+	readonly name: string,
+	readonly id: Id,
 	readonly color: string,
-	readonly category_id: Id | null,
 };
 
 export type SelectSchema = {
 	readonly id: Id,
 	readonly name: string,
-	readonly options: SelectOption[],
-	readonly categories: SelectCategory[],
+	readonly options: { [key in Id]: SelectOption },
+};
+
+export type SettingsData = {
+	readonly theme: ThemeOption,
+	readonly additional_color_variables: { [key in Id]: ColorVariable },
+};
+
+export type SplitColorVariable = {
+	readonly light: string,
+	readonly dark: string,
+};
+
+export type SystemColorVariables = {
+	readonly background: ColorVariable,
+	readonly black: ColorVariable,
+	readonly blue: ColorVariable,
+	readonly gray: ColorVariable,
+	readonly green: ColorVariable,
+	readonly red: ColorVariable,
+	readonly white: ColorVariable,
+	readonly yellow: ColorVariable,
 };
 
 export type TableViewData = {
@@ -124,6 +141,12 @@ export type TextSchema = {
 	readonly id: Id,
 	readonly name: string,
 };
+
+export type Theme = {
+	readonly system_color_variables: SystemColorVariables,
+};
+
+export type ThemeOption = "default" | Theme;
 
 export type TimeFormat = "H24" | "H12";
 
@@ -148,6 +171,11 @@ export type PermissionState =
 "Prompt" | 
 /**  Permission must be requested, but you must explain to the user why your app needs that permission. **Android only**. */
 "PromptWithRationale";
+
+export type ResolvedSettingsData = {
+	readonly theme: Theme,
+	readonly additional_color_variables: { [key in Id]: ColorVariable },
+};
 
 export type RootBranch = Branch & RootFields;
 

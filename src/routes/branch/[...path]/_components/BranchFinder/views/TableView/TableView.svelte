@@ -34,12 +34,12 @@
       <th class="startCell">Branch</th>
       
       {#each visiblePropertySchemas as propertySchema}
-        <MenuContainer Menu={propertySchemaConfigMenuMap[propertySchema.type] as PropertySchemaConfigMenu<T>} menuProps={{schema: propertySchema as TypedPropertySchema<T>}}>
-          {#snippet children(setOpen, menuSnippet)}
+        <MenuContainer type="Component" menu={propertySchemaConfigMenuMap[propertySchema.type] as PropertySchemaConfigMenu<T>} menuProps={{schema: propertySchema as TypedPropertySchema<T>}}>
+          {#snippet children(menuTrigger, menuSnippet)}
             <th 
               role="button" 
               style="cursor: pointer"
-              onclick={setOpen} 
+              use:menuTrigger
               oncontextmenu={(e)=>createContextMenu(e, editPropertySchemaMenu(e.currentTarget, {type: "Table", ...viewData}, propertySchema.id))}
             >
               {propertySchema.name}

@@ -1,6 +1,7 @@
+TODO: Eliminate split source of truth for data with an id stored in a hashmap keyed by an id
+TODO: Check why all parent branches are loaded when a branch is. (likely color)
+TODO: Improve table ergonomics
 TODO: Intermediate trash folder for deleted branches
-TODO: Fix the rust error types
-TODO: Sanatize user generated strings
 TODO: Check bug, if you delete a branch, then create a new one with the same name, it has the deleted one's data
 TODO: Only render visible table cells
-TODO: Check why all parent branches are loaded when a branch is. (likely color)
+TODO: Sanatize user generated strings

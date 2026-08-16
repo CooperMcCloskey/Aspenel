@@ -7,13 +7,16 @@
   <h1>{date}</h1>
 </header>
 
-<a href="/branch/Home">asdf</a>
+<main>
+  <a href="/branch/Home">home</a><br>
+  <a href="/settings">settings</a>
+</main>
+
 <style>
   header{
     grid-area: 2/2/3/5;
   }
-  a{
-    position: absolute;
-    top: 100px;
+  main{
+    grid-area: 3/2/5/6;
   }
 </style>

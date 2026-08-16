@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { PropertyValueValidationResult, LoadedPropertyValue } from "$lib/data/property/value/types";
+  import { sortByTimeCreated } from "$lib/data/utils";
 
   let {
     propertyData,
@@ -9,6 +10,7 @@
     checkResult: PropertyValueValidationResult<"Select">
   } = $props();
 
+  const options = $derived(sortByTimeCreated(propertyData.schema.options));
 </script>
 
 <select>

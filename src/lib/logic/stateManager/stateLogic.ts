@@ -1,7 +1,7 @@
-import type { IdPath } from "$lib/data/utils";
+import { sortByTimeCreated, type IdMap, type IdPath } from "$lib/data/utils";
 import type { WritableDeep } from "type-fest";
 import type { NodeChildren, NodeHandle, StateChange, StateTreeNode, StateTreeRoot, StateTreeVariant } from "./types";
-import { commands } from "$lib/bindings";
+import { commands, type Id } from "$lib/bindings";
 import { stateManager } from "./StateManager.svelte";
 
 export function getNode(tree: StateTreeRoot): StateTreeRoot
@@ -35,7 +35,7 @@ export function createNodeHandle(path: IdPath | undefined, applyCommand: (comman
         }, {});
       this.applyCommand((node)=>{node.children = childrenAsNodes}, false)
     },
-    get childArray(){ return Object.values(this.node.children ?? {}).map((c)=>c.branch) }
+    get childArray(){ return sortByTimeCreated(this.node.children ?? {}).map((c)=>c.branch) }
   }
 }
 

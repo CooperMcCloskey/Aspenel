@@ -1,23 +1,23 @@
+mod data;
 mod error_handling;
 mod filesystem;
 mod utils;
-mod data;
 
 use tauri_specta::{collect_commands, Builder};
 
 fn specta_builder() -> Builder<tauri::Wry> {
-  Builder::<tauri::Wry>::new()
-    .commands(collect_commands![
-      filesystem::commands::load_branch,
-      filesystem::commands::load_root_branch,
-      filesystem::commands::load_dir,
-      filesystem::commands::create_branch,
-      filesystem::commands::create_root_branch,
-      filesystem::commands::create_home_branch,
-      filesystem::commands::write_branch,
-      filesystem::commands::rename_file,
-      filesystem::commands::delete_file,
-    ])
+  Builder::<tauri::Wry>::new().commands(collect_commands![
+    filesystem::commands::load_branch,
+    filesystem::commands::load_root_branch,
+    filesystem::commands::load_dir,
+    filesystem::commands::create_branch,
+    filesystem::commands::create_root_branch,
+    filesystem::commands::create_home_branch,
+    filesystem::commands::write_branch,
+    filesystem::commands::rename_file,
+    filesystem::commands::delete_file,
+    filesystem::commands::read_settings,
+  ])
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

@@ -12,6 +12,8 @@
 // step in your build script / npm script:
 //   "gen:bindings": "cargo run --bin export-bindings && node scripts/make-readonly.mjs"
 
+//FIXME: AI generated
+
 import { Project, SyntaxKind } from "ts-morph";
 import path from "node:path";
 import { fileURLToPath } from "node:url";

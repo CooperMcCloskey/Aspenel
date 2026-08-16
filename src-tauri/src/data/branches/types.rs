@@ -5,8 +5,8 @@ use specta::Type;
 
 use crate::{
   data::{
+    components::types::ChildView,
     properties::{schemas::PropertySchema, values::PropertyValue},
-    views::types::ChildView,
   },
   utils::types::Id,
 };
@@ -61,12 +61,12 @@ pub struct LoadedRootBranch {
 #[serde(tag = "type")]
 pub enum UnloadedBranchVariant {
   Branch(Branch),
-  RootBranch(RootBranch)
+  RootBranch(RootBranch),
 }
 
 #[derive(Serialize, Deserialize, Type)]
 #[serde(tag = "type")]
 pub enum LoadedBranchVariant {
   LoadedBranch(LoadedBranch),
-  LoadedRootBranch(LoadedRootBranch)
+  LoadedRootBranch(LoadedRootBranch),
 }

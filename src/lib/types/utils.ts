@@ -5,3 +5,6 @@ export type WithoutTypeDiscriminator<T> = T extends any ? Omit<T, "type"> : neve
 export function isLoadedBranch(arg: any): arg is LoadedBranch {
   return arg && typeof arg === "object" && "branch" in arg;
 }
+
+export const objectEntries = <T extends object>(obj: T) => Object.entries(obj) as [keyof T, T[keyof T]][];
+export const objectFromEntries = <K extends PropertyKey, V>(e: [K, V][]) => Object.fromEntries(e) as Record<K, V>;

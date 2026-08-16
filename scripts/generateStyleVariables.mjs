@@ -1,70 +1,52 @@
 import fs from "fs";
 import path from "path";
 
-const themePath = path.resolve("./src/lib/styling/theme.json");
+const themePath = path.resolve("./src/lib/styling/systemTheme.json");
 const theme = JSON.parse(fs.readFileSync(themePath, "utf-8"));
-const isNumber = /^-?\d*\.?\d+(?:[a-z%]+)?$/i;
 
-let themeColors = {
-  "light": "",
-  "dark": ""
-}
-let css = "";
-let ts = ""
+const colorBlocks = { light: "", dark: "" };
+let rootVars = "";
 
 for (const [sectionKey, section] of Object.entries(theme)) {
-  ts+= "\n"
-
   if (sectionKey === "colors") {
-    for (const [scheme, colors] of Object.entries(section)) {
-      ts += `  ${scheme}: {\n`
-      for (const [key, value] of Object.entries(colors)) {
-        themeColors[scheme] += `    --${key}: ${value};\n`;
-        ts +=`    ${key}: ${/^-?\d*\.?\d+[a-z%]+$/i.test(value) ? value.replace(/(-?\d*\.?\d+)([a-z%]+)/i, '$1') : `"${value}"`},\n`;
+    for (const [scheme, tokens] of Object.entries(section)) {
+      for (const [key, value] of Object.entries(tokens)) {
+        colorBlocks[scheme] += `    --${key}: ${value};\n`;
       }
-      ts += "  },\n"
     }
-    
-    continue
+    continue;
   }
 
-  css += "\n";
   for (const [key, value] of Object.entries(section)) {
-    css += `  --${key}: ${value};\n`;
-    ts += `  ${key}: ${
-      isNumber.test(value)
-        ? value.replace(/(-?\d*\.?\d+)[a-z%]+/i, '$1')
-        : `"${value}"`
-    },\n`;
+    rootVars += `  --${key}: ${value};\n`;
   }
 }
 
-const cssOutput = `/* npm run updateStylingVariables to update */
+const banner = "/* Generated from systemTheme.json — do not edit. */";
+
+const cssOutput = `${banner}
 
 :root {
-${css}
-}
+${rootVars}}
 
 @media (prefers-color-scheme: light) {
   :root {
-${themeColors.light}
-  }
+${colorBlocks.light}  }
 }
-  
+
 @media (prefers-color-scheme: dark) {
   :root {
-${themeColors.dark}
-  }
+${colorBlocks.dark}  }
 }
-`
-const cssOutputFile = path.resolve("./src/lib/styling/variables.css");
-const tsOutput = `${`// npm run updateStylingVariables to update\n\nexport const stylingVars = {${ts}}`}`
-const tsOutputFile = path.resolve("./src/lib/styling/variables.ts");
+`;
+
+const tsOutput = `${banner}
+export const systemTheme = ${JSON.stringify(theme, null, 2)};
+`;
+
+const cssOutputFile = path.resolve("./src/lib/styling/systemTheme.css");
+const tsOutputFile = path.resolve("./src/lib/styling/systemTheme.ts");
 
 fs.mkdirSync(path.dirname(cssOutputFile), { recursive: true });
-fs.mkdirSync(path.dirname(tsOutputFile), { recursive: true });
 fs.writeFileSync(cssOutputFile, cssOutput);
 fs.writeFileSync(tsOutputFile, tsOutput);
-
-console.log(`css created at ${cssOutputFile}`);
-console.log(`ts created at ${tsOutputFile}`);

@@ -1,13 +1,16 @@
 use std::{
-  collections::HashMap, fs, path::{Path, PathBuf},
+  collections::HashMap,
+  fs,
+  path::{Path, PathBuf},
 };
 
 use tauri::{AppHandle, Manager};
 
 use crate::{
-  data::branches::{
-    impls::{Loadable, Writeable}, types::{Branch, LoadedBranch, LoadedBranchVariant, LoadedRootBranch, RootBranch},
-  }, error_handling::command_errors::Error, filesystem::{path_utils::get_sys_path, write::create_dir}, utils::types::Id,
+  data::{branches::{
+    impls::{Loadable, Writeable},
+    types::{Branch, LoadedBranch, LoadedBranchVariant, LoadedRootBranch, RootBranch},
+  }, settings::types::{SettingsData}}, error_handling::command_errors::Error, filesystem::{constants::SETTINGS_PATH, path_utils::get_sys_path, read::read_file, write::{create_dir, write_file}}, utils::types::Id,
 };
 
 #[tauri::command]
@@ -26,7 +29,7 @@ pub fn load_root_branch(app: AppHandle, path: PathBuf) -> Result<LoadedBranchVar
 
 #[tauri::command]
 #[specta::specta]
-pub fn write_branch(app: AppHandle, data: LoadedBranchVariant, path: PathBuf) -> Result<(), Error>{
+pub fn write_branch(app: AppHandle, data: LoadedBranchVariant, path: PathBuf) -> Result<(), Error> {
   data.write(app, &path)
 }
 
@@ -51,7 +54,6 @@ pub fn load_dir(app: AppHandle, dir_path: PathBuf) -> Result<HashMap<Id, LoadedB
       result.insert(lb.branch.id, lb);
     }
   }
-
   Ok(result)
 }
 
@@ -102,3 +104,17 @@ pub fn delete_file(app: AppHandle, path: PathBuf) -> Result<(), Error> {
   fs::remove_dir_all(sys_path)?;
   Ok(())
 }
+
+
+//TODO: handle corrupted settings files, create a similar pattern for reading the home branch
+#[tauri::command]
+#[specta::specta]
+pub fn read_settings(app: AppHandle) -> Result<SettingsData, Error>{
+  let settings_path = Path::new(SETTINGS_PATH);
+  let sys_path = get_sys_path(app.clone(), &settings_path)?;
+  if !sys_path.exists() {
+    write_file(app.clone(), settings_path, SettingsData::default())?;
+  }
+  read_file::<SettingsData>(app, Path::new(SETTINGS_PATH))
+}
+

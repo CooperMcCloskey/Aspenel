@@ -1,5 +1,5 @@
 <script lang="ts">
-  import '$lib/styling/variables.css'
+  import '$lib/styling/systemTheme.css'
   import '$lib/styling/global.css'
   import IconBase from '$lib/components/icons/IconBase.svelte';
   import BackArrowIcon from '$lib/components/icons/BackArrowIcon.svelte';

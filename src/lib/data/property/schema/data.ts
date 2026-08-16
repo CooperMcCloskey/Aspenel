@@ -6,9 +6,9 @@ import { stateManager } from "$lib/logic/stateManager/StateManager.svelte";
 
 const propertySchemaFactoryMap: {[T in PropertyType]: (name: string, id: Id)=>TypedPropertySchema<T>} = {
   "Date": (name, id)=>({type: "Date", name, id, date_format: "DMY", time_format: "H24"}),
-  "MultiSelect": (name, id)=>({type: "MultiSelect", name, id, options: [], categories: []}),
+  "MultiSelect": (name, id)=>({type: "MultiSelect", name, id, options: {}}),
   "Number": (name, id)=>({type: "Number", name, id, min: undefined, max: undefined}),
-  "Select": (name, id)=>({type: "Select", name, id, options: [], categories: []}),
+  "Select": (name, id)=>({type: "Select", name, id, options: {}}),
   "Text": (name, id)=>({type: "Text", name,  id}),
 } 
 
