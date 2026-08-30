@@ -25,6 +25,7 @@
 </script>
 
 <!-- FIXME: operation being pushed on focus -->
+<!-- TODO: replace with TextInput component -->
 <input 
   value={property.value ?? ""} 
   use:onCommit={(e, el)=>setValue(el.value)} 

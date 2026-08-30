@@ -1,9 +1,15 @@
-import type { LoadedBranch } from "$lib/bindings";
-
 export type WithoutTypeDiscriminator<T> = T extends any ? Omit<T, "type"> : never;
+export type Size = {width: number, height: number}
+export type Result<T> = {
+  status: "ok"
+  data: T
+} | {
+  status: "error",
+  error: string
+}
 
-export function isLoadedBranch(arg: any): arg is LoadedBranch {
-  return arg && typeof arg === "object" && "branch" in arg;
+export function fitsContainer(container: Size, contained: Size | undefined): boolean{
+  return container.width > (contained?.width ?? Infinity) && container.height > (contained?.height ?? Infinity);
 }
 
 export const objectEntries = <T extends object>(obj: T) => Object.entries(obj) as [keyof T, T[keyof T]][];

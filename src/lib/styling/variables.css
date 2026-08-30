@@ -27,9 +27,9 @@
     --blue: #504d61;
     --green: #4d6158;
     --background: #F7F1E0;
-    --white: #e8dfcd;
-    --gray: #c5c5c5;
-    --black: #000000;
+    --gray0: #e8dfcd;
+    --gray2: #c5c5c5;
+    --gray4: #000000;
 
   }
 }
@@ -41,9 +41,9 @@
     --blue: #504d61;
     --green: #4d6158;
     --background: #1E1E1E;
-    --white: #292936;
-    --gray: #4F4F69;
-    --black: #c5c5c5;
+    --gray0: #292936;
+    --gray2: #4F4F69;
+    --gray4: #c5c5c5;
 
   }
 }

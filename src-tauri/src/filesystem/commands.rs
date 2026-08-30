@@ -7,10 +7,21 @@ use std::{
 use tauri::{AppHandle, Manager};
 
 use crate::{
-  data::{branches::{
-    impls::{Loadable, Writeable},
-    types::{Branch, LoadedBranch, LoadedBranchVariant, LoadedRootBranch, RootBranch},
-  }, settings::types::{SettingsData}}, error_handling::command_errors::Error, filesystem::{constants::SETTINGS_PATH, path_utils::get_sys_path, read::read_file, write::{create_dir, write_file}}, utils::types::Id,
+  data::{
+    branches::{
+      impls::{Loadable, Writeable},
+      types::{Branch, LoadedBranch, LoadedBranchVariant, LoadedRootBranch, RootBranch},
+    },
+    settings::types::Settings,
+  },
+  error_handling::command_errors::Error,
+  filesystem::{
+    constants::SETTINGS_PATH,
+    path_utils::get_sys_path,
+    read::read_file,
+    write::{create_dir, write_file},
+  },
+  utils::types::Id,
 };
 
 #[tauri::command]
@@ -105,16 +116,14 @@ pub fn delete_file(app: AppHandle, path: PathBuf) -> Result<(), Error> {
   Ok(())
 }
 
-
 //TODO: handle corrupted settings files, create a similar pattern for reading the home branch
 #[tauri::command]
 #[specta::specta]
-pub fn read_settings(app: AppHandle) -> Result<SettingsData, Error>{
+pub fn read_settings(app: AppHandle) -> Result<Settings, Error> {
   let settings_path = Path::new(SETTINGS_PATH);
   let sys_path = get_sys_path(app.clone(), &settings_path)?;
   if !sys_path.exists() {
-    write_file(app.clone(), settings_path, SettingsData::default())?;
+    write_file(app.clone(), settings_path, Settings::default())?;
   }
-  read_file::<SettingsData>(app, Path::new(SETTINGS_PATH))
+  read_file::<Settings>(app, Path::new(SETTINGS_PATH))
 }
-

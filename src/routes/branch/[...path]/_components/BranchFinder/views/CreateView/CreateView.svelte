@@ -7,9 +7,9 @@
 
 <style>
   button{
-    color: var(--gray);
+    color: var(--gray2);
   }
   button:hover{
-    color: var(--black)
+    color: var(--gray4)
   }
 </style>

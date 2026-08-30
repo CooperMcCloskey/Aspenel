@@ -1,41 +1,33 @@
 <script lang="ts">
-    import ColorPicker from '$lib/components/ColorPicker.svelte';
+  import { settings } from '$lib/logic/settings.svelte.js';
+  import ColorSettingsTab from './tabs/ColorSettingsTab.svelte';
+  import RadioButtonGroup from '$lib/components/RadioButtonGroup.svelte';
 
-  let { data: settings } = $props();
+  //TODO: diff with old settings and add change indicators.
+  //TODO: proxy the actual settings and keep undo redo history.
+  const oldSettings = $state($state.snapshot(settings));
 
-  const tabs = ["Colors", "About"]
-  let selectedTab = $state(tabs[0])
+  const tabs = ["General", "Colors", "About"]
+  let selectedTab = $state(tabs[0]!)
 </script>
 
 <header>
-  <h1>Settings</h1>
-  <div id="tabs">
-    {#each tabs as tab}
-      <label class="tab">
-        <input 
-          type="radio" 
-          name="tabs" 
-          value={tab}
-          bind:group={selectedTab}
-        >
-        <span class="tabLabel">{tab}</span>
-      </label>
-    {/each}
-  </div>
-  <input type="radio">
+  <h1>{selectedTab}</h1>
 </header>
 
+<!-- TODO: add search as the top tab -->
+<div class="tabs">
+  <RadioButtonGroup 
+    options={tabs} 
+    bind:value={selectedTab} 
+    --flex-direction="column"
+    --first-child-padding="0"
+  />
+</div>
 
 <main>
   {#if selectedTab === "Colors"}
-    <div id="colors">
-    {#each Object.entries(settings.theme.system_color_variables) as color, index}
-      <div class="color">
-        <ColorPicker noThemeColors></ColorPicker> 
-        <span>{color[0]}</span> 
-      </div>
-    {/each}
-    </div>
+    <ColorSettingsTab {oldSettings}/>
   {/if}
 </main>
 
@@ -43,21 +35,11 @@
   header{
     grid-area: 2/2/3/5;
   }
+  .tabs{
+    grid-area: 3/1/8/2;
+  }
   main{
-    grid-area: 3/2/5/6;
-  }
-  .tab{
-    cursor: pointer;
-    padding: var(--standardPadding);
-  }
-  .tab:first-child{
-    padding-left: 0;
-  }
-  .tab input:checked + .tabLabel{
-    font-weight: 500;
-  }
-  .color{
-    position: relative;
+    grid-area: 3/2/8/6;
   }
 </style>
 

@@ -41,7 +41,7 @@
     width: calc(100% - 2 * var(--standardPadding));
     max-height: calc(2 * var(--smallText) * var(--lineHeight) + 2 * var(--standardPadding));
     background-color: var(--red);
-    color: var(--white);
+    color: var(--gray0);
     padding: var(--standardPadding);
     z-index: 1;
   }

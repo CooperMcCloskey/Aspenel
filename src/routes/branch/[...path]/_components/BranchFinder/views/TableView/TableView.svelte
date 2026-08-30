@@ -105,7 +105,7 @@
     padding: var(--standardPadding);
     text-align: left;
     font-weight: normal;
-    border: var(--borderWidth) solid color-mix(in srgb, var(--gray) 25%, transparent);
+    border: var(--borderWidth) solid var(--gray1);
   }
   th{ 
     border-top: none; 

@@ -52,9 +52,9 @@
   bottom: 10px;
   right: 10px;
   border-radius: 50%;
-  border: 2px solid var(--gray);
+  border: 2px solid var(--gray2);
 }
 .saved{
-  background-color: var(--gray);
+  background-color: var(--gray2);
 }
 </style>

@@ -1,43 +1,38 @@
-use std::{collections::HashMap};
+use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 use specta::Type;
 
 use crate::utils::types::Id;
 
-#[derive(Serialize, Deserialize, Type)]
-pub struct SettingsData {
-  theme: ThemeOption,
-  additional_color_variables: HashMap<Id, ColorVariable>
-}
-
-#[derive(Serialize, Deserialize, Type)]
-pub struct ResolvedSettingsData{
+#[derive(Serialize, Deserialize, Type, Default)]
+pub struct Settings {
+  selected_scheme: Scheme,
   theme: Theme,
-  additional_color_variables: HashMap<Id, ColorVariable>
+  additional_color_variables: HashMap<Id, ColorVariable>,
 }
 
-impl SettingsData {
-  pub fn default() -> SettingsData {
-    SettingsData { theme: ThemeOption::Default, additional_color_variables: HashMap::new() }
-  }
-}
-
-#[derive(Serialize, Deserialize, Type)]
-enum ThemeOption {
-    #[serde(rename = "default")]
-    Default,
-    #[serde(untagged)]
-    Theme(Theme),
-}
-
-#[derive(Serialize, Deserialize, Type)]
+#[derive(Serialize, Deserialize, Type, Default)]
 pub struct Theme {
+  #[serde(default)]
   system_color_variables: SystemColorVariables,
 }
 
 #[derive(Serialize, Deserialize, Type)]
-#[serde(untagged)]
+pub enum Scheme {
+  Light,
+  Dark,
+  System,
+}
+
+impl Default for Scheme {
+  fn default() -> Self {
+    Scheme::System
+  }
+}
+
+#[derive(Serialize, Deserialize, Type)]
+#[serde(tag = "type", content = "value")]
 pub enum ColorVariable {
   Single(String),
   Split(SplitColorVariable),
@@ -50,4 +45,3 @@ pub struct SplitColorVariable {
 }
 
 include!(concat!(env!("OUT_DIR"), "/default_theme.rs"));
-

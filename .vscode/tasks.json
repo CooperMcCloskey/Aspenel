@@ -19,9 +19,9 @@
       }
     },
     {
-      "label": "gen-style-vars",
+      "label": "gen-theme",
       "type": "shell",
-      "command": "npm run gen-style-vars",
+      "command": "npm run gen-theme",
       "problemMatcher": [],
       "presentation": {
         "reveal": "always",

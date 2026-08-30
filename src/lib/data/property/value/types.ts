@@ -1,5 +1,6 @@
 import type { PropertyValue } from "$lib/bindings";
 import type { IdPath } from "$lib/data/utils";
+import type { Result } from "$lib/types/utils";
 import type { TypedPropertySchema } from "../schema/types";
 import type { PropertyType } from "../types";
 
@@ -15,11 +16,4 @@ export type LoadedPropertyValue<T extends PropertyType> = {
   readonly branchPath: IdPath;
 };
 
-export type PropertyValueValidationResult<T extends PropertyType> = {
-  readonly status: "ok",
-  readonly data: TypedPropertyValue<T> | undefined
-} | {
-  readonly status: "error",
-  readonly error: string
-}
-
+export type PropertyValueValidationResult<T extends PropertyType> = Result<TypedPropertyValue<T> | undefined>

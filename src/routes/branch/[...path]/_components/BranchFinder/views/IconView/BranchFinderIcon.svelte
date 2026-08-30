@@ -20,8 +20,7 @@
     position: relative;
     grid-column: span 1;
     grid-row: span 1;
-    background: var(--white);
-    cursor: pointer;
+    background: var(--gray0);
   }
   header{
     position: absolute;
@@ -35,9 +34,9 @@
     position: absolute;
     bottom: 0;
     left: 2px;
-    color: var(--white);
+    color: var(--gray0);
   }
   #container:hover > header > h2, #container:focus-visible > header > h2{
-    text-decoration: underline solid var(--white) 2px;
+    text-decoration: underline solid var(--gray0) 2px;
   }
 </style>

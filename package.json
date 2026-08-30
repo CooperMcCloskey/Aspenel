@@ -10,8 +10,8 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "tauri": "tauri",
-    "gen-style-vars": "node scripts/generateStyleVariables.mjs",
-    "gen-bindings": "cd src-tauri && cargo test export_binding && cd .. && node scripts/normalizeBindings.mjs && node scripts/readonlyBindings.mjs"
+    "gen-theme": "node scripts/generateTheme.mjs && npm run gen-bindings",
+    "gen-bindings": "cd src-tauri && cargo test export_binding && cd .. && node scripts/postProcessBindings.mjs"
   },
   "license": "MIT",
   "dependencies": {

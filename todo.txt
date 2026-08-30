@@ -1,3 +1,7 @@
+TODO: Redefine the json conventions for saving color themes so that there are not redundant matched values.
+TODO: Remove id="" in reused components
+TODO: Cut down css with common classes
+TODO: Fix colors (contrast)
 TODO: Eliminate split source of truth for data with an id stored in a hashmap keyed by an id
 TODO: Check why all parent branches are loaded when a branch is. (likely color)
 TODO: Improve table ergonomics

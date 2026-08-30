@@ -6,7 +6,7 @@ import type { UntypedBranchVariant } from "./types";
 export function newEmptyLoadedFields(): LoadedFields {
   return {
     filename: "...",
-    computed_color: "var(--gray)",
+    computed_color: "var(--gray2)",
     path: "loading"
   }
 }
@@ -23,7 +23,7 @@ export function newEmptyRootFields(): RootFields {
 export function newEmptyBranch<T extends UntypedBranchVariant>(): T {
   return {
     id: "0",
-    color: "var(--gray)",
+    color: "var(--gray2)",
     property_values: {},
     ...newEmptyLoadedFields(),
     ...newEmptyRootFields()

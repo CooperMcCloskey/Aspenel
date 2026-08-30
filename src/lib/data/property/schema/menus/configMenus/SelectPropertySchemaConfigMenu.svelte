@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ColorPicker from "$lib/components/ColorPicker.svelte";
+    import ColorPicker from "$lib/components/colors/ColorPicker.svelte";
     import type { TypedPropertySchema } from "../../types";
 
   const { schema }: { schema: TypedPropertySchema<"Select"> } = $props();
@@ -14,6 +14,6 @@
 <style>
   .row{
     position: relative;
-    white-space: nowrap;
+    gray0-space: nowrap;
   }
 </style>

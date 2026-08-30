@@ -1,8 +1,8 @@
 /* Generated from systemTheme.json — do not edit. */
 
 :root {
-  --fontFamily: 'Josefin Sans';
-  --monoFontFamily: 'JetBrains Mono';
+  --fontFamily: 'Charter';
+  --monoFontFamily: 'Iosevka';
   --lineHeight: 1.2;
   --headerText: 3rem;
   --largeText: 2rem;
@@ -15,30 +15,85 @@
   --standardPadding: 4px;
   --borderWidth: 2px;
   --iconSpacing: 2px;
+
+  /* both schemes, always resolvable regardless of the active one */
+  --lightbackground: #f7f0e1;
+  --lightgray0: #e8dfcd;
+  --lightgray1: #d4c9b6;
+  --lightgray2: #a69b85;
+  --lightgray3: #756b57;
+  --lightgray4: #1f1e1d;
+  --lightred: #c85040;
+  --lightyellow: #c8b63f;
+  --lightblue: #504d61;
+  --lightgreen: #4d6158;
+
+  --darkbackground: #1d1c1f;
+  --darkgray0: #292936;
+  --darkgray1: #3b3b4f;
+  --darkgray2: #4f4f69;
+  --darkgray3: #8585a3;
+  --darkgray4: #c2c2c9;
+  --darkred: #c85040;
+  --darkyellow: #c8b63f;
+  --darkblue: #504d61;
+  --darkgreen: #4d6158;
 }
 
 @media (prefers-color-scheme: light) {
   :root {
+    --background: #f7f0e1;
+    --gray0: #e8dfcd;
+    --gray1: #d4c9b6;
+    --gray2: #a69b85;
+    --gray3: #756b57;
+    --gray4: #1f1e1d;
     --red: #c85040;
     --yellow: #c8b63f;
     --blue: #504d61;
     --green: #4d6158;
-    --white: #e8dfcd;
-    --gray: #c5c5c5;
-    --black: #000000;
-    --background: #F7F1E0;
   }
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
+    --background: #1d1c1f;
+    --gray0: #292936;
+    --gray1: #3b3b4f;
+    --gray2: #4f4f69;
+    --gray3: #8585a3;
+    --gray4: #c2c2c9;
     --red: #c85040;
     --yellow: #c8b63f;
     --blue: #504d61;
     --green: #4d6158;
-    --background: #1E1E1E;
-    --white: #292936;
-    --gray: #4F4F69;
-    --black: #c5c5c5;
   }
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --background: #f7f0e1;
+  --gray0: #e8dfcd;
+  --gray1: #d4c9b6;
+  --gray2: #a69b85;
+  --gray3: #756b57;
+  --gray4: #1f1e1d;
+  --red: #c85040;
+  --yellow: #c8b63f;
+  --blue: #504d61;
+  --green: #4d6158;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #1d1c1f;
+  --gray0: #292936;
+  --gray1: #3b3b4f;
+  --gray2: #4f4f69;
+  --gray3: #8585a3;
+  --gray4: #c2c2c9;
+  --red: #c85040;
+  --yellow: #c8b63f;
+  --blue: #504d61;
+  --green: #4d6158;
 }

@@ -4,8 +4,11 @@
   import IconBase from '$lib/components/icons/IconBase.svelte';
   import BackArrowIcon from '$lib/components/icons/BackArrowIcon.svelte';
   import { goto } from '$app/navigation';
+  import { applySettingsChanges, settings } from '$lib/logic/settings.svelte';
 
   const { children } = $props();
+
+  $effect(()=>{applySettingsChanges(settings)})
 
   function backArrow(){
     //TODO: Make this work

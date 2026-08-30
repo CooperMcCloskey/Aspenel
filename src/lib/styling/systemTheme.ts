@@ -1,30 +1,42 @@
 /* Generated from systemTheme.json — do not edit. */
 export const systemTheme = {
   "colors": {
-    "light": {
-      "red": "#c85040",
-      "yellow": "#c8b63f",
-      "blue": "#504d61",
-      "green": "#4d6158",
-      "white": "#e8dfcd",
-      "gray": "#c5c5c5",
-      "black": "#000000",
-      "background": "#F7F1E0"
+    "neutrals": {
+      "background": {
+        "light": "#f7f0e1",
+        "dark": "#1d1c1f"
+      },
+      "gray0": {
+        "light": "#e8dfcd",
+        "dark": "#292936"
+      },
+      "gray1": {
+        "light": "#d4c9b6",
+        "dark": "#3b3b4f"
+      },
+      "gray2": {
+        "light": "#a69b85",
+        "dark": "#4f4f69"
+      },
+      "gray3": {
+        "light": "#756b57",
+        "dark": "#8585a3"
+      },
+      "gray4": {
+        "light": "#1f1e1d",
+        "dark": "#c2c2c9"
+      }
     },
-    "dark": {
+    "accents": {
       "red": "#c85040",
       "yellow": "#c8b63f",
       "blue": "#504d61",
-      "green": "#4d6158",
-      "background": "#1E1E1E",
-      "white": "#292936",
-      "gray": "#4F4F69",
-      "black": "#c5c5c5"
+      "green": "#4d6158"
     }
   },
   "font": {
-    "fontFamily": "'Josefin Sans'",
-    "monoFontFamily": "'JetBrains Mono'",
+    "fontFamily": "'Charter'",
+    "monoFontFamily": "'Iosevka'",
     "lineHeight": "1.2",
     "headerText": "3rem",
     "largeText": "2rem",
@@ -40,4 +52,26 @@ export const systemTheme = {
     "borderWidth": "2px",
     "iconSpacing": "2px"
   }
-};
+} as const;
+
+/** Color keys by group, in file order. */
+export const colorGroups = {
+  "neutrals": [
+    "background",
+    "gray0",
+    "gray1",
+    "gray2",
+    "gray3",
+    "gray4"
+  ],
+  "accents": [
+    "red",
+    "yellow",
+    "blue",
+    "green"
+  ]
+} as const;
+
+export type ColorGroup = keyof typeof colorGroups;
+export type ColorKey = (typeof colorGroups)[ColorGroup][number];
+export type Scheme = "light" | "dark";

@@ -61,16 +61,16 @@
   }
   .pathComponent{
     display: inline;
-    color: var(--gray);
+    color: var(--gray2);
     position: relative;
     margin: 0;
     font-size: 0; /* eliminate space between component and separator */
   }
   #pathDisplayContainer:has(.path:hover) .path{
-    color: var(--black)
+    color: var(--gray4)
   }
   .pathComponent:has(.path:hover) ~ .pathComponent .path {
-    color: var(--gray) !important;
+    color: var(--gray2) !important;
   }
   .path{
     font-size: var(--smallText);
