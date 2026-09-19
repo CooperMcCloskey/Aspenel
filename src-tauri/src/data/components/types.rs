@@ -11,18 +11,8 @@ pub enum ChildView {
   Table(TableViewData),
 }
 
-impl ChildView {
-  pub fn id(&self) -> Id {
-    match self {
-      ChildView::Icon(data) => data.id,
-      ChildView::Table(data) => data.id,
-    }
-  }
-}
-
 #[derive(Serialize, Deserialize, Type)]
 pub struct IconViewData {
-  id: Id,
   name: String,
   visible_property_ids: Vec<Id>,
 }
@@ -32,7 +22,6 @@ impl IconViewData {
   //ensure that this constructor for the iconView lines up with the one in the frontend.
   pub fn new_icon_view(name: &str) -> IconViewData {
     IconViewData {
-      id: Id::new(),
       name: name.to_string(),
       visible_property_ids: vec![],
     }
@@ -41,7 +30,6 @@ impl IconViewData {
 
 #[derive(Serialize, Deserialize, Type)]
 pub struct TableViewData {
-  id: Id,
   name: String,
   hidden_property_ids: Vec<Id>,
 }

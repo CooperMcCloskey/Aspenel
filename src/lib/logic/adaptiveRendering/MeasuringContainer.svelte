@@ -19,7 +19,7 @@
 </script>
 
 <div 
-  id="measuringContainer" 
+  class="measuringContainer" 
   bind:clientWidth={width} 
   bind:clientHeight={height}
 >
@@ -27,7 +27,7 @@
 </div>
 
 <style>
-  #measuringContainer{
+  .measuringContainer{
     visibility: hidden;
     position: absolute;
     top: 0;

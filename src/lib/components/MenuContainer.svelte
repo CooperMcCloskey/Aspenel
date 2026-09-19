@@ -40,7 +40,7 @@
 {#snippet menuSnippet()}
   {#if open}
     <div 
-      id="menu" 
+      class="menu" 
       bind:this={menuElement}
       style={applyBackgroundColor("gray0")}
     >
@@ -56,7 +56,7 @@
 {@render props.children(menuTrigger, menuSnippet)}
 
 <style>
-  #menu{
+  .menu{
     position: absolute;
     top: 100%;
     left: 0;

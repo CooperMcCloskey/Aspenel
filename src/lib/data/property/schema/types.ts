@@ -1,4 +1,4 @@
-import type { PropertySchema } from "$lib/bindings";
+import type { Id, PropertySchema } from "$lib/bindings";
 import type { PropertyType } from "../types";
 
-export type TypedPropertySchema<T extends PropertyType> = Extract<PropertySchema, { type: T; }>;
+export type LoadedPropertySchema<T extends PropertyType> = Extract<PropertySchema, { type: T; }> & {id: Id};

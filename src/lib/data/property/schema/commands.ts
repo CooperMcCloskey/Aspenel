@@ -6,12 +6,13 @@ import { renameElement } from "$lib/logic/uiLogic";
 import type { WritableDeep } from "type-fest";
 import type { PropertyType } from "../types";
 import { getPropertySchema, newPropertySchema } from "./data";
-import type { TypedPropertySchema } from "./types";
+import type { LoadedPropertySchema } from "./types";
+import { ulid } from "ulid";
 
 
 export function createPropertySchema<T extends PropertyType>(type: T) { 
-  const schema: TypedPropertySchema<T> = newPropertySchema(type);
-  stateManager.applyCommand(()=>stateManager.tree.branch.properties[schema.id] = schema);
+  const schema: LoadedPropertySchema<T> = newPropertySchema(type);
+  stateManager.applyCommand(()=>stateManager.tree.branch.properties[ulid()] = schema);
 }
 
 export function renamePropertySchema(propertyElement: HTMLElement, schemaId: Id) {

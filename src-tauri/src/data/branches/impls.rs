@@ -55,7 +55,7 @@ impl RootBranch {
       },
       root_data: RootFields {
         properties: HashMap::new(),
-        ui_components: HashMap::from([(default_view.id(), default_view)]),
+        ui_components: HashMap::from([(Id::new(), default_view)]),
       },
     }
   }

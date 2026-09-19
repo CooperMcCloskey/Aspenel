@@ -7,11 +7,11 @@ import { createPropertySchema } from "../commands";
 import { propertyTypes } from "../../types";
 
 
-export function editPropertySchemaMenu(propertyElement: HTMLSpanElement, view: ChildView, propertyId: Id): Promise<Menu> {
+export function editPropertySchemaMenu(propertyElement: HTMLSpanElement, viewId: Id, propertyId: Id): Promise<Menu> {
   return Menu.new({
     items: [
       { text: "Rename", action: () => renamePropertySchema(propertyElement, propertyId) },
-      { text: "Hide", action: () => hidePropertySchema(view.id, propertyId) },
+      { text: "Hide", action: () => hidePropertySchema(viewId, propertyId) },
       { text: "Delete", action: () => deletePropertySchema(propertyId) }
     ]
   });

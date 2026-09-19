@@ -2,7 +2,11 @@ use std::{collections::HashSet, env, fs, path::Path};
 
 use serde_json::{Map, Value};
 
+//FIXME: Ai generated
+
 fn main() {
+  tauri_build::build();
+
   let theme_path = "../src/lib/styling/systemTheme.json";
   println!("cargo:rerun-if-changed={theme_path}");
 

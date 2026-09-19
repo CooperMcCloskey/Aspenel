@@ -42,7 +42,7 @@ export function createNodeHandle(path: IdPath | undefined, applyCommand: (comman
 export function applyStateChange(change: StateChange){
   const {target, key, newValue} = change;
   if(newValue === undefined) Reflect.deleteProperty(target, key);
-  Reflect.set(target, key, newValue)
+  else Reflect.set(target, key, newValue)
 }
 export function undoStateChange(change: StateChange){
   const {target, key, oldValue} = change

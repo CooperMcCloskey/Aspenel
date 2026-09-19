@@ -12,14 +12,14 @@
   
 </script>
 
-<div id="container">
+<div class="container">
   {#each children as child}
     <BranchFinderIcon branch={child}/>
   {/each}
 </div>
 
 <style>
-  #container{
+  .container{
     width: 100%;
     height: 100%;
     display: grid;

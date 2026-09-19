@@ -6,15 +6,15 @@
   import { branchEditMenu } from "$lib/data/branch/menus/contextMenus";
   import { newChild } from "$lib/data/branch/commands";
   import { stateManager } from "$lib/logic/stateManager/StateManager.svelte";
-  import type { TableViewData } from "$lib/bindings";
+  import type { Id, TableViewData } from "$lib/bindings";
   import PropertyValueContainer from "./PropertyValues/PropertyValueContainer.svelte";
   import MenuContainer from "$lib/components/MenuContainer.svelte";
   import { propertySchemaConfigMenuMap, type PropertySchemaConfigMenu } from "$lib/data/property/schema/menus/configMenus/map";
   import { editPropertySchemaMenu, newPropertySchemaMenu } from "$lib/data/property/schema/menus/contextMenus";
   import type { PropertyType } from "$lib/data/property/types";
-  import type{ TypedPropertySchema } from "$lib/data/property/schema/types";
+  import type{ LoadedPropertySchema } from "$lib/data/property/schema/types";
 
-  const { viewData }: { viewData:  TableViewData} = $props();
+  const { id, viewData }: { id: Id, viewData: TableViewData} = $props();
 
   $effect(()=>{
     viewData;
@@ -22,25 +22,29 @@
   })
 
   const children = $derived(stateManager.rootNodeHandle.childArray)
-  const visiblePropertySchemas = $derived(Object.values(stateManager.rootBranch.properties).filter((p)=>!viewData.hidden_property_ids.includes(p.id))); //TODO: Sort
+  const visiblePropertySchemas: LoadedPropertySchema<PropertyType>[] = $derived(
+    Object.entries(stateManager.rootBranch.properties)
+      .filter(([id, _])=>!viewData.hidden_property_ids.includes(id))
+      .map(([id,p])=>({...p, id}))
+  ); //TODO: Sort
 
 </script>
 
 <!-- TODO: Resizeable columns -->
-<table id="container">
+<table class="container">
 
   <thead>
-    <tr id="row1">
+    <tr>
       <th class="startCell">Branch</th>
       
       {#each visiblePropertySchemas as propertySchema}
-        <MenuContainer type="Component" menu={propertySchemaConfigMenuMap[propertySchema.type] as PropertySchemaConfigMenu<T>} menuProps={{schema: propertySchema as TypedPropertySchema<T>}}>
+        <MenuContainer type="Component" menu={propertySchemaConfigMenuMap[propertySchema.type] as PropertySchemaConfigMenu<T>} menuProps={{schema: propertySchema as LoadedPropertySchema<T>}}>
           {#snippet children(menuTrigger, menuSnippet)}
             <th 
               role="button" 
               style="cursor: pointer"
               use:menuTrigger
-              oncontextmenu={(e)=>createContextMenu(e, editPropertySchemaMenu(e.currentTarget, {type: "Table", ...viewData}, propertySchema.id))}
+              oncontextmenu={(e)=>createContextMenu(e, editPropertySchemaMenu(e.currentTarget, id, propertySchema.id))}
             >
               {propertySchema.name}
               {@render menuSnippet()}
@@ -72,7 +76,7 @@
 
         {#each visiblePropertySchemas as propertySchema}
           <td class="propertyValueCell" style="padding: 0px">
-            <PropertyValueContainer {propertySchema} childId={child.id}></PropertyValueContainer>
+            <PropertyValueContainer {propertySchema} id={child.id}></PropertyValueContainer>
           </td>
         {/each}
 
@@ -95,7 +99,7 @@
 </table>
 
 <style>
-  #container{
+  .container{
     height: 100%;
     font-family: var(--monoFontFamily);
     border-collapse: collapse;

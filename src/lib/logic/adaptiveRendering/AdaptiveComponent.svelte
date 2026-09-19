@@ -13,7 +13,7 @@
 </script>
 
 <div 
-  id="container" 
+  class="container" 
   bind:clientWidth={containerSize.width}
   bind:clientHeight={containerSize.height}
 > 
@@ -23,18 +23,18 @@
 
   {@render chosenSnippet()}
 
-  <!-- <div id="debug">
+  <!-- <div class="debug">
     <span>container: {JSON.stringify(containerSize)}</span>
     <span>snippets: {JSON.stringify(snippetSizes)}</span>
   </div> -->
 </div>
 
 <style>
-  #container{
+  .container{
     width: 100%;
     height: 100%;
   }
-  /* #debug{
+  /* .debug{
     color: rgb(255, 0, 255);
     position: absolute;
     top: 0;

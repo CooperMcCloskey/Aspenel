@@ -16,12 +16,12 @@
   
 </script>
 
-<div id="container">
+<div class="container">
   <header>
     <button title="More..."><IconBase hasHoverEffect={true}><MoreHorizontalIcon/></IconBase></button>
     <button title="New Branch" onclick={()=>newChild()}><IconBase hasHoverEffect={true}><NewBranchIcon/></IconBase></button>
   </header>
-  <div id="fileViews">
+  <div class="fileViews">
     {#if activeView === null}
       <CreateView/>
     {:else}
@@ -43,14 +43,14 @@
     justify-content: flex-start;
     align-items: flex-start;
   }
-  #container{
+  .container{
     display: block;
     position: relative;
     width: 100%;
     height: 100%;
     font-family: sans;
   }
-  #fileViews{
+  .fileViews{
     width: 100%;
     height: 100%;
   }

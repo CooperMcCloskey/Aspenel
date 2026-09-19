@@ -13,8 +13,8 @@
       aria-label="Color picker"
       style="background-color: {hexValue};"
     >
-      <span id="name">{name}</span>
-      <span id="hex">{hexValue}</span>
+      <span class="name">{name}</span>
+      <span class="hex">{hexValue}</span>
     </button>
     {@render menuSnippet()}
   {/snippet}
@@ -33,13 +33,13 @@
     width: 100%;
     height: 100%;
   }
-  #name{
+  .name{
     position: absolute;
     top: var(--standardPadding);
     left: var(--standardPadding);
     font-family: var(--fontFamily);
   }
-  #hex{
+  .hex{
     position: absolute;
     bottom: var(--standardPadding);
     left: var(--standardPadding);

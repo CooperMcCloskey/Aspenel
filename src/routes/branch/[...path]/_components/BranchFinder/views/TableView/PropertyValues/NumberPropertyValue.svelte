@@ -1,8 +1,8 @@
 <script lang="ts">
+  import Input from "$lib/components/input/Input.svelte";
   import { setPropertyValue } from "$lib/data/property/value/commands";
   import type { PropertyValueValidationResult, LoadedPropertyValue } from "$lib/data/property/value/types";
   import { checkNumberValue } from "$lib/data/property/value/variants/number";
-  import { onCommit } from "$lib/logic/actions";
 
   let {
     property,
@@ -12,33 +12,16 @@
     checkResult: PropertyValueValidationResult<"Number">
   } = $props();
 
-  $inspect(property)
- 
-  function setValue(value: unknown){
-    checkResult = setPropertyValue(property, value);
-    if(checkResult.status === "error"){
-      checkResult = setPropertyValue(property, property.value);
-      if(checkResult.status === "error") throw new Error("Illegal property value saved");
-    }
-  }
-
 </script>
 
-<!-- FIXME: operation being pushed on focus -->
-<!-- TODO: replace with TextInput component -->
-<input 
-  value={property.value ?? ""} 
-  use:onCommit={(e, el)=>setValue(el.value)} 
-  oninput={(e)=>{checkResult = checkNumberValue(property.schema, e.currentTarget.value)}}
-  type="text"
-  autocorrect="off"
-  autocapitalize="off"
-  autocomplete="off"
-  spellcheck="false"
->
 
-<style>
-  input{ 
-    text-align: right; 
-  }
-</style>
+<Input
+  bind:value={property.value}
+  validate={(draft)=>checkNumberValue(property.schema, draft)}
+  format={(value)=>(value === undefined ? "" : String(value))}
+  submit={(value)=>setPropertyValue(property, value)}
+  --text-align="right"
+  --invalidBox-left="calc(-1 * var(--standardPadding))"
+  --invalidBox-top="calc(100% + var(--standardPadding) + var(--borderWidth))"
+>
+</Input>

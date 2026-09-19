@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { HexColor } from "$lib/bindings";
   import type { Result } from "$lib/types/utils";
-  import RadioButtonGroup from "../RadioButtonGroup.svelte";
-  import TextInput from "../TextInput.svelte";
+    import Input from "../input/Input.svelte";
+  import RadioButtonGroup from "../input/RadioButtonGroup.svelte";
   import { applyBackgroundColor, hexToHsv, hsvToHex, isHex } from "./data";
 
   let {
@@ -39,10 +39,10 @@
   {#if selectedTab === "HSV" || noThemeColors}
     <div class="swatchBox" style={applyBackgroundColor(hexValue)}>
       <div class="hexInputWrapper">
-        <TextInput
+        <Input
           bind:value={hexValue} 
           validate={validateHex} 
-          onSubmit={(v)=>{hsv=hexToHsv(v)}}
+          submit={(v)=>{hsv=hexToHsv(v)}}
           noInvalidBox
         />
       </div>

@@ -9,11 +9,7 @@ use crate::utils::types::Id;
 pub struct NumberSchema {
   id: Id,
   name: String,
-  #[specta(type = specta_typescript::Number)]
-  #[specta(optional)]
   min: Option<f64>,
-  #[specta(type = specta_typescript::Number)]
-  #[specta(optional)]
   max: Option<f64>,
 }
 
@@ -21,7 +17,6 @@ pub struct NumberSchema {
 
 #[derive(Serialize, Deserialize, Type)]
 pub struct TextSchema {
-  id: Id,
   name: String,
 }
 
@@ -44,7 +39,6 @@ enum TimeFormat {
 
 #[derive(Serialize, Deserialize, Type)]
 pub struct DateSchema {
-  id: Id,
   name: String,
   date_format: DateFormat,
   time_format: TimeFormat,
@@ -55,20 +49,17 @@ pub struct DateSchema {
 #[derive(Serialize, Deserialize, Type)]
 struct SelectOption {
   name: String,
-  id: Id,
   color: String,
 }
 
 #[derive(Serialize, Deserialize, Type)]
 pub struct SelectSchema {
-  id: Id,
   name: String,
   options: HashMap<Id, SelectOption>,
 }
 
 #[derive(Serialize, Deserialize, Type)]
 pub struct MultiSelectSchema {
-  id: Id,
   name: String,
   options: HashMap<Id, SelectOption>,
 }

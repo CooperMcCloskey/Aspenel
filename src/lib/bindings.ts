@@ -42,7 +42,6 @@ export type ColorVariable = { readonly type: "Single"; readonly value: HexColor 
 export type DateFormat = "Relative" | "Text" | "MDY" | "DMY" | "YMD";
 
 export type DateSchema = {
-	readonly id: Id,
 	readonly name: string,
 	readonly date_format: DateFormat,
 	readonly time_format: TimeFormat,
@@ -51,7 +50,6 @@ export type DateSchema = {
 export type Error = string;
 
 export type IconViewData = {
-	readonly id: Id,
 	readonly name: string,
 	readonly visible_property_ids: Id[],
 };
@@ -75,7 +73,6 @@ export type LoadedFields = {
 export type LoadedRootBranch = Branch & LoadedFields & RootFields;
 
 export type MultiSelectSchema = {
-	readonly id: Id,
 	readonly name: string,
 	readonly options: { [key in Id]: SelectOption },
 };
@@ -92,8 +89,8 @@ export type Neutrals = {
 export type NumberSchema = {
 	readonly id: Id,
 	readonly name: string,
-	readonly min: number,
-	readonly max: number,
+	readonly min: number | null,
+	readonly max: number | null,
 };
 
 export type PropertySchema = {
@@ -119,12 +116,10 @@ export type Scheme = "Light" | "Dark" | "System";
 
 export type SelectOption = {
 	readonly name: string,
-	readonly id: Id,
 	readonly color: string,
 };
 
 export type SelectSchema = {
-	readonly id: Id,
 	readonly name: string,
 	readonly options: { [key in Id]: SelectOption },
 };
@@ -146,13 +141,11 @@ export type SystemColorVariables = {
 };
 
 export type TableViewData = {
-	readonly id: Id,
 	readonly name: string,
 	readonly hidden_property_ids: Id[],
 };
 
 export type TextSchema = {
-	readonly id: Id,
 	readonly name: string,
 };
 

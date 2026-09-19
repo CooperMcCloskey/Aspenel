@@ -2,6 +2,8 @@ import { idPathsEqual, type IdPath } from "$lib/data/utils";
 import { undoStateChange } from "./stateLogic";
 import type { CommandHistoryEntry, StateChange, StateTreeRoot } from "./types";
 
+//IMPORTANT: null is for Rust's None. undefined is for deleting a key, usually from a map.
+
 export class StateHistoryTracker{
   
   editedPaths: IdPath[];

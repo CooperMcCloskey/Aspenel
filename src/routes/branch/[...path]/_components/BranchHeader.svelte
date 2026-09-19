@@ -1,24 +1,19 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { branchHref, separatePath } from "$lib/logic/filesystem";
-  import { onCommit } from "$lib/logic/actions";
   import { commands } from "$lib/bindings";
   import { sep as separator } from "@tauri-apps/api/path"
-
+  import Input from "$lib/components/input/Input.svelte";
   
   let {name, path}: {name: string, path: string} = $props()
 
-  //FIXME: this is probably wrong
-  //FIXME: if focused when redirected, a breaking error is caused.
-  $effect(()=>{nameHeader.value = name})
+  //FIXME: breaks on rename
   
-  let nameHeader: HTMLInputElement;
-
   //separating path for the navigation at the top of the table.
   const pathComponents = $derived(await separatePath(path))
 
-  async function nameUpdate() {
-    const newPath = await commands.renameFile(path, nameHeader.value);
+  async function nameUpdate(newName: string) {
+    const newPath = await commands.renameFile(path, newName);
     goto(`/branch/${newPath}`); //TODO: save before changing the page
   }
 </script>
@@ -32,26 +27,20 @@
       </div>
     {/each}
   </div>
+  
+  <Input
+    value={name}
+    submit={nameUpdate}
+    --font-size="var(--largeText)"
+    --cursor="text"
+  >
+  </Input>
 
-  <input
-    bind:this={nameHeader}
-    type="text" 
-    placeholder={`New Branch`} 
-    use:onCommit={nameUpdate}
-  />
 </header>
 
 <style>
   header {
     grid-area: 2/2/3/6;
-  }
-  input {
-    font-size: var(--largeText);
-    font-weight: 400;
-    margin-block-start: 0.67em;
-    margin-block-end: 0.67em;
-    text-overflow: ellipsis;
-    width: 100%;
   }
   #pathDisplayContainer{
     width: 100%;

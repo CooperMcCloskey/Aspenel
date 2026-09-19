@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Settings } from "$lib/bindings";
   import ColorSwatch from "$lib/components/colors/ColorSwatch.svelte";
-    import RadioButtonGroup from "$lib/components/RadioButtonGroup.svelte";
+    import RadioButtonGroup from "$lib/components/input/RadioButtonGroup.svelte";
   import { systemStringToDisplay } from "$lib/data/utils";
   import { settings } from "$lib/logic/settings.svelte";
   

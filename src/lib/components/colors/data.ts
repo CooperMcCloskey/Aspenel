@@ -122,7 +122,8 @@ export function getTextColorOn(background: HexColor, schemeOverride?: boolean): 
   return lightText ? "var(--dark-gray0)" : "var(--dark-gray4)";
 }
 
-export function applyBackgroundColor(background: ColorInput, schemeOverride?: boolean): string{
+export function applyBackgroundColor(background: ColorInput | undefined, schemeOverride?: boolean): string{
+  if(!background) return "";
   const backgroundHex = resolveColorInput(background, schemeOverride)
   const textColor = getTextColorOn(backgroundHex, schemeOverride)
   return `background-color: ${backgroundHex}; color: ${textColor}`

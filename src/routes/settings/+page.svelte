@@ -1,7 +1,7 @@
 <script lang="ts">
   import { settings } from '$lib/logic/settings.svelte.js';
   import ColorSettingsTab from './tabs/ColorSettingsTab.svelte';
-  import RadioButtonGroup from '$lib/components/RadioButtonGroup.svelte';
+  import RadioButtonGroup from '$lib/components/input/RadioButtonGroup.svelte';
 
   //TODO: diff with old settings and add change indicators.
   //TODO: proxy the actual settings and keep undo redo history.

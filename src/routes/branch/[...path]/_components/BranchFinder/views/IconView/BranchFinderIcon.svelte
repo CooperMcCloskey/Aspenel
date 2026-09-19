@@ -8,7 +8,7 @@
   let { branch }: {branch: LoadedBranch} = $props();
 </script>
 
-<a id="container" href={branchHref(branch.path)} oncontextmenu={(e)=>createContextMenu(e, branchEditMenu([branch.id]))}>
+<a class="container" href={branchHref(branch.path)} oncontextmenu={(e)=>createContextMenu(e, branchEditMenu([branch.id]))}>
   <header style="background: {branch.computed_color}">
     <h2>{branch.filename}</h2>
   </header>
@@ -36,7 +36,7 @@
     left: 2px;
     color: var(--gray0);
   }
-  #container:hover > header > h2, #container:focus-visible > header > h2{
+  .container:hover > header > h2, .container:focus-visible > header > h2{
     text-decoration: underline solid var(--gray0) 2px;
   }
 </style>
