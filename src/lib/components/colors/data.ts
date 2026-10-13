@@ -1,12 +1,12 @@
-import type { Accents, ColorVariable, Neutrals, Scheme, Settings, SystemColorVariables } from "$lib/bindings";
+import type { Accents, ColorValue, ColorVariable } from "$lib/bindings";
 import { getActiveScheme, settings } from "$lib/logic/settings.svelte";
-import type { MediaQuery } from "svelte/reactivity";
+import { error } from "@sveltejs/kit";
 
 type HexColor = `#${string}`;
 type RGB = {r: number, g: number, b: number};
 export type HSV = {h: number, s: number, v: number}
 
-export type ColorInput = HexColor | keyof Neutrals | keyof Accents
+export const ERROR_COLOR = "#FF00FF"
 
 export function isHex(s: string): s is HexColor{
   return /^#[0-9a-f]{6}$/i.test(s);
@@ -100,10 +100,19 @@ export function contrastRatio(a: HexColor, b: HexColor): number {
   return (high + 0.05) / (low + 0.05);
 }
 
-export function resolveColorInput(c: ColorInput, schemeOverride?: boolean): HexColor{
-  if(isHex(c)) return c;
-  const colors = {...settings.theme.system_color_variables.neutrals, ...settings.theme.system_color_variables.accents}
-  return resolveColorVariable(colors[c], schemeOverride)
+export function resolveColorInput(c: ColorValue, schemeOverride?: boolean): HexColor{
+  if(c.type === "HexColor") return c.value;
+  else if(c.type === "AddedColorId") {
+    const cv = settings.added_color_variables[c.value]
+    if(cv) return resolveColorVariable(cv, schemeOverride);
+    else return ERROR_COLOR
+  }
+  else /* c.type === "SystemColor" */ {
+    const { neutrals, accents } = settings.theme.system_color_variables
+    const cv: ColorVariable | undefined = {...neutrals, ...accents}[c.value]
+    if(cv) return resolveColorVariable(cv, schemeOverride);
+    else return ERROR_COLOR
+  }
 }
 
 export function resolveColorVariable(c: ColorVariable, schemeOverride?: boolean): HexColor{
@@ -122,9 +131,15 @@ export function getTextColorOn(background: HexColor, schemeOverride?: boolean): 
   return lightText ? "var(--dark-gray0)" : "var(--dark-gray4)";
 }
 
-export function applyBackgroundColor(background: ColorInput | undefined, schemeOverride?: boolean): string{
+export function applyBackgroundColor(background: ColorValue | undefined, schemeOverride?: boolean): string{
   if(!background) return "";
   const backgroundHex = resolveColorInput(background, schemeOverride)
   const textColor = getTextColorOn(backgroundHex, schemeOverride)
   return `background-color: ${backgroundHex}; color: ${textColor}`
+}
+
+export function getRandomColor(index?: number): ColorValue{
+  const colors = Object.keys(settings.theme.system_color_variables.accents) as (keyof Accents)[]
+  const color = colors[(index ?? Math.floor(Math.random() * colors.length)) % colors.length]!
+  return {type: "SystemColor", value: color}
 }

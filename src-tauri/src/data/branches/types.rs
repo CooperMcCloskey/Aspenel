@@ -5,6 +5,7 @@ use specta::Type;
 
 use crate::{
   data::{
+    colors::types::ColorValue,
     components::types::ChildView,
     properties::{schemas::PropertySchema, values::PropertyValue},
   },
@@ -15,7 +16,7 @@ use crate::{
 pub struct LoadedFields {
   pub filename: String,
   pub path: PathBuf,
-  pub computed_color: String,
+  pub computed_color: ColorValue,
 }
 
 #[derive(Serialize, Deserialize, Type)]
@@ -27,7 +28,7 @@ pub struct RootFields {
 #[derive(Serialize, Deserialize, Type)]
 pub struct Branch {
   pub id: Id,
-  pub color: Option<String>, //If unset, it will inherit from a parent
+  pub color: Option<ColorValue>, //If unset, it will inherit from a parent
   pub property_values: HashMap<Id, PropertyValue>,
 }
 

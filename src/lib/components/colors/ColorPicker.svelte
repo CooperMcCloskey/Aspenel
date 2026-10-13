@@ -13,7 +13,7 @@
     <button 
       use:menuTrigger 
       aria-label="Color picker"
-      style={applyBackgroundColor(hexValue)}
+      style={applyBackgroundColor({type: "HexColor", value: hexValue})}
     ></button>
     {@render menuSnippet()}
   {/snippet}

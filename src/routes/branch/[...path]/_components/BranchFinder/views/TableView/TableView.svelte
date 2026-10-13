@@ -76,7 +76,7 @@
 
         {#each visiblePropertySchemas as propertySchema}
           <td class="propertyValueCell" style="padding: 0px">
-            <PropertyValueContainer {propertySchema} id={child.id}></PropertyValueContainer>
+            <PropertyValueContainer {propertySchema} id={child.id} />
           </td>
         {/each}
 

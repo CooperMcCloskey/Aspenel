@@ -42,7 +42,7 @@
     <div 
       class="menu" 
       bind:this={menuElement}
-      style={applyBackgroundColor("gray0")}
+      style={applyBackgroundColor({type: "SystemColor", value: "gray0"})}
     >
       {#if props.type === "Component"}
         <props.menu {...props.menuProps}/> 

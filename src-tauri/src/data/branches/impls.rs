@@ -7,17 +7,13 @@ use crate::{
     branches::types::{
       Branch, LoadedBranch, LoadedBranchVariant, LoadedFields, LoadedRootBranch, RootBranch,
       RootFields, UnloadedBranchVariant,
-    },
-    components::types::{ChildView, IconViewData},
-  },
-  error_handling::command_errors::Error,
-  filesystem::{
+    }, colors::types::{ColorValue, SystemColor}, components::types::{ChildView, IconViewData},
+  }, error_handling::command_errors::Error, filesystem::{
     constants::{BRANCH_PATH, ROOT_DATA_PATH},
     path_utils::get_sys_path,
     read::{find_color, read_file},
     write::write_file,
-  },
-  utils::types::Id,
+  }, utils::types::Id,
 };
 
 impl Branch {
@@ -50,7 +46,7 @@ impl RootBranch {
     RootBranch {
       branch: Branch {
         id: Id::new(),
-        color: Some("var(--red)".to_string()),
+        color: Some(ColorValue::SystemColor(SystemColor::Red)),
         property_values: HashMap::new(),
       },
       root_data: RootFields {
@@ -77,7 +73,11 @@ impl RootBranch {
 }
 
 impl LoadedFields {
-  pub fn from(app: AppHandle, path: &Path, color: Option<String>) -> Result<LoadedFields, Error> {
+  pub fn from(
+    app: AppHandle,
+    path: &Path,
+    color: Option<ColorValue>,
+  ) -> Result<LoadedFields, Error> {
     Ok(LoadedFields {
       filename: path.file_name().unwrap().to_string_lossy().into(),
       path: path.into(),

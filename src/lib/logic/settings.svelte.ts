@@ -29,5 +29,5 @@ export function applySettingsChanges(settings: Settings){
       root.style.setProperty(`--dark-${key}`, resolveColorVariable(cv, false));
     }
   }
-  root.style.setProperty("color", getTextColorOn(resolveColorInput("background")))
+  root.style.setProperty("color", getTextColorOn(resolveColorInput({type: "SystemColor", value: "background"})))
 }

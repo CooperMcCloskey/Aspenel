@@ -6,7 +6,7 @@ import type { UntypedBranchVariant } from "./types";
 export function newEmptyLoadedFields(): LoadedFields {
   return {
     filename: "...",
-    computed_color: "var(--gray2)",
+    computed_color: {type: "SystemColor", value: "gray2"},
     path: "loading"
   }
 }

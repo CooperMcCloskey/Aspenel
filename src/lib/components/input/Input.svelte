@@ -1,7 +1,8 @@
 <script lang="ts" generics="T">
   import type { Result } from '$lib/types/utils';
   import type { HTMLInputAttributes } from "svelte/elements";
-  import { applyBackgroundColor, type ColorInput } from '../colors/data';
+  import type { ColorValue } from '$lib/bindings';
+  import { applyBackgroundColor } from '../colors/data';
 
   type Converters<T> = {
     format: (value: T) => string;
@@ -23,7 +24,7 @@
     invalidStyle?: "text" | "outline",
     preventInvalidInput?: boolean
     noInvalidBox?: boolean
-    backgroundColor?: ColorInput,
+    backgroundColor?: ColorValue,
     submit?: (value: T)=>void; 
   }
   & ([T] extends [string] ? Partial<Converters<T>> : Converters<T>)

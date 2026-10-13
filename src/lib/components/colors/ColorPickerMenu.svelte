@@ -28,7 +28,7 @@
   }
 </script>
 
-<div class="box" style={applyBackgroundColor("gray0")}>
+<div class="box" style={applyBackgroundColor({type: "SystemColor", value: "gray0"})}>
   {#if !noThemeColors}
     <RadioButtonGroup options={tabs} bind:value={selectedTab}/>
   {/if}
@@ -37,7 +37,7 @@
     <div></div>
   {/if}
   {#if selectedTab === "HSV" || noThemeColors}
-    <div class="swatchBox" style={applyBackgroundColor(hexValue)}>
+    <div class="swatchBox" style={applyBackgroundColor({type: "HexColor", value: hexValue})}>
       <div class="hexInputWrapper">
         <Input
           bind:value={hexValue} 

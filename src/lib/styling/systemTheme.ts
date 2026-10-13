@@ -38,7 +38,6 @@ export const systemTheme = {
     "fontFamily": "'Charter'",
     "monoFontFamily": "'Iosevka'",
     "lineHeight": "1.2",
-    "headerText": "3rem",
     "largeText": "2rem",
     "mediumText": "1.375rem",
     "standardText": "1rem",

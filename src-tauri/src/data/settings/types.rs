@@ -3,13 +3,13 @@ use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 use specta::Type;
 
-use crate::utils::types::Id;
+use crate::{data::colors::types::HexColor, utils::types::Id};
 
 #[derive(Serialize, Deserialize, Type, Default)]
 pub struct Settings {
   selected_scheme: Scheme,
   theme: Theme,
-  additional_color_variables: HashMap<Id, ColorVariable>,
+  added_color_variables: HashMap<Id, ColorVariable>,
 }
 
 #[derive(Serialize, Deserialize, Type, Default)]
@@ -34,14 +34,14 @@ impl Default for Scheme {
 #[derive(Serialize, Deserialize, Type)]
 #[serde(tag = "type", content = "value")]
 pub enum ColorVariable {
-  Single(String),
+  Single(HexColor),
   Split(SplitColorVariable),
 }
 
 #[derive(Serialize, Deserialize, Type)]
 pub struct SplitColorVariable {
-  light: String,
-  dark: String,
+  light: HexColor,
+  dark: HexColor,
 }
 
 include!(concat!(env!("OUT_DIR"), "/default_theme.rs"));

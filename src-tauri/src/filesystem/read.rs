@@ -1,4 +1,5 @@
 use crate::data::branches::types::Branch;
+use crate::data::colors::types::ColorValue;
 use crate::error_handling::command_errors::Error;
 use crate::filesystem::constants::BRANCH_PATH;
 use crate::filesystem::path_utils::get_sys_path;
@@ -19,7 +20,7 @@ where
   Ok(data)
 }
 
-pub fn find_color(app: AppHandle, mut path: PathBuf) -> Result<String, Error> {
+pub fn find_color(app: AppHandle, mut path: PathBuf) -> Result<ColorValue, Error> {
   loop {
     let branch = read_file::<Branch>(app.clone(), &path.join(BRANCH_PATH))?;
     if let Some(color) = branch.color {

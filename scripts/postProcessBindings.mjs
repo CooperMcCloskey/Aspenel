@@ -8,7 +8,9 @@
 //   3. Strips the `?` that `#[serde(default)]` produces — Rust always writes
 //      every field, so the value is never actually absent. Keep a field
 //      optional by listing it in KEEP_OPTIONAL.
-//   4. Retypes hex-bearing `string` properties as HexColor.
+//   4. Narrows the aliases specta can only emit as `string` — see NARROW.
+//      Rust already puts HexColor on the properties that hold one, so only
+//      the alias itself needs sharpening.
 //
 // Usage: node scripts/gen-bindings.mjs [bindingsPath] [typesPath]
 
@@ -24,8 +26,12 @@ const typesPath = path.resolve(process.argv[3] ?? "src/lib/types.ts");
 /** Properties that are genuinely optional, as "TypeName.propName". */
 const KEEP_OPTIONAL = new Set([]);
 
-/** Types whose plain `string` members hold a hex color. */
-const HEX_TYPES = new Set(["ColorVariable", "SplitColorVariable"]);
+/**
+ * Aliases to retype after export, as name -> TS type text. specta has no way
+ * to express a template literal, so a newtype over String lands as `string`
+ * and is sharpened here instead.
+ */
+const NARROW = new Map([["HexColor", "`#${string}`"]]);
 
 const norm = (s) => s.replace(/\s+/g, " ").trim();
 
@@ -72,7 +78,7 @@ function fix() {
   const source = new Project().addSourceFileAtPath(bindingsPath);
   let readonly = 0;
   let required = 0;
-  let hex = 0;
+  let narrowed = 0;
 
   // covers interface members and object-literal type members in one pass
   for (const prop of source.getDescendantsOfKind(SyntaxKind.PropertySignature)) {
@@ -90,12 +96,6 @@ function fix() {
       prop.setHasQuestionToken(false);
       required++;
     }
-
-    // only plain `string` — the union arm holding SplitColorVariable is left alone
-    if (HEX_TYPES.has(owner) && prop.getTypeNode()?.getText() === "string") {
-      prop.setType("HexColor");
-      hex++;
-    }
   }
 
   for (const index of source.getDescendantsOfKind(SyntaxKind.IndexSignature)) {
@@ -105,13 +105,23 @@ function fix() {
     }
   }
 
-  if (hex > 0 && !source.getTypeAlias("HexColor")) {
-    source.insertStatements(0, "export type HexColor = `#${string}`;\n");
+  for (const [name, type] of NARROW) {
+    const alias = source.getTypeAlias(name);
+
+    if (!alias) {
+      console.warn(`⚠ ${name} is not in the bindings — nothing to narrow`);
+      continue;
+    }
+
+    if (alias.getTypeNode()?.getText() === type) continue;
+
+    alias.setType(type);
+    narrowed++;
   }
 
   source.saveSync();
   console.log(
-    `✔ ${readonly} readonly, ${required} de-optionalised, ${hex} hex — ${bindingsPath}`
+    `✔ ${readonly} readonly, ${required} de-optionalised, ${narrowed} narrowed — ${bindingsPath}`
   );
 }
 

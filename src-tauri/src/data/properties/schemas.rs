@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 use specta::Type;
 
-use crate::utils::types::Id;
+use crate::{data::colors::types::ColorValue, utils::types::Id};
 
 #[derive(Serialize, Deserialize, Type)]
 pub struct NumberSchema {
@@ -49,7 +49,7 @@ pub struct DateSchema {
 #[derive(Serialize, Deserialize, Type)]
 struct SelectOption {
   name: String,
-  color: String,
+  color: ColorValue,
 }
 
 #[derive(Serialize, Deserialize, Type)]

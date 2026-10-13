@@ -16,7 +16,7 @@
       <button
         use:menuTrigger
         aria-label="Color picker"
-        style={applyBackgroundColor(hexValue, schemeOverride)}
+        style={applyBackgroundColor({type: "HexColor", value: hexValue}, schemeOverride)}
       >
         <AdaptiveComponent> 
           {#snippet box()}

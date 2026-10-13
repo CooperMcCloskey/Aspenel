@@ -49,7 +49,7 @@ for (const [group, entries] of Object.entries(colors)) {
     if (schemes.length !== SCHEMES.length || !SCHEMES.every((s) => schemes.includes(s))) {
       throw new Error(`colors.${group}.${key} must be a hex string or { light, dark }`);
     }
-
+ 
     for (const scheme of SCHEMES) {
       if (!HEX.test(value[scheme])) {
         throw new Error(`colors.${group}.${key}.${scheme} is "${value[scheme]}", expected #rrggbb`);

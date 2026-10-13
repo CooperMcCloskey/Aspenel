@@ -3,5 +3,4 @@
 
 fn main() {
   aspenel_lib::run()
-  
 }
