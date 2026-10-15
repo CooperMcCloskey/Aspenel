@@ -36,7 +36,7 @@ export type ChildView = {
 	readonly type: "Table",
 } & TableViewData;
 
-export type ColorValue = { readonly type: "SystemColor"; readonly value: SystemColor } | { readonly type: "HexColor"; readonly value: HexColor } | { readonly type: "AddedColorId"; readonly value: Id };
+export type ColorValue = { readonly type: "SystemColor"; readonly value: SystemColor } | { readonly type: "HexColor"; readonly value: HexColor } | { readonly type: "HSV"; readonly value: HSV } | { readonly type: "AddedColorId"; readonly value: Id };
 
 export type ColorVariable = { readonly type: "Single"; readonly value: HexColor } | { readonly type: "Split"; readonly value: SplitColorVariable };
 
@@ -49,6 +49,12 @@ export type DateSchema = {
 };
 
 export type Error = string;
+
+export type HSV = {
+	readonly h: number,
+	readonly s: number,
+	readonly v: number,
+};
 
 export type HexColor = `#${string}`;
 
@@ -115,8 +121,6 @@ export type RootFields = {
 	readonly ui_components: { [key in Id]: ChildView },
 };
 
-export type Scheme = "Light" | "Dark" | "System";
-
 export type SelectOption = {
 	readonly name: string,
 	readonly color: ColorValue,
@@ -127,8 +131,10 @@ export type SelectSchema = {
 	readonly options: { [key in Id]: SelectOption },
 };
 
+export type SelectedScheme = "light" | "dark" | "system";
+
 export type Settings = {
-	readonly selected_scheme: Scheme,
+	readonly selected_scheme: SelectedScheme,
 	readonly theme: Theme,
 	readonly added_color_variables: { [key in Id]: ColorVariable },
 };
@@ -185,6 +191,8 @@ export type PermissionState =
 "PromptWithRationale";
 
 export type RootBranch = Branch & RootFields;
+
+export type Scheme = "light" | "dark";
 
 export type UnloadedBranchVariant = {
 	readonly type: "Branch",

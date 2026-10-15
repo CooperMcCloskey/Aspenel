@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { LoadedBranch } from "$lib/bindings";
-  import { resolveColorInput } from "$lib/components/colors/data";
+    import { toHex } from "$lib/data/colors/conversion";
     import { branchEditMenu } from "$lib/data/branch/menus/contextMenus";
   import { createContextMenu } from "$lib/logic/contextMenus";
   import { branchHref } from "$lib/logic/filesystem";
@@ -10,7 +10,7 @@
 </script>
 
 <a class="container" href={branchHref(branch.path)} oncontextmenu={(e)=>createContextMenu(e, branchEditMenu([branch.id]))}>
-  <header style="background: {resolveColorInput(branch.computed_color)}">
+  <header style="background: {toHex(branch.computed_color)}">
     <h2>{branch.filename}</h2>
   </header>
 </a>

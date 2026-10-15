@@ -1,10 +1,10 @@
 <script lang="ts">
-  import type { HexColor } from "$lib/bindings";
+  import type { ColorValue, HexColor } from "$lib/bindings";
   import MenuContainer from "../MenuContainer.svelte";
   import ColorPickerMenu from "./ColorPickerMenu.svelte";
-  import { applyBackgroundColor } from "./data";
+  import { applyBackgroundColor } from "../../data/colors/contrast";
 
-  let { hexValue = $bindable() }:{ hexValue: HexColor } = $props();
+  let { color = $bindable() }:{ color: ColorValue } = $props();
 
 </script>
 
@@ -13,13 +13,13 @@
     <button 
       use:menuTrigger 
       aria-label="Color picker"
-      style={applyBackgroundColor({type: "HexColor", value: hexValue})}
+      style={applyBackgroundColor(color)}
     ></button>
     {@render menuSnippet()}
   {/snippet}
 
   {#snippet menu()}
-    <ColorPickerMenu bind:hexValue></ColorPickerMenu>
+    <ColorPickerMenu bind:color></ColorPickerMenu>
   {/snippet}
 </MenuContainer>
 

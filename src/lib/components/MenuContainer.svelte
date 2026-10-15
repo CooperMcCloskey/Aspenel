@@ -1,7 +1,7 @@
 <script lang="ts" generics="T extends Record<string, any>">
   import type { Component, Snippet } from "svelte";
   import type { Action } from "svelte/action";
-  import { applyBackgroundColor } from "./colors/data";
+  import { applyBackgroundColor } from "../data/colors/contrast";
 
   //TODO: click down inside the box and then unclick outside the box hides the menu
   //TODO: position the box where there is space so it is not off the screen

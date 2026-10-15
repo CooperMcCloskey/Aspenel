@@ -7,13 +7,18 @@ use crate::{
     branches::types::{
       Branch, LoadedBranch, LoadedBranchVariant, LoadedFields, LoadedRootBranch, RootBranch,
       RootFields, UnloadedBranchVariant,
-    }, colors::types::{ColorValue, SystemColor}, components::types::{ChildView, IconViewData},
-  }, error_handling::command_errors::Error, filesystem::{
+    },
+    colors::types::{ColorValue, SystemColor},
+    components::types::{ChildView, IconViewData},
+  },
+  error_handling::command_errors::Error,
+  filesystem::{
     constants::{BRANCH_PATH, ROOT_DATA_PATH},
     path_utils::get_sys_path,
     read::{find_color, read_file},
     write::write_file,
-  }, utils::types::Id,
+  },
+  utils::types::Id,
 };
 
 impl Branch {

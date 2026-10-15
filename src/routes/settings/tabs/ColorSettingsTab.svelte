@@ -1,14 +1,37 @@
 <script lang="ts">
-  import type { Settings } from "$lib/bindings";
+  import type { ColorValue, ColorVariable, Settings } from "$lib/bindings";
   import ColorSwatch from "$lib/components/colors/ColorSwatch.svelte";
-    import RadioButtonGroup from "$lib/components/input/RadioButtonGroup.svelte";
+    import { resolveColorVariable } from "$lib/data/colors/conversion";
+  import { toHex } from "$lib/data/colors/conversion";
+  import RadioButtonGroup from "$lib/components/input/RadioButtonGroup.svelte";
   import { systemStringToDisplay } from "$lib/data/utils";
   import { settings } from "$lib/logic/settings.svelte";
+    import type { Theme } from "@tauri-apps/api/window";
+  import type { WritableDeep } from "type-fest";
   
   const { oldSettings }:{ oldSettings: Settings } = $props()
 
   const neutrals = $derived(settings.theme.system_color_variables.neutrals);
   const accents = $derived(settings.theme.system_color_variables.accents);
+
+  function singleColorVariableBinding(cv: WritableDeep<ColorVariable & {type: "Single"}>){
+    return ({
+      get: ()=>({type: "HexColor", value: cv.value} as ColorValue),
+      set: (color: ColorValue)=>{cv.value = toHex(color)}
+    })
+  }
+  function splitColorVariableBinding(cv: WritableDeep<ColorVariable & {type: "Split"}>){
+    return ({
+      light: {
+        get: ()=>({type: "HexColor", value: cv.value.light} as ColorValue),
+        set: (color: ColorValue)=>{cv.value.light = toHex(color)}
+      },
+      dark: {
+        get: ()=>({type: "HexColor", value: cv.value.dark} as ColorValue),
+        set: (color: ColorValue)=>{cv.value.dark = toHex(color)}
+      }
+    });
+  }
 
 </script>
 <div id="colorContainer">
@@ -17,7 +40,7 @@
       <span>Scheme: </span>
       <RadioButtonGroup 
         bind:value={settings.selected_scheme} 
-        options={["System", "Light", "Dark"]}
+        options={["system", "light", "dark"]}
         --first-child-padding="0"
       />
     </div>
@@ -26,10 +49,23 @@
       {@const name = systemStringToDisplay(key)}
       <div class="neutral" class:single={cv.type === "Single"}>
         {#if cv.type === "Single"}
-          <ColorSwatch name={name} bind:hexValue={cv.value}/>
+          {@const bindings = singleColorVariableBinding(cv)}
+          <ColorSwatch 
+            name={name} 
+            bind:color={bindings.get, bindings.set}
+          />
         {:else}
-          <ColorSwatch name={name} bind:hexValue={cv.value.light} schemeOverride={true}/>
-          <ColorSwatch name={name} bind:hexValue={cv.value.dark} schemeOverride={false}/>
+          {@const bindings = splitColorVariableBinding(cv)}
+          <ColorSwatch 
+            name={name} 
+            bind:color={bindings.light.get, bindings.light.set} 
+            schemeOverride={"light"}
+          />
+          <ColorSwatch 
+            name={name} 
+            bind:color={bindings.dark.get, bindings.dark.set} 
+            schemeOverride={"dark"}
+          />
         {/if}
       </div>
     {/each}
@@ -40,15 +76,28 @@
       {@const name = systemStringToDisplay(key)}
       <div class="accent">
         {#if cv.type === "Single"}
-          <ColorSwatch name={name} bind:hexValue={cv.value}/>
+          {@const bindings = singleColorVariableBinding(cv)}
+          <ColorSwatch 
+            name={name} 
+            bind:color={bindings.get, bindings.set}
+          />
         {:else}
+          {@const bindings = splitColorVariableBinding(cv)}
           <div class="splitAccent">
             <div>
-              <ColorSwatch name={name} bind:hexValue={cv.value.light}/>
+              <ColorSwatch 
+                name={name} 
+                bind:color={bindings.light.get, bindings.light.set} 
+                schemeOverride={"light"}
+              />
               <div class="themeIndicator lightIndicator"></div>
             </div>
             <div>
-              <ColorSwatch name={name} bind:hexValue={cv.value.dark}/>
+              <ColorSwatch 
+                name={name} 
+                bind:color={bindings.dark.get, bindings.dark.set}
+                schemeOverride={"dark"}
+              />
               <div class="themeIndicator darkIndicator"></div>
             </div>
           </div>

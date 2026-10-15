@@ -1,12 +1,13 @@
 <script lang="ts">
-  import type { HexColor } from "$lib/bindings";
+  import type { ColorValue } from "$lib/bindings";
   import AdaptiveComponent from "$lib/logic/adaptiveRendering/AdaptiveComponent.svelte";
+  import type { Theme } from "@tauri-apps/api/window";
   import MenuContainer from "../MenuContainer.svelte";
   import ColorPickerMenu from "./ColorPickerMenu.svelte";
-  import { applyBackgroundColor } from "./data";
+  import { applyBackgroundColor } from "../../data/colors/contrast";
+  import { toHex } from "$lib/data/colors/conversion";
 
-  let { hexValue = $bindable(), name, schemeOverride }:{ hexValue: HexColor, name: string, schemeOverride?: boolean } = $props();
-
+  let { color = $bindable(), name, schemeOverride }:{ color: ColorValue, name: string, schemeOverride?: Theme } = $props();
 </script>
 
 
@@ -16,19 +17,19 @@
       <button
         use:menuTrigger
         aria-label="Color picker"
-        style={applyBackgroundColor({type: "HexColor", value: hexValue}, schemeOverride)}
+        style={applyBackgroundColor(color, schemeOverride)}
       >
         <AdaptiveComponent> 
           {#snippet box()}
             <div class="textBox">
               <span class="name">{name}</span>
-              <span class="hex">{hexValue}</span>
+              <span class="hex">{toHex(color, schemeOverride)}</span>
             </div>
           {/snippet}
           {#snippet fullLine()}
             <div class="textLine">
               <span class="name">{name}</span>
-              <span class="hex">{hexValue}</span>
+              <span class="hex">{toHex(color, schemeOverride)}</span>
             </div>
           {/snippet}
           {#snippet nameLine()}
@@ -47,7 +48,7 @@
 
   {#snippet menu()}
     <ColorPickerMenu 
-      bind:hexValue
+      bind:color
       noThemeColors
     />
   {/snippet}

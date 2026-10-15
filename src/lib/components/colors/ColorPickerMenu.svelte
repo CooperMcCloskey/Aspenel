@@ -1,31 +1,45 @@
 <script lang="ts">
-  import type { HexColor } from "$lib/bindings";
+  import type { ColorValue, HexColor, HSV } from "$lib/bindings";
   import type { Result } from "$lib/types/utils";
-    import Input from "../input/Input.svelte";
+  import Input from "../input/Input.svelte";
   import RadioButtonGroup from "../input/RadioButtonGroup.svelte";
-  import { applyBackgroundColor, hexToHsv, hsvToHex, isHex } from "./data";
+  import { applyBackgroundColor } from "../../data/colors/contrast";
+  import { isHex } from "$lib/data/colors/validation";
+  import { toHex, toHSV } from "$lib/data/colors/conversion";
 
   let {
-    hexValue = $bindable(), 
+    color = $bindable(), 
     noThemeColors = false, 
   }:{
-    hexValue: HexColor,
+    color: ColorValue,
     noThemeColors?: boolean,
   } = $props();
 
   const tabs = ["Theme", "HSV"]
   let selectedTab = $state(tabs[0]!)
 
-  let hsv = $state(hexToHsv($state.snapshot(hexValue)))
-
-  $effect(()=>{
-    if(hsvToHex(hexToHsv(hexValue)) != hsvToHex(hsv) && isHex(hsvToHex(hsv))) hexValue = hsvToHex(hsv);
-  })
-
   function validateHex(draft: string): Result<HexColor>{
     if(isHex(draft)) return {status: "ok", data: draft}
     else return {status: "error", error: /*TODO: improve*/ "Invalid hexcode"}
   }
+
+  let storedHSV: HSV = $state({...toHSV(color)});
+  const currentHSV = $derived(toHex({type: "HSV", value: storedHSV}) === toHex(color) ? storedHSV : toHSV(color));
+  
+  function hsvBinding(key: "h" | "s" | "v"){
+    return ({
+      get: ()=>currentHSV[key],
+      set: (value: number)=>{
+        storedHSV = {...currentHSV, [key]: value};
+        color = {type: "HSV", value: storedHSV};
+      }
+    });
+  }
+
+  const hBind = hsvBinding("h");
+  const sBind = hsvBinding("s");
+  const vBind = hsvBinding("v");
+
 </script>
 
 <div class="box" style={applyBackgroundColor({type: "SystemColor", value: "gray0"})}>
@@ -37,12 +51,16 @@
     <div></div>
   {/if}
   {#if selectedTab === "HSV" || noThemeColors}
-    <div class="swatchBox" style={applyBackgroundColor({type: "HexColor", value: hexValue})}>
+    <div class="swatchBox" style={applyBackgroundColor(color)}>
       <div class="hexInputWrapper">
         <Input
-          bind:value={hexValue} 
+          maxlength={7}
+          size={7}
+          bind:value={
+            ()=>toHex(color),
+            (value)=>{color = {type: "HexColor", value}}
+          } 
           validate={validateHex} 
-          submit={(v)=>{hsv=hexToHsv(v)}}
           noInvalidBox
         />
       </div>
@@ -51,13 +69,13 @@
       <span>H</span>
       <input 
         type="range" 
-        bind:value={hsv.h}
+        bind:value={hBind.get, hBind.set}
         min="0"
         max="360"
       >
       <input 
         type="number" 
-        bind:value={hsv.h}
+        bind:value={hBind.get, hBind.set}
         min="0"
         max="360"
       >
@@ -66,14 +84,14 @@
       <span>S</span>
       <input 
         type="range" 
-        bind:value={hsv.s}
+        bind:value={sBind.get, sBind.set}
         step="0.01"
         min="0"
         max="1"
       > 
       <input 
         type="number" 
-        bind:value={hsv.s}
+        bind:value={sBind.get, sBind.set}
         step="0.01"
         min="0"
         max="1"
@@ -83,14 +101,14 @@
       <span>V</span>
       <input 
         type="range" 
-        bind:value={hsv.v}
+        bind:value={vBind.get, vBind.set}
         step="0.01"
         min="0"
         max="1"
       > 
       <input 
         type="number" 
-        bind:value={hsv.v}
+        bind:value={vBind.get, vBind.set}
         step="0.01"
         min="0"
         max="1"
@@ -112,7 +130,7 @@
   .hexInputWrapper{
     padding: var(--standardPadding);
     font-family: var(--monoFontFamily);
-    position: absolute;
+    position: absolute;;
     bottom: 0px;
   }
   .inputRow{

@@ -1,5 +1,7 @@
-import type { Settings } from "$lib/bindings";
-import { getTextColorOn, resolveColorInput, resolveColorVariable } from "$lib/components/colors/data";
+import type { Scheme, Settings } from "$lib/bindings";
+import { getTextColorOn } from "$lib/data/colors/contrast";
+import { resolveColorVariable } from "$lib/data/colors/conversion";
+import { toHex } from "$lib/data/colors/conversion";
 import { MediaQuery } from "svelte/reactivity";
 
 export const settings: Settings = $state({}) as Settings
@@ -7,11 +9,10 @@ export function setSettings(s: Settings){ Object.assign(settings,s) }
 
 const systemScheme = new MediaQuery("prefers-color-scheme: light");
 
-export function getActiveScheme(): boolean{
+export function getActiveScheme(): Scheme {
   const selectedScheme = settings.selected_scheme;
-  if(selectedScheme === "Light") return true;
-  if(selectedScheme === "Dark") return false;
-  return systemScheme.current ? true : false;
+  if(selectedScheme !== "system") return selectedScheme;
+  return systemScheme.current ? "light" : "dark";
 }
 
 export function applySettingsChanges(settings: Settings){
@@ -25,9 +26,9 @@ export function applySettingsChanges(settings: Settings){
       const hex = resolveColorVariable(cv, scheme);
 
       root.style.setProperty(`--${key}`, hex);
-      root.style.setProperty(`--light-${key}`, resolveColorVariable(cv, true));
-      root.style.setProperty(`--dark-${key}`, resolveColorVariable(cv, false));
+      root.style.setProperty(`--light-${key}`, resolveColorVariable(cv, "light"));
+      root.style.setProperty(`--dark-${key}`, resolveColorVariable(cv, "dark"));
     }
   }
-  root.style.setProperty("color", getTextColorOn(resolveColorInput({type: "SystemColor", value: "background"})))
+  root.style.setProperty("color", getTextColorOn({type: "SystemColor", value: "background"}))
 }

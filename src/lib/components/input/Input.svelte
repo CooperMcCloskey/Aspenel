@@ -2,7 +2,8 @@
   import type { Result } from '$lib/types/utils';
   import type { HTMLInputAttributes } from "svelte/elements";
   import type { ColorValue } from '$lib/bindings';
-  import { applyBackgroundColor } from '../colors/data';
+  import { applyBackgroundColor, applyErrorText, contrastRatio } from '../../data/colors/contrast';
+  import { systemColors } from "../../data/colors/utils";
 
   type Converters<T> = {
     format: (value: T) => string;
@@ -39,7 +40,16 @@
   let valid: boolean = $derived(validation.status === "ok");
 </script>
 
-<div class="container">
+<div class="container" style={applyBackgroundColor(backgroundColor)}>
+  <div class="highlightContainer" aria-hidden="true">
+    <span 
+      class="highlight" 
+      {@attach applyErrorText(!valid && invalidStyle === "text")}
+    >
+      {draft}
+    </span>
+  </div>
+
   <input
     spellcheck="false"
     autocorrect="off"
@@ -51,7 +61,6 @@
     class:invalid={!valid}
     class:invalidOutline={invalidStyle==="outline"}
     class:invalidText={invalidStyle==="text"}
-    style={applyBackgroundColor(backgroundColor)}
     onkeydown={(e)=>{
       if(e.key==="Enter") {
         e.preventDefault()
@@ -75,7 +84,10 @@
     type="text"
   >
   {#if validation.status === "error" && !noInvalidBox}
-    <div class="invalidBox">{validation.error}</div>
+    <div 
+      style={applyBackgroundColor(systemColors.red)} 
+      class="invalidBox">{validation.error}
+    </div>
   {/if}
 </div>
 
@@ -84,7 +96,21 @@
     display: inline-block;
     position: relative;
   }
+  .highlightContainer{
+    position: absolute;
+    inset: 0;
+    text-align: var(--text-align, left);
+    font: inherit;
+    font-size: var(--font-size);
+    white-space: pre;
+    pointer-events: none;
+  }
+  .highlight{
+    color: transparent;
+  }
   input{
+    position: relative;
+    background: transparent;
     text-align: var(--text-align, left);
     cursor: var(--cursor);
     font-size: var(--font-size);
@@ -94,12 +120,11 @@
     display: none;
     left: var(--invalidBox-left, 0);
     top: var(--invalidBox-top, 100%);
-    background-color: var(--red);
     color: var(--gray0);
     padding: var(--standardPadding);
     z-index: 1;
   }
   .invalid:focus-within + .invalidBox { display: block; }
   .invalid.invalidOutline{ box-shadow: inset 0 0 0 calc(var(--standardPadding) - var(--borderWidth)) var(--red); }
-  .invalid.invalidText{ color: var(--red) }
+  .invalid.invalidText{ color: var(--red) !important }
 </style>

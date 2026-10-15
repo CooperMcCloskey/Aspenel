@@ -7,7 +7,7 @@ use crate::{data::colors::types::HexColor, utils::types::Id};
 
 #[derive(Serialize, Deserialize, Type, Default)]
 pub struct Settings {
-  selected_scheme: Scheme,
+  selected_scheme: SelectedScheme,
   theme: Theme,
   added_color_variables: HashMap<Id, ColorVariable>,
 }
@@ -19,15 +19,24 @@ pub struct Theme {
 }
 
 #[derive(Serialize, Deserialize, Type)]
+#[serde(rename_all = "lowercase")]
 pub enum Scheme {
+  Light,
+  Dark,
+}
+
+
+#[derive(Serialize, Deserialize, Type)]
+#[serde(rename_all = "lowercase")]
+pub enum SelectedScheme {
   Light,
   Dark,
   System,
 }
 
-impl Default for Scheme {
+impl Default for SelectedScheme {
   fn default() -> Self {
-    Scheme::System
+    SelectedScheme::System
   }
 }
 
