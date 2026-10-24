@@ -39,12 +39,10 @@ h2{
 }
 a{
   all: unset;
-  font-family: var(--monoFontFamily);
   cursor: pointer;
 }
 button{
   all: unset;
-  font-family: var(--monoFontFamily);
   cursor: pointer;
 }
 input{

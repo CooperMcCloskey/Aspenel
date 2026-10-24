@@ -36,7 +36,7 @@
     bottom: var(--iconSpacing);
     gap: var(--iconSpacing);
     width: 100%;
-    height: 24px;
+    height: var(--iconSize);
     display: flex;
     flex-direction: row-reverse;
     flex-wrap: nowrap;
@@ -48,7 +48,6 @@
     position: relative;
     width: 100%;
     height: 100%;
-    font-family: sans;
   }
   .fileViews{
     width: 100%;

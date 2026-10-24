@@ -81,8 +81,8 @@ const cssOutput = `${banner}
 :root {
 ${rootVars}
   /* both schemes, always resolvable regardless of the active one */
-${vars("light", { prefix: "light" })}
-${vars("dark", { prefix: "dark" })}}
+${vars("light", { prefix: "light-" })}
+${vars("dark", { prefix: "dark-" })}}
 
 @media (prefers-color-scheme: light) {
   :root {

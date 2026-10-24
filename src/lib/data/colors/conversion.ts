@@ -1,11 +1,11 @@
 import type { ColorValue, HexColor, ColorVariable, HSV, Scheme, SystemColor } from "$lib/bindings";
 import { getActiveScheme, settings } from "$lib/logic/settings.svelte";
 import { type RGB } from "./contrast";
-import { colorError } from "./utils";
+import { colorError, type HexColorValue } from "./utils";
 import { isColorVariable } from "./validation";
 
-export function toHex(c: ColorValue, schemeOverride?: "light" | "dark"): HexColor {
-  if (c.type === "HexColor") return c.value;
+export function toHex(c: ColorValue, schemeOverride?: "light" | "dark"): HexColorValue {
+  if (c.type === "HexColor") return c;
   else if (c.type == "HSV") {
     const { h, s, v } = c.value;
     const f = (offset: number): string => {
@@ -13,7 +13,7 @@ export function toHex(c: ColorValue, schemeOverride?: "light" | "dark"): HexColo
       const channelValue = v - v * s * Math.max(0, Math.min(phase, 4 - phase, 1));
       return Math.round(channelValue * 255).toString(16).padStart(2, '0');
     };
-    return `#${f(5)}${f(3)}${f(1)}`;
+    return {type: "HexColor", value: `#${f(5)}${f(3)}${f(1)}`};
   }
   else if (c.type === "AddedColorId") {
     const cv = settings.added_color_variables[c.value];
@@ -29,7 +29,7 @@ export function toHex(c: ColorValue, schemeOverride?: "light" | "dark"): HexColo
 }
 export function toHSV(color: ColorValue): HSV {
   if (color.type === "HSV") return color.value;
-  const hex = toHex(color);
+  const hex = toHex(color).value;
   const clean = hex.replace(/^#/, '');
   const full = clean.length === 3 ? clean.split('').map(c => c + c).join('') : clean; //for 3 letter hex codes
   const r = parseInt(full.slice(0, 2), 16) / 255;
@@ -58,8 +58,8 @@ export function toHSV(color: ColorValue): HSV {
 
   return { h, s, v };
 }
-export function toRGB(color: ColorValue): RGB {
-  const hex = toHex(color);
+export function getRBG(color: ColorValue): RGB {
+  const hex = toHex(color).value;
   const h = hex.replace('#', '');
   const full = h.length === 3 ? h.split('').map(c => c + c).join('') : h;
 
@@ -70,13 +70,13 @@ export function toRGB(color: ColorValue): RGB {
   };
 }
 
-export function resolveColorVariable(c: ColorVariable, schemeOverride?: Scheme): HexColor {
+export function resolveColorVariable(c: ColorVariable, schemeOverride?: Scheme): HexColorValue{
   if (!isColorVariable(c)) return colorError(c);
-  if (c.type === "Single") return c.value;
-  if (schemeOverride !== undefined) return schemeOverride === "light" ? c.value.light : c.value.dark;
-  return getActiveScheme() === "light" ? c.value.light : c.value.dark;
+  if (c.type === "Single") return {type: "HexColor", value: c.value};
+  if (schemeOverride !== undefined) return {type: "HexColor", value: schemeOverride === "light" ? c.value.light : c.value.dark};
+  return {type: "HexColor", value: getActiveScheme() === "light" ? c.value.light : c.value.dark};
 }
 export function resolveSystemColor(color: SystemColor, schemeOverride?: Scheme): ColorValue {
-  return { type: "HexColor", value: toHex({ type: "SystemColor", value: color }, schemeOverride) };
+  return toHex({type: "SystemColor", value: color}, schemeOverride);
 }
 

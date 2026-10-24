@@ -1,8 +1,9 @@
 <script lang="ts">
+    import { systemTheme } from "$lib/styling/systemTheme";
   import type { Snippet } from "svelte";
 
   const {
-    size = "24px", 
+    size = systemTheme.layout.iconSize, 
     hasHoverEffect = false,
     color, 
     children

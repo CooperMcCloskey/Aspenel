@@ -23,7 +23,7 @@ export function newEmptyRootFields(): RootFields {
 export function newEmptyBranch<T extends UntypedBranchVariant>(): T {
   return {
     id: "0",
-    color: "var(--gray2)",
+    color: {type: "SystemColor", value: "gray2"},
     property_values: {},
     ...newEmptyLoadedFields(),
     ...newEmptyRootFields()

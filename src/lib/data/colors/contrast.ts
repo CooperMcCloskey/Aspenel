@@ -1,6 +1,6 @@
 import type { ColorValue, HexColor, Scheme } from "$lib/bindings";
 import type { Attachment } from "svelte/attachments";
-import { toHex, toRGB } from "./conversion";
+import { toHex, getRBG } from "./conversion";
 import { resolveSystemColor } from "./conversion";
 import { systemColors } from "./utils";
 
@@ -8,7 +8,7 @@ export type RGB = {r: number, g: number, b: number};
 export type HSV = {h: number, s: number, v: number}
 
 export function relativeLuminance(color: ColorValue): number {
-  const {r,g,b} = toRGB(color);
+  const {r,g,b} = getRBG(color);
   const linearize = (v: number) => {
     const c = v / 255;
     return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
@@ -27,7 +27,7 @@ export function contrastRatio(a: ColorValue, b: ColorValue): number {
 export function getTextColorOn(background: ColorValue, schemeOverride?: Scheme): "var(--gray0)" | "var(--gray4)" | "var(--light-gray0)" | "var(--light-gray4)" | "var(--dark-gray0)" | "var(--dark-gray4)"{
   const gray0: ColorValue = resolveSystemColor("gray0", schemeOverride)
   const gray4: ColorValue = resolveSystemColor("gray4", schemeOverride)
-  const lightText = contrastRatio(background, gray0) > contrastRatio(background, gray4)
+  const lightText = contrastRatio(background, gray0) + 1 > contrastRatio(background, gray4)
   if(schemeOverride === undefined) return lightText ? "var(--gray0)" : "var(--gray4)";
   else if(schemeOverride === "light") return lightText ? "var(--light-gray0)" : "var(--light-gray4)";
   else /*schemeOverride === "dark"*/ return lightText ? "var(--dark-gray0)" : "var(--dark-gray4)";
@@ -35,7 +35,7 @@ export function getTextColorOn(background: ColorValue, schemeOverride?: Scheme):
 
 export function applyBackgroundColor(background: ColorValue | undefined, schemeOverride?: Scheme): string{
   if(!background) return "";
-  const backgroundHex = toHex(background, schemeOverride)
+  const backgroundHex = toHex(background, schemeOverride).value
   const textColor = getTextColorOn(background, schemeOverride)
   return `
     --background-color: ${backgroundHex};

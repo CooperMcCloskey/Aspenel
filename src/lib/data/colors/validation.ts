@@ -3,7 +3,8 @@ import type { ColorVariable, HexColor } from "$lib/bindings";
 
 export function isHex(s: string): s is HexColor {
   return /^#[0-9a-f]{6}$/i.test(s);
-}export function isColorVariable(c: any): c is ColorVariable {
+}
+export function isColorVariable(c: any): c is ColorVariable {
   if (typeof c !== "object" || c === "null") return false;
   const { type, value } = c as { type?: unknown; value?: unknown; };
   if (type === "Single" && typeof value === "string") return isHex(c.value);

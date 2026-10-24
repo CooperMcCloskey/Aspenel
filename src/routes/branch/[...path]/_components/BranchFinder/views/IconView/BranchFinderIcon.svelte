@@ -1,16 +1,22 @@
 <script lang="ts">
   import type { LoadedBranch } from "$lib/bindings";
-    import { toHex } from "$lib/data/colors/conversion";
-    import { branchEditMenu } from "$lib/data/branch/menus/contextMenus";
+  import { branchEditMenu } from "$lib/data/branch/menus/contextMenus";
   import { createContextMenu } from "$lib/logic/contextMenus";
   import { branchHref } from "$lib/logic/filesystem";
+  import { applyBackgroundColor } from "$lib/data/colors/contrast";
+  import { systemColors } from "$lib/data/colors/utils";
 
   //TODO: Make this icon able to be dragged and rearranged.
   let { branch }: {branch: LoadedBranch} = $props();
 </script>
 
-<a class="container" href={branchHref(branch.path)} oncontextmenu={(e)=>createContextMenu(e, branchEditMenu([branch.id]))}>
-  <header style="background: {toHex(branch.computed_color)}">
+<a 
+  class="container" 
+  href={branchHref(branch.path)} 
+  oncontextmenu={(e)=>createContextMenu(e, branchEditMenu([branch.id]))}
+  style={applyBackgroundColor(systemColors.gray0)}
+>
+  <header style={applyBackgroundColor(branch.computed_color)}>
     <h2>{branch.filename}</h2>
   </header>
 </a>
@@ -21,11 +27,9 @@
     position: relative;
     grid-column: span 1;
     grid-row: span 1;
-    background: var(--gray0);
   }
   header{
     position: absolute;
-    font-family: var(--fontFamily);
     top: 0;
     width: 100%;
     height: var(--gridUnitHeight);
@@ -35,7 +39,6 @@
     position: absolute;
     bottom: 0;
     left: 2px;
-    color: var(--gray0);
   }
   .container:hover > header > h2, .container:focus-visible > header > h2{
     text-decoration: underline solid var(--gray0) 2px;

@@ -49,7 +49,8 @@ export const systemTheme = {
     "gridColumns": "6",
     "standardPadding": "4px",
     "borderWidth": "2px",
-    "iconSpacing": "2px"
+    "iconSpacing": "2px",
+    "iconSize": "24px"
   }
 } as const;
 

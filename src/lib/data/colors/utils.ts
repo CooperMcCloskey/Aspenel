@@ -1,16 +1,18 @@
-import type { Accents, ColorValue, HexColor, SystemColor } from "$lib/bindings";
+import type { Accents, ColorValue, SystemColor } from "$lib/bindings";
 import { settings } from "$lib/logic/settings.svelte";
 import { colorGroups } from "$lib/styling/systemTheme";
 
+export type HexColorValue = ColorValue & {type: "HexColor"};
 
-export function colorError(value: any, message?: string): HexColor {
+export function colorError(value: any, message?: string): HexColorValue {
   console.warn(`colorError: ${JSON.stringify(value)}${message ? (", " + message) : ""}`);
-  return "#ff00ff";
+  return {type: "HexColor", value: "#ff00ff"};
 }
 
 type SystemColorMap = {
   [K in SystemColor]: { type: "SystemColor"; value: K; };
 };
+
 export const systemColors = Object.fromEntries(
   Object.values(colorGroups)
     .flat()

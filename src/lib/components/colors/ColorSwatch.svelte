@@ -12,7 +12,7 @@
 
 
 <MenuContainer type="Snippet">
-  {#snippet children(menuTrigger, menuSnippet)}
+  {#snippet children(menuTrigger)}
     <div class="wrapper">
       <button
         use:menuTrigger
@@ -23,13 +23,13 @@
           {#snippet box()}
             <div class="textBox">
               <span class="name">{name}</span>
-              <span class="hex">{toHex(color, schemeOverride)}</span>
+              <span class="hex">{toHex(color, schemeOverride).value}</span>
             </div>
           {/snippet}
           {#snippet fullLine()}
             <div class="textLine">
               <span class="name">{name}</span>
-              <span class="hex">{toHex(color, schemeOverride)}</span>
+              <span class="hex">{toHex(color, schemeOverride).value}</span>
             </div>
           {/snippet}
           {#snippet nameLine()}
@@ -42,7 +42,6 @@
           {/snippet}
         </AdaptiveComponent>
       </button>
-      {@render menuSnippet()}
     </div>
   {/snippet}
 
@@ -83,9 +82,6 @@
     justify-content: space-between;
     gap: calc(var(--standardPadding) * 2);
     align-items: center;
-  }
-  .name{
-    font-family: var(--fontFamily);
   }
   .hex{
     font-family: var(--monoFontFamily);

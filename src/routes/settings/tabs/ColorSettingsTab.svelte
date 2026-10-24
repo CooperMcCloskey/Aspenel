@@ -17,18 +17,18 @@
   function singleColorVariableBinding(cv: WritableDeep<ColorVariable & {type: "Single"}>){
     return ({
       get: ()=>({type: "HexColor", value: cv.value} as ColorValue),
-      set: (color: ColorValue)=>{cv.value = toHex(color)}
+      set: (color: ColorValue)=>{cv.value = toHex(color).value}
     })
   }
   function splitColorVariableBinding(cv: WritableDeep<ColorVariable & {type: "Split"}>){
     return ({
       light: {
         get: ()=>({type: "HexColor", value: cv.value.light} as ColorValue),
-        set: (color: ColorValue)=>{cv.value.light = toHex(color)}
+        set: (color: ColorValue)=>{cv.value.light = toHex(color).value}
       },
       dark: {
         get: ()=>({type: "HexColor", value: cv.value.dark} as ColorValue),
-        set: (color: ColorValue)=>{cv.value.dark = toHex(color)}
+        set: (color: ColorValue)=>{cv.value.dark = toHex(color).value}
       }
     });
   }

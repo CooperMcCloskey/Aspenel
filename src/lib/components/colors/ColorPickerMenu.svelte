@@ -6,6 +6,8 @@
   import { applyBackgroundColor } from "../../data/colors/contrast";
   import { isHex } from "$lib/data/colors/validation";
   import { toHex, toHSV } from "$lib/data/colors/conversion";
+  import { settings } from "$lib/logic/settings.svelte";
+  import ColorButtonList from "./ColorButtonList.svelte";
 
   let {
     color = $bindable(), 
@@ -48,7 +50,9 @@
   {/if}
 
   {#if selectedTab === "Theme" && !noThemeColors}
-    <div></div>
+    <ColorButtonList colors={settings.theme.system_color_variables.neutrals} />
+    <ColorButtonList colors={settings.theme.system_color_variables.accents} />
+    <ColorButtonList colors={settings.added_color_variables} />
   {/if}
   {#if selectedTab === "HSV" || noThemeColors}
     <div class="swatchBox" style={applyBackgroundColor(color)}>
@@ -57,7 +61,7 @@
           maxlength={7}
           size={7}
           bind:value={
-            ()=>toHex(color),
+            ()=>toHex(color).value,
             (value)=>{color = {type: "HexColor", value}}
           } 
           validate={validateHex} 

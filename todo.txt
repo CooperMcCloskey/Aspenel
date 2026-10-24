@@ -1,5 +1,3 @@
-TODO: Check how random color is working
-
 TODO: figure out why gen-theme is throwing warnings
 TODO: Cut down css with common classes
 TODO: Fix colors (contrast)

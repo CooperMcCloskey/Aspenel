@@ -1,7 +1,6 @@
 import type { Scheme, Settings } from "$lib/bindings";
 import { getTextColorOn } from "$lib/data/colors/contrast";
 import { resolveColorVariable } from "$lib/data/colors/conversion";
-import { toHex } from "$lib/data/colors/conversion";
 import { MediaQuery } from "svelte/reactivity";
 
 export const settings: Settings = $state({}) as Settings
@@ -23,11 +22,9 @@ export function applySettingsChanges(settings: Settings){
 
   for (const group of Object.values(settings.theme.system_color_variables)) {
     for (const [key, cv] of Object.entries(group)) {
-      const hex = resolveColorVariable(cv, scheme);
-
-      root.style.setProperty(`--${key}`, hex);
-      root.style.setProperty(`--light-${key}`, resolveColorVariable(cv, "light"));
-      root.style.setProperty(`--dark-${key}`, resolveColorVariable(cv, "dark"));
+      root.style.setProperty(`--${key}`, resolveColorVariable(cv, scheme).value);
+      root.style.setProperty(`--light-${key}`, resolveColorVariable(cv, "light").value);
+      root.style.setProperty(`--dark-${key}`, resolveColorVariable(cv, "dark").value);
     }
   }
   root.style.setProperty("color", getTextColorOn({type: "SystemColor", value: "background"}))
