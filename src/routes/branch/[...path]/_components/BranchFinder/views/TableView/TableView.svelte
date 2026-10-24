@@ -8,11 +8,12 @@
   import { stateManager } from "$lib/logic/stateManager/StateManager.svelte";
   import type { Id, TableViewData } from "$lib/bindings";
   import PropertyValueContainer from "./PropertyValues/PropertyValueContainer.svelte";
-  import MenuContainer from "$lib/components/MenuContainer.svelte";
-  import { propertySchemaConfigMenuMap, type PropertySchemaConfigMenu } from "$lib/data/property/schema/menus/configMenus/map";
   import { editPropertySchemaMenu, newPropertySchemaMenu } from "$lib/data/property/schema/menus/contextMenus";
   import type { PropertyType } from "$lib/data/property/types";
   import type{ LoadedPropertySchema } from "$lib/data/property/schema/types";
+  import MenuContainer from "$lib/components/MenuContainer.svelte";
+  import { propertySchemaConfigMenuMap } from "$lib/data/property/menus/configMenus/map";
+  import type { PropertySchemaConfigMenu } from "$lib/data/property/schema/menus/configMenus/map";
 
   const { id, viewData }: { id: Id, viewData: TableViewData} = $props();
 
@@ -30,28 +31,29 @@
 
 </script>
 
-<!-- TODO: Resizeable columns -->
-<table class="container">
+<!-- TODO: Resizeable columns and rows -->
+<table class="table">
 
   <thead>
     <tr>
       <th class="startCell">Branch</th>
-      
       {#each visiblePropertySchemas as propertySchema}
-        <MenuContainer type="Component" menu={propertySchemaConfigMenuMap[propertySchema.type] as PropertySchemaConfigMenu<T>} menuProps={{schema: propertySchema as LoadedPropertySchema<T>}}>
-          {#snippet children(menuTrigger, menuSnippet)}
-            <th 
-              role="button" 
-              style="cursor: pointer"
-              use:menuTrigger
-              oncontextmenu={(e)=>createContextMenu(e, editPropertySchemaMenu(e.currentTarget, id, propertySchema.id))}
-            >
-              {propertySchema.name}
-              {@render menuSnippet()}
-            </th>
-          {/snippet}
-          
-        </MenuContainer>
+        <th>
+          <MenuContainer 
+            type="Component" 
+            menu={propertySchemaConfigMenuMap[propertySchema.type] as PropertySchemaConfigMenu<T>} 
+            menuProps={{schema: propertySchema as LoadedPropertySchema<T>}}
+          >
+            {#snippet children(menuTrigger)}
+              <button 
+                use:menuTrigger 
+                oncontextmenu={(e)=>createContextMenu(e, editPropertySchemaMenu(e.currentTarget, id, propertySchema.id))}
+              >
+                {propertySchema.name}
+              </button>
+            {/snippet}
+          </MenuContainer>
+        </th>
       {/each}
 
       <th class="endCell">
@@ -99,9 +101,7 @@
 </table>
 
 <style>
-  .container{
-    height: 100%;
-    font-family: var(--monoFontFamily);
+  .table{
     border-collapse: collapse;
   }
   th, td{

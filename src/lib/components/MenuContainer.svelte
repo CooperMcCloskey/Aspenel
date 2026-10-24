@@ -6,62 +6,57 @@
   //TODO: click down inside the box and then unclick outside the box hides the menu
   //TODO: position the box where there is space so it is not off the screen
 
-  type Props = { 
+  let props: { 
     children: Snippet<[
-      menuTrigger: Action<HTMLElement>, 
-      menuSnippet: Snippet,
+      menuTrigger: Action<HTMLElement>,
     ]>
   } & (
     | {type: "Component", menu: Component<T>, menuProps: T} 
     | {type: "Snippet", menu: Snippet}
-  ) 
+  )  = $props()
 
-  let props: Props = $props()
-  let open: boolean = $state(false);
+  const id = $props.id();
+  let position = $state({left: 0, top: 0});
+  let trigger: HTMLElement | undefined;
 
-  let menuElement: HTMLElement | undefined = $state() //TODO: figure out why the menu closes on click for color picker 
-  
-  const menuTrigger: Action<HTMLElement> = (trigger)=>{
-    const handler = (e: MouseEvent)=>{
-      const target = e.target as Node
-      if(trigger.contains(target)){
-        if(e.target === trigger) open = !open;
-        else open = true; 
-      }
-      else if(menuElement?.contains(target)) return
-      else open = false
-    }
-    window.addEventListener("click", handler);
-    return {destroy: ()=>window.removeEventListener("click", handler)}
+  const menuTrigger: Action<HTMLElement> = (node)=>{
+    trigger = node;
+    node.setAttribute("popovertarget", id);
+  }
+
+  function placeMenu(e: ToggleEvent){
+    if(e.newState !== "open" || !trigger) return;
+    const rect = trigger.getBoundingClientRect();
+    position = {left: rect.left, top: rect.bottom};
   }
 
 </script>
 
-{#snippet menuSnippet()}
-  {#if open}
-    <div 
-      class="menu" 
-      bind:this={menuElement}
-      style={applyBackgroundColor({type: "SystemColor", value: "gray0"})}
-    >
-      {#if props.type === "Component"}
-        <props.menu {...props.menuProps}/> 
-      {:else} 
-        {@render props.menu()} 
-      {/if}
-    </div>  
-  {/if}
-{/snippet}
+{@render props.children(menuTrigger)}
 
-{@render props.children(menuTrigger, menuSnippet)}
+<div
+  {id}
+  popover
+  class="menu"
+  onbeforetoggle={placeMenu}
+  style:left="{position.left}px"
+  style:top="{position.top}px"
+  style={applyBackgroundColor({type: "SystemColor", value: "gray0"})}
+>
+  {#if props.type === "Component"}
+    <props.menu {...props.menuProps}/>
+  {:else}
+    {@render props.menu()}
+  {/if}
+</div>
 
 <style>
   .menu{
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1;
+    inset: auto;
+    margin: 0;
+    border: none;
     padding: var(--standardPadding);
+    overflow: hidden;
   }
 </style>
 

@@ -1,8 +1,5 @@
 <script lang="ts">
-  import type { NumberSchema } from "$lib/bindings";
-  import { stateManager } from "$lib/logic/stateManager/StateManager.svelte";
-  import type { WritableDeep } from "type-fest";
-  import { getPropertySchema } from "../../data";
+  import { applySchemaCommand, getPropertySchema } from "../../data";
   import type { LoadedPropertySchema } from "../../types";
   import Input from "$lib/components/input/Input.svelte";
 
@@ -19,10 +16,7 @@
     return {status: "ok", data: min}
   }}
   format={(v)=>String(v ?? "")}
-  submit={(v)=>stateManager.applyCommand(()=>{
-    const s = getPropertySchema(schema.id, "Number") as WritableDeep<NumberSchema>;
-    s.min = Number.isFinite(v) ? v : null;
-  })}
+  submit={(v)=>applySchemaCommand<"Number">(schema.id, (s)=>{s.min = Number.isFinite(v) ? v : null})}
 />
 <span>Maximum: </span><Input 
   type="number"
@@ -34,8 +28,5 @@
     return {status: "ok", data: max}
   }}
   format={(v)=>String(v ?? "")}
-  submit={(v)=>stateManager.applyCommand(()=>{
-    const s = getPropertySchema(schema.id, "Number") as WritableDeep<NumberSchema>;
-    s.max = Number.isFinite(v) ? v : null;
-  })}
+  submit={(v)=>applySchemaCommand<"Number">(schema.id, (s)=>{s.max = Number.isFinite(v) ? v : null})}
 />

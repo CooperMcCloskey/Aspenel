@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ColorValue, HexColor } from "$lib/bindings";
+  import type { ColorValue } from "$lib/bindings";
   import MenuContainer from "../MenuContainer.svelte";
   import ColorPickerMenu from "./ColorPickerMenu.svelte";
   import { applyBackgroundColor } from "../../data/colors/contrast";
@@ -9,13 +9,12 @@
 </script>
 
 <MenuContainer type="Snippet">
-  {#snippet children(menuTrigger, menuSnippet)}
+  {#snippet children(menuTrigger)}
     <button 
       use:menuTrigger 
       aria-label="Color picker"
       style={applyBackgroundColor(color)}
     ></button>
-    {@render menuSnippet()}
   {/snippet}
 
   {#snippet menu()}

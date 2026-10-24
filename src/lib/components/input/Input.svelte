@@ -2,7 +2,7 @@
   import type { Result } from '$lib/types/utils';
   import type { HTMLInputAttributes } from "svelte/elements";
   import type { ColorValue } from '$lib/bindings';
-  import { applyBackgroundColor, applyErrorText, contrastRatio } from '../../data/colors/contrast';
+  import { applyBackgroundColor, applyErrorText } from '../../data/colors/contrast';
   import { systemColors } from "../../data/colors/utils";
 
   type Converters<T> = {
@@ -18,7 +18,7 @@
     preventInvalidInput = false,
     noInvalidBox = false,
     backgroundColor,
-    submit: submit,
+    submit,
     ...rest
   }:{
     value: T
@@ -109,6 +109,7 @@
     color: transparent;
   }
   input{
+    text-overflow: ellipsis;
     position: relative;
     background: transparent;
     text-align: var(--text-align, left);
