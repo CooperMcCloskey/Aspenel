@@ -1,8 +1,10 @@
 <script lang="ts">
   import type { Id, SelectOption } from "$lib/bindings";
-    import ColorPicker from "$lib/components/colors/ColorPicker.svelte";
-    import AddIcon from "$lib/components/icons/AddIcon.svelte";
-    import IconBase from "$lib/components/icons/IconBase.svelte";
+  import ColorPicker from "$lib/components/colors/ColorPicker.svelte";
+  import AddIcon from "$lib/components/icons/AddIcon.svelte";
+  import IconBase from "$lib/components/icons/IconBase.svelte";
+  import Input from "$lib/components/input/Input.svelte";
+  import { applySelectOptionCommand, newSelectOption } from "$lib/data/property/value/variants/select";
   import type { LoadedPropertySchema } from "../../types";
 
   const { schema }: { schema: LoadedPropertySchema<"Select"> } = $props();
@@ -17,15 +19,20 @@
 <div>
   {#each options as option}
     <div class="row">
-      <!-- <ColorPicker bind:hexValue={
-        ()=>{},
-        (v)=>{}
-      }></ColorPicker> -->
-      <span class="optionLabel">{option.name}</span>
+      <ColorPicker bind:color={
+        ()=>{return option.color},
+        (v)=>{applySelectOptionCommand(option.id, schema.id, (option)=>{option.color = v})}
+      }></ColorPicker>
+      <Input 
+        value={option.name}
+        preventInvalidInput
+        noInvalidBox
+        submit={(v)=>applySelectOptionCommand(option.id, schema.id, (option)=>{option.name = v})}
+      />
     </div>
   {/each}
   <div class="row">
-    <button onclick={()=>{}}>
+    <button onclick={()=>{newSelectOption(options.length, schema.id)}}>
       <IconBase hasHoverEffect={true}><AddIcon/></IconBase>
     </button>
   </div>
@@ -35,8 +42,5 @@
   .row{
     position: relative;
     white-space: nowrap;
-  }
-  .optionLabel{
-    text-overflow: ellipsis;
   }
 </style>
