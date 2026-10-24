@@ -10,9 +10,7 @@ export function createViewMenu(): Promise<Menu> {
     items: viewTypes.map(type => ({
       id: type,
       text: `New ${type} View`,
-      action: () =>{
-        stateManager.applyCommand(()=>{stateManager.tree.branch.ui_components[ulid()] = newChildView(type)})
-      },
+      action: () => stateManager.applyCommand(()=>{stateManager.tree.branch.ui_components[ulid()] = newChildView(type)})
     }))
   })
 }

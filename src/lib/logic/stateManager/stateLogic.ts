@@ -22,7 +22,7 @@ export function createNodeHandle(path: IdPath | undefined, applyCommand: (comman
     path,
     get node(){ return getNode(stateManager.tree, path) },
     get branch(){ return this.node.branch },
-    applyCommand(command: (node: WritableDeep<StateTreeNode>)=>void, userCaused?: boolean){ console.log(command); applyCommand(()=>command(this.node), userCaused) },
+    applyCommand(command: (node: WritableDeep<StateTreeNode>)=>void, userCaused?: boolean){ applyCommand(()=>command(this.node), userCaused) },
     async loadChildren(){
       if(this.node.children) return;
       const childLoadResult = await commands.loadDir(this.node.branch.path);

@@ -3,6 +3,7 @@ import type { PropertyType } from "../types";
 import { ulid } from "ulid";
 import type { Id } from "$lib/bindings";
 import { stateManager } from "$lib/logic/stateManager/StateManager.svelte";
+import type { WritableDeep } from "type-fest";
 
 const propertySchemaFactoryMap: {[T in PropertyType]: (name: string, id: Id)=>LoadedPropertySchema<T>} = {
   "Date": (name, id)=>({type: "Date", name, id, date_format: "DMY", time_format: "H24"}),
@@ -24,4 +25,9 @@ export function getPropertySchema<T extends PropertyType = PropertyType>(schemaI
   if(schema === undefined) throw new Error(`Schema (type: ${type}) with id: ${schemaId} not found.`);
   if(type !== undefined && schema.type !== type) throw new Error(`Schema with id: ${schemaId} has type: ${schema.type} not ${type}`);
   return schema as LoadedPropertySchema<T>
+}
+
+export function applySchemaCommand<T extends PropertyType = PropertyType>(schemaId: Id, command: (schema: WritableDeep<LoadedPropertySchema<T>>)=>void){
+  const schema = getPropertySchema<T>(schemaId) as WritableDeep<LoadedPropertySchema<T>>;
+  command(schema);
 }

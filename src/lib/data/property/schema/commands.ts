@@ -1,6 +1,4 @@
 import type { Id, PropertySchema } from "$lib/bindings";
-import { getView } from "$lib/data/childView/data";
-import type { ChildViewType, TypedChildView } from "$lib/data/childView/types";
 import { stateManager } from "$lib/logic/stateManager/StateManager.svelte";
 import { renameElement } from "$lib/logic/uiLogic";
 import type { WritableDeep } from "type-fest";
@@ -22,14 +20,9 @@ export function renamePropertySchema(propertyElement: HTMLElement, schemaId: Id)
   });
 }
 
-const hidePropertyFunctionMap: {[T in ChildViewType]: (view: WritableDeep<TypedChildView<T>>, propertyId: Id)=>void} = {
-  "Icon": (view, propertyId)=>{view.visible_property_ids = view.visible_property_ids.filter((id) => id!==propertyId)},
-  "Table": (view, propertyId)=>{view.hidden_property_ids.push(propertyId)}
-}
-export function hidePropertySchema<T extends ChildViewType>(viewId: Id, propertyId: Id) {
-  const view = getView(viewId) as WritableDeep<TypedChildView<T>>;
-  const type = view.type as T;
-  stateManager.applyCommand(()=>hidePropertyFunctionMap[type](view, propertyId))
+export function applySchemaCommand<T extends PropertyType = PropertyType>(schemaId: Id, command: (schema: WritableDeep<LoadedPropertySchema<T>>)=>void){
+  const schema = getPropertySchema<T>(schemaId) as WritableDeep<LoadedPropertySchema<T>>;
+  command(schema);
 }
 
 export function deletePropertySchema(schemaId: Id) { stateManager.applyCommand(()=>delete stateManager.tree.branch.properties[schemaId])}

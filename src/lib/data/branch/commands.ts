@@ -12,17 +12,9 @@ export async function newChild(parentPath?: IdPath) {
   const child = childResult.data;
 
   parent.applyCommand((p)=>{
-    p.children = {
-      ...p.children, 
-      [child.id]: {
-        branch: { 
-          ...child, 
-          type: "LoadedBranch" 
-        }, 
-        children: {} 
-      } 
-    }
-  });
+    p.children ??= {}
+    p.children[child.id] = { branch: {...child, type: "LoadedBranch"}, children: {} }
+  })
 }
 
 export async function deleteChild(childPath: IdPath){
