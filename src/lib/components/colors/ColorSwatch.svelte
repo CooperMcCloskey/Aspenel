@@ -61,7 +61,7 @@
   }
   button{
     position: relative;
-    padding: var(--standardPadding);
+    padding: var(--standard-padding);
     width: 100%;
     height: 100%;
     box-sizing: border-box;
@@ -80,11 +80,11 @@
     height: 100%;
     display: flex;
     justify-content: space-between;
-    gap: calc(var(--standardPadding) * 2);
+    gap: calc(var(--standard-padding) * 2);
     align-items: center;
   }
   .hex{
-    font-family: var(--monoFontFamily);
+    font-family: var(--mono-font-family);
   }
 </style>
 

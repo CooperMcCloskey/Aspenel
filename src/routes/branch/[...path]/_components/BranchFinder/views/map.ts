@@ -1,11 +1,12 @@
-import type { ChildViewType, TypedChildView } from "$lib/data/childView/types";
+import type { BranchViewType, TypedBranchView } from "$lib/data/modules/branchView/types";
 import type { Component } from "svelte";
 import IconView from "./IconView/IconView.svelte";
 import TableView from "./TableView/TableView.svelte";
+import type { Id } from "$lib/bindings";
 
-export type ChildViewComponent<T extends ChildViewType> = Component<{ viewData: TypedChildView<T>; }>;
+export type BranchViewComponent<T extends BranchViewType> = Component<{ id: Id, viewData: TypedBranchView<T>; }>;
 
-export const childViewComponentMap: {[T in ChildViewType]: ChildViewComponent<T>} = {
+export const branchViewComponentMap: {[T in BranchViewType]: BranchViewComponent<T>} = {
   Icon: IconView,
   Table: TableView,
 };

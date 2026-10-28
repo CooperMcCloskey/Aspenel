@@ -21,7 +21,7 @@
   format={(value)=>(value === undefined ? "" : String(value))}
   submit={(value)=>setPropertyValue(property, value)}
   --text-align="right"
-  --invalidBox-left="calc(-1 * var(--standardPadding))"
-  --invalidBox-top="calc(100% + var(--standardPadding) + var(--borderWidth))"
+  --invalidBox-left="calc(-1 * var(--standard-padding))"
+  --invalidBox-top="calc(100% + var(--standard-padding) + var(--border-width))"
 >
 </Input>

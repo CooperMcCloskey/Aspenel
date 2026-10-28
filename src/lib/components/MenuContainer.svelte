@@ -55,7 +55,7 @@
     inset: auto;
     margin: 0;
     border: none;
-    padding: var(--standardPadding);
+    padding: var(--standard-padding);
     overflow: hidden;
   }
 </style>

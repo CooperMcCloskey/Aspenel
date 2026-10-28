@@ -11,9 +11,9 @@
 }
 
 :root{
-  font-family: var(--fontFamily);
+  font-family: var(--font-family);
   font-weight: 400;
-  line-height: var(--lineHeight);
+  line-height: var(--line-height);
   width: 100%;
   height: 100%;
 }
@@ -61,7 +61,7 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
 }
 input[type="number"] {
-  font-family: var(--monoFontFamily);
+  font-family: var(--mono-font-family);
   appearance: textfield;
   -moz-appearance: textfield;
 }

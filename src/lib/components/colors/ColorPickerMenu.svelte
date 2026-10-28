@@ -123,17 +123,17 @@
 
 <style>
   .box{
-    font-size: var(--standardText);
+    font-size: var(--standard-text);
   }
   .swatchBox{
     position: relative;
-    margin-bottom: var(--standardPadding);
+    margin-bottom: var(--standard-padding);
     width: 100%;
     aspect-ratio: 3;
   }
   .hexInputWrapper{
-    padding: var(--standardPadding);
-    font-family: var(--monoFontFamily);
+    padding: var(--standard-padding);
+    font-family: var(--mono-font-family);
     position: absolute;;
     bottom: 0px;
   }
@@ -143,9 +143,9 @@
     align-items: center;
   }
   input[type="range"]{
-    margin: 0 var(--standardPadding);
+    margin: 0 var(--standard-padding);
   }
   input[type="number"]{
-    width: calc(var(--standardText) * 4);
+    width: calc(var(--standard-text) * 4);
   }
 </style>

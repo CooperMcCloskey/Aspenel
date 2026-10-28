@@ -32,19 +32,19 @@
 
 <style>
   .text{
-    padding: var(--standardPadding);
+    padding: var(--standard-padding);
   }
   .errorBox{
     display: none;
     position: absolute;
-    top: calc(100% - var(--standardPadding));
-    width: calc(100% - 2 * var(--standardPadding));
-    max-height: calc(2 * var(--smallText) * var(--lineHeight) + 2 * var(--standardPadding));
+    top: calc(100% - var(--standard-padding));
+    width: calc(100% - 2 * var(--standard-padding));
+    max-height: calc(2 * var(--small-text) * var(--line-height) + 2 * var(--standard-padding));
     background-color: var(--red);
     color: var(--gray0);
-    padding: var(--standardPadding);
+    padding: var(--standard-padding);
     z-index: 1;
   }
-  .invalid{ box-shadow: inset 0 0 0 calc(var(--standardPadding) - var(--borderWidth)) var(--red); }
+  .invalid{ box-shadow: inset 0 0 0 calc(var(--standard-padding) - var(--border-width)) var(--red); }
   .invalid:focus-within + .errorBox { display: block; }
 </style>

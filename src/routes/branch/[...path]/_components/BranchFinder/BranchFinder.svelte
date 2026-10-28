@@ -1,18 +1,18 @@
-<script lang="ts" generics="ActiveViewType extends ChildViewType">
+<script lang="ts" generics="ActiveViewType extends BranchViewType">
   import IconBase from "$lib/components/icons/IconBase.svelte";
   import NewBranchIcon from "$lib/components/icons/NewBranchIcon.svelte";
   import MoreHorizontalIcon from "$lib/components/icons/MoreHorizontalIcon.svelte";
-  import  { type ChildViewType, type TypedChildView } from "../../../../../lib/data/childView/types";
+  import  { type BranchViewType, type TypedBranchView } from "../../../../../lib/data/modules/branchView/types";
   import CreateView from "./views/CreateView/CreateView.svelte";
-  import { childViewComponentMap, type ChildViewComponent } from "./views/map";
+  import { branchViewComponentMap, type BranchViewComponent } from "./views/map";
   import { newChild } from "$lib/data/branch/commands";
-  import type { ChildView } from "$lib/bindings";
+  import type { BranchView } from "$lib/bindings";
   import { stateManager } from "$lib/logic/stateManager/StateManager.svelte";
 
-  let defaultActiveView: null | ChildView = $derived(Object.values(stateManager.tree.branch.ui_components)[0] ?? null)
-  let selectedActiveView: null | ChildView = $state(null);
-  let activeView: null | TypedChildView<ActiveViewType> = $derived(selectedActiveView ?? defaultActiveView) as null | TypedChildView<ActiveViewType>
-  let ActiveViewComponent: null | ChildViewComponent<ActiveViewType> = $derived(activeView === null ? null : childViewComponentMap[activeView.type])
+  let defaultActiveView: null | BranchView = $derived(Object.values(stateManager.tree.branch.modules)[0] ?? null)
+  let selectedActiveView: null | BranchView = $state(null);
+  let activeView: null | TypedBranchView<ActiveViewType> = $derived(selectedActiveView ?? defaultActiveView) as null | TypedBranchView<ActiveViewType>
+  let ActiveViewComponent: null | BranchViewComponent<ActiveViewType> = $derived(activeView === null ? null : branchViewComponentMap[activeView.type])
   
 </script>
 
@@ -33,10 +33,10 @@
 <style>
   header{
     position: relative;
-    bottom: var(--iconSpacing);
-    gap: var(--iconSpacing);
+    bottom: var(--icon-spacing);
+    gap: var(--icon-spacing);
     width: 100%;
-    height: var(--iconSize);
+    height: var(--icon-size);
     display: flex;
     flex-direction: row-reverse;
     flex-wrap: nowrap;

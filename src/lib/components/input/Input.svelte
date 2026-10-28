@@ -122,10 +122,10 @@
     left: var(--invalidBox-left, 0);
     top: var(--invalidBox-top, 100%);
     color: var(--gray0);
-    padding: var(--standardPadding);
+    padding: var(--standard-padding);
     z-index: 1;
   }
   .invalid:focus-within + .invalidBox { display: block; }
-  .invalid.invalidOutline{ box-shadow: inset 0 0 0 calc(var(--standardPadding) - var(--borderWidth)) var(--red); }
+  .invalid.invalidOutline{ box-shadow: inset 0 0 0 calc(var(--standard-padding) - var(--border-width)) var(--red); }
   .invalid.invalidText{ color: var(--red) !important }
 </style>

@@ -1,5 +1,5 @@
 import { Menu } from "@tauri-apps/api/menu";
-import { newChildView } from "../data";
+import { newBranchView } from "../data";
 import { viewTypes } from "../types";
 import { ulid } from "ulid";
 import { stateManager } from "$lib/logic/stateManager/StateManager.svelte";
@@ -10,7 +10,7 @@ export function createViewMenu(): Promise<Menu> {
     items: viewTypes.map(type => ({
       id: type,
       text: `New ${type} View`,
-      action: () => stateManager.applyCommand(()=>{stateManager.tree.branch.ui_components[ulid()] = newChildView(type)})
+      action: () => stateManager.applyCommand(()=>{stateManager.tree.branch.modules[ulid()] = newBranchView(type)})
     }))
   })
 }

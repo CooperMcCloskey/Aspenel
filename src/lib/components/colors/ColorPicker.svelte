@@ -24,7 +24,7 @@
 
 <style>
   button{
-    height: var(--smallText);
-    width: var(--smallText);
+    height: var(--small-text);
+    width: var(--small-text);
   }
 </style>

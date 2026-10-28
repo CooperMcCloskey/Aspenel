@@ -1,7 +1,6 @@
-import type { ChildView, Id } from "$lib/bindings";
+import type { BranchView, Id } from "$lib/bindings";
 import { Menu } from "@tauri-apps/api/menu";
 import { deletePropertySchema } from "../commands";
-import { hidePropertySchema } from "../commands";
 import { renamePropertySchema } from "../commands";
 import { createPropertySchema } from "../commands";
 import { propertyTypes } from "../../types";

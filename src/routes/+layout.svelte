@@ -24,18 +24,18 @@
 
 <style> 
   #grid{
-    --gridRowBorders: calc(var(--gridRows) - 1);
-    --gridColumnBorders: calc(var(--gridColumns) - 1);
-    --gridUnitWidth: calc((100vh - var(--gridColumnBorders)*var(--gridGapSize))/var(--gridColumns));
-    --gridUnitHeight: calc((100vh - var(--gridRowBorders)*var(--gridGapSize))/var(--gridRows));
+    --gridRowBorders: calc(var(--grid-rows) - 1);
+    --gridColumnBorders: calc(var(--grid-columns) - 1);
+    --gridUnitWidth: calc((100vh - var(--gridColumnBorders)*var(--standard-padding))/var(--grid-columns));
+    --gridUnitHeight: calc((100vh - var(--gridRowBorders)*var(--standard-padding))/var(--grid-rows));
 
     position: fixed;
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-rows: repeat(var(--gridRows), 1fr);
-    grid-template-columns: repeat(var(--gridColumns), 1fr);
-    gap: var(--gridGapSize);
+    grid-template-rows: repeat(var(--grid-rows), 1fr);
+    grid-template-columns: repeat(var(--grid-columns), 1fr);
+    gap: var(--standard-padding);
   }
   #backArrowContainer{
     position: absolute;

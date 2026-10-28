@@ -19,7 +19,7 @@
 
 <style>
   button{
-    width: var(--iconSize);
-    height: var(--iconSize);
+    width: var(--icon-size);
+    height: var(--icon-size);
   }
 </style>

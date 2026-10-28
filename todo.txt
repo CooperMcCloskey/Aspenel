@@ -1,9 +1,12 @@
+TODO: Add module rendering
+TODO: Add drag and drop to modules
+TODO: Add drag and drop to select schema options 
+TODO: remove snake case from bindings
 TODO: figure out why gen-theme is throwing warnings
 TODO: Cut down css with common classes
-TODO: Fix colors (contrast)
-TODO: Check why all parent branches are loaded when a branch is. (likely color)
 TODO: Improve table ergonomics
-TODO: Intermediate trash folder for deleted branches
+TODO: Trash folder for deleted branches
 TODO: Check bug, if you delete a branch, then create a new one with the same name, it has the deleted one's data
 TODO: Only render visible table cells
 TODO: Sanatize user generated strings
+TODO: Check performance

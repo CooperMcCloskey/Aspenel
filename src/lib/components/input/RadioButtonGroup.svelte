@@ -28,22 +28,22 @@
 
 <style>
   .tabs {
-    padding: var(--standardPadding);
+    padding: var(--standard-padding);
     display: inline-flex;
-    gap: var(--tabsGap, var(--standardPadding));
+    gap: var(--tabs-gap, var(--standard-padding));
     justify-content: var(--justify-content, flex-start);
     flex-direction: var(--flex-direction, row);
     align-items: var(--align-items, start);
   }
   .tabLabel {
     display: inline-block;
-    padding: var(--standardPadding);
+    padding: var(--standard-padding);
   }
   .tab{
     position: relative;
   }
   .tab:first-child{
-    left: var(--first-child-padding, calc(-1 * var(--standardPadding)));
+    left: var(--first-child-padding, calc(-1 * var(--standard-padding)));
   }
   .tab input:checked + .tabLabel {
     background: var(--gray3);

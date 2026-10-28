@@ -2,7 +2,6 @@ import type { LoadedFields, RootFields } from "$lib/bindings";
 import type { StateTreeRoot } from "$lib/logic/stateManager/types";
 import type { UntypedBranchVariant } from "./types";
 
-
 export function newEmptyLoadedFields(): LoadedFields {
   return {
     filename: "...",
@@ -14,7 +13,7 @@ export function newEmptyLoadedFields(): LoadedFields {
 export function newEmptyRootFields(): RootFields {
   return {
     properties: {},
-    ui_components: {}
+    modules: {}
   }
 }
 

@@ -31,7 +31,7 @@
   <Input
     value={name}
     submit={nameUpdate}
-    --font-size="var(--largeText)"
+    --font-size="var(--large-text)"
     --cursor="text"
   >
   </Input>
@@ -62,7 +62,7 @@
     color: var(--gray2) !important;
   }
   .path{
-    font-size: var(--smallText);
+    font-size: var(--small-text);
   }
   
 </style>

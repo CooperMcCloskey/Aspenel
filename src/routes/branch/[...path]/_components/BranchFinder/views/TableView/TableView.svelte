@@ -6,7 +6,7 @@
   import { branchEditMenu } from "$lib/data/branch/menus/contextMenus";
   import { newChild } from "$lib/data/branch/commands";
   import { stateManager } from "$lib/logic/stateManager/StateManager.svelte";
-  import type { Id, TableViewData } from "$lib/bindings";
+  import type { Id, TableBranchViewData } from "$lib/bindings";
   import PropertyValueContainer from "./PropertyValues/PropertyValueContainer.svelte";
   import { editPropertySchemaMenu, newPropertySchemaMenu } from "$lib/data/property/schema/menus/contextMenus";
   import type { PropertyType } from "$lib/data/property/types";
@@ -15,7 +15,7 @@
   import { propertySchemaConfigMenuMap } from "$lib/data/property/menus/configMenus/map";
   import type { PropertySchemaConfigMenu } from "$lib/data/property/schema/menus/configMenus/map";
 
-  const { id, viewData }: { id: Id, viewData: TableViewData} = $props();
+  const { id, viewData }: { id: Id, viewData: TableBranchViewData} = $props();
 
   $effect(()=>{
     viewData;
@@ -100,21 +100,22 @@
   </tfoot>
 </table>
 
+<!-- TODO: check if -webkit-user-select is still necessary and if so where else it might be needed -->
 <style>
   .table{
     border-collapse: collapse;
   }
   th, td{
     position: relative;
-    padding: var(--standardPadding);
+    padding: var(--standard-padding);
     text-align: left;
     font-weight: normal;
-    border: var(--borderWidth) solid var(--gray1);
+    border: var(--border-width) solid var(--gray1);
   }
   th{ 
     border-top: none; 
     user-select: none;
-    -webkit-user-select: none; /* Necessary for mac right now but maybe there is a better choice? */
+    -webkit-user-select: none; /* Necessary for mac right now but maybe there is a better choice?*/ 
   }
   tfoot > tr > td{ border-bottom: none; } 
   .startCell{ border-left: none; }

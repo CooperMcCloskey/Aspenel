@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { IconViewData } from "$lib/bindings";
+  import type { IconBranchViewData, Id } from "$lib/bindings";
   import { stateManager } from "$lib/logic/stateManager/StateManager.svelte";
   import BranchFinderIcon from "./BranchFinderIcon.svelte";
-  const {viewData}: {viewData: IconViewData} = $props();
+  const { id, viewData }: { id: Id, viewData: IconBranchViewData} = $props();
   $effect(()=>{
     viewData;
     stateManager.rootNodeHandle.loadChildren();
@@ -25,6 +25,6 @@
     display: grid;
     grid-template-rows: repeat(1, 1fr);
     grid-template-columns: repeat(4, 1fr);
-    gap: var(--gridGapSize);
+    gap: var(--standard-padding);
   }
 </style>

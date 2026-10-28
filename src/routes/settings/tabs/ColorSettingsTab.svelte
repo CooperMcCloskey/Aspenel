@@ -111,7 +111,7 @@
   #colorContainer{
     display: grid;
     grid-template-rows: 4fr 1fr;
-    gap: var(--gridGapSize);
+    gap: var(--standard-padding);
     width: 100%;
     height: 100%;
   }
@@ -119,7 +119,7 @@
     grid-column: 1 / -1;
   }
   #neutrals{
-    padding-bottom: var(--standardPadding);
+    padding-bottom: var(--standard-padding);
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto;
@@ -137,10 +137,10 @@
   }
   
   #accents{
-    padding-top: var(--standardPadding);
+    padding-top: var(--standard-padding);
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: var(--standardPadding);    
+    gap: var(--standard-padding);    
   }
   .splitAccent{
     display: grid;
@@ -153,17 +153,17 @@
   }
   .themeIndicator{
     position: absolute;
-    top: var(--standardPadding);
-    right: var(--standardPadding);
-    width: var(--standardText);
-    height: var(--standardText);
+    top: var(--standard-padding);
+    right: var(--standard-padding);
+    width: var(--standard-text);
+    height: var(--standard-text);
   }
   .lightIndicator{
-    border: var(--borderWidth) solid var(--dark-gray0);
+    border: var(--border-width) solid var(--dark-gray0);
     background-color: var(--light-gray0);
   }
   .darkIndicator{
-    border: var(--borderWidth) solid var(--light-gray0);
+    border: var(--border-width) solid var(--light-gray0);
     background-color: var(--dark-gray0);
   }
 </style>

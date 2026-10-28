@@ -59,6 +59,24 @@ for (const [group, entries] of Object.entries(colors)) {
   }
 }
 
+// ---- CSS names: the JSON and TS keep camelCase, CSS variables are kebab-case
+// standardText -> standard-text, gridGapSize -> grid-gap-size, gray0 -> gray0
+const cssName = (key) =>
+  key
+    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+    .replace(/([A-Z]+)([A-Z][a-z])/g, "$1-$2")
+    .toLowerCase();
+
+// CSS variables share one namespace, so two keys must never map to the same name
+const cssNames = new Map();
+for (const key of [...seen, ...Object.values(sections).flatMap((section) => Object.keys(section))]) {
+  const name = cssName(key);
+  if (cssNames.has(name) && cssNames.get(name) !== key) {
+    throw new Error(`"${key}" and "${cssNames.get(name)}" both become --${name}`);
+  }
+  cssNames.set(name, key);
+}
+
 // ---- emit
 const resolve = (value, scheme) => (typeof value === "string" ? value : value[scheme]);
 
@@ -66,12 +84,12 @@ const allColors = () => Object.values(colors).flatMap((group) => Object.entries(
 
 const vars = (scheme, { indent = "  ", prefix = "" } = {}) =>
   allColors()
-    .map(([key, value]) => `${indent}--${prefix}${key}: ${resolve(value, scheme)};\n`)
+    .map(([key, value]) => `${indent}--${prefix}${cssName(key)}: ${resolve(value, scheme)};\n`)
     .join("");
 
 const rootVars = Object.values(sections)
   .flatMap((section) => Object.entries(section))
-  .map(([key, value]) => `  --${key}: ${value};\n`)
+  .map(([key, value]) => `  --${cssName(key)}: ${value};\n`)
   .join("");
 
 const banner = "/* Generated from systemTheme.json — do not edit. */";

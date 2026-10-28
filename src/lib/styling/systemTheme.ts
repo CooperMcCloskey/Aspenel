@@ -44,9 +44,8 @@ export const systemTheme = {
     "smallText": "0.75rem"
   },
   "layout": {
-    "gridGapSize": "16px",
-    "gridRows": "8",
-    "gridColumns": "6",
+    "gridRows": "17",
+    "gridColumns": "24",
     "standardPadding": "4px",
     "borderWidth": "2px",
     "iconSpacing": "2px",

@@ -1,20 +1,19 @@
 /* Generated from systemTheme.json — do not edit. */
 
 :root {
-  --fontFamily: 'Charter';
-  --monoFontFamily: 'Iosevka';
-  --lineHeight: 1.2;
-  --largeText: 2rem;
-  --mediumText: 1.375rem;
-  --standardText: 1rem;
-  --smallText: 0.75rem;
-  --gridGapSize: 16px;
-  --gridRows: 8;
-  --gridColumns: 6;
-  --standardPadding: 4px;
-  --borderWidth: 2px;
-  --iconSpacing: 2px;
-  --iconSize: 24px;
+  --font-family: 'Charter';
+  --mono-font-family: 'Iosevka';
+  --line-height: 1.2;
+  --large-text: 2rem;
+  --medium-text: 1.375rem;
+  --standard-text: 1rem;
+  --small-text: 0.75rem;
+  --grid-rows: 17;
+  --grid-columns: 24;
+  --standard-padding: 4px;
+  --border-width: 2px;
+  --icon-spacing: 2px;
+  --icon-size: 24px;
 
   /* both schemes, always resolvable regardless of the active one */
   --light-background: #f7f0e1;
