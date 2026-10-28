@@ -9,7 +9,7 @@ use crate::{
       RootFields, UnloadedBranchVariant,
     },
     colors::types::{ColorValue, SystemColor},
-    components::types::{ChildView, IconViewData},
+    modules::types::Module,
   },
   error_handling::command_errors::Error,
   filesystem::{
@@ -40,13 +40,13 @@ impl RootBranch {
       branch: Branch::new(),
       root_data: RootFields {
         properties: HashMap::new(),
-        ui_components: HashMap::new(),
+        modules: HashMap::new(),
       },
     }
   }
 
   pub fn new_home_branch() -> RootBranch {
-    let default_view = ChildView::Icon(IconViewData::new_icon_view("Icon View"));
+    let default_modules = Module::defaults();
 
     RootBranch {
       branch: Branch {
@@ -56,7 +56,7 @@ impl RootBranch {
       },
       root_data: RootFields {
         properties: HashMap::new(),
-        ui_components: HashMap::from([(Id::new(), default_view)]),
+        modules: default_modules,
       },
     }
   }

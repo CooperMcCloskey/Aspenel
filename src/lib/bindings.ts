@@ -30,11 +30,11 @@ export type Branch = {
 	readonly property_values: { [key in Id]: PropertyValue },
 };
 
-export type ChildView = {
+export type BranchView = {
 	readonly type: "Icon",
-} & IconViewData | {
+} & IconBranchViewData | {
 	readonly type: "Table",
-} & TableViewData;
+} & TableBranchViewData;
 
 export type ColorValue = { readonly type: "SystemColor"; readonly value: SystemColor } | { readonly type: "HexColor"; readonly value: HexColor } | { readonly type: "HSV"; readonly value: HSV } | { readonly type: "AddedColorId"; readonly value: Id };
 
@@ -50,6 +50,13 @@ export type DateSchema = {
 
 export type Error = string;
 
+export type GridArea = {
+	readonly row: number,
+	readonly column: number,
+	readonly width: number,
+	readonly height: number,
+};
+
 export type HSV = {
 	readonly h: number,
 	readonly s: number,
@@ -58,8 +65,7 @@ export type HSV = {
 
 export type HexColor = `#${string}`;
 
-export type IconViewData = {
-	readonly name: string,
+export type IconBranchViewData = {
 	readonly visible_property_ids: Id[],
 };
 
@@ -80,6 +86,16 @@ export type LoadedFields = {
 };
 
 export type LoadedRootBranch = Branch & LoadedFields & RootFields;
+
+export type Module = {
+	readonly grid_area: GridArea,
+} & ModuleCategory;
+
+export type ModuleCategory = {
+	readonly category: "BranchView",
+} & BranchView | {
+	readonly category: "Text",
+} & TextModule;
 
 export type MultiSelectSchema = {
 	readonly name: string,
@@ -118,7 +134,7 @@ export type PropertyValue = { readonly type: "Number"; readonly value: number } 
 
 export type RootFields = {
 	readonly properties: { [key in Id]: PropertySchema },
-	readonly ui_components: { [key in Id]: ChildView },
+	readonly modules: { [key in Id]: Module },
 };
 
 export type SelectOption = {
@@ -152,10 +168,11 @@ export type SystemColorVariables = {
 	readonly accents: Accents,
 };
 
-export type TableViewData = {
-	readonly name: string,
+export type TableBranchViewData = {
 	readonly hidden_property_ids: Id[],
 };
+
+export type TextModule = { readonly type: "BranchHeader" };
 
 export type TextSchema = {
 	readonly name: string,

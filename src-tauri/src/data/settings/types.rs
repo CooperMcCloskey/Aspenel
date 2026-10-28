@@ -25,7 +25,6 @@ pub enum Scheme {
   Dark,
 }
 
-
 #[derive(Serialize, Deserialize, Type)]
 #[serde(rename_all = "lowercase")]
 pub enum SelectedScheme {

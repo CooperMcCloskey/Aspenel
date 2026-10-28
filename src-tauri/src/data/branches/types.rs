@@ -6,7 +6,7 @@ use specta::Type;
 use crate::{
   data::{
     colors::types::ColorValue,
-    components::types::ChildView,
+    modules::types::Module,
     properties::{schemas::PropertySchema, values::PropertyValue},
   },
   utils::types::Id,
@@ -22,7 +22,7 @@ pub struct LoadedFields {
 #[derive(Serialize, Deserialize, Type)]
 pub struct RootFields {
   pub properties: HashMap<Id, PropertySchema>,
-  pub ui_components: HashMap<Id, ChildView>,
+  pub modules: HashMap<Id, Module>,
 }
 
 #[derive(Serialize, Deserialize, Type)]
